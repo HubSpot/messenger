@@ -1,0 +1,7 @@
+.messenger .message .actions {
+  float: right; }
+  .messenger .message .actions a {
+    text-decoration: underline; }
+.hs-fixed-message-box .messenger .message .actions {
+  float: left;
+  margin-top: 10px; }

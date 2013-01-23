@@ -1,0 +1,13 @@
+<div class="message hs-message {{ type }}">
+    {{ message }}
+
+    <div class="actions">
+        {{#each actions}}
+            <span data-action="{{ this.name }}">
+                <span class="phrase"></span>
+                <a href="#{{ this.name }}">{{{ this.label }}}</a>
+            </span>
+        {{/each}}
+    </div>
+    <div style="clear:both"></div>
+</div>

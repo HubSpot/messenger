@@ -15,26 +15,32 @@
 /* line 19, ../../src/sass/messenger.sass */
 .fixed-messenger {
   position: fixed;
+  z-index: 10000;
 }
-/* line 22, ../../src/sass/messenger.sass */
+/* line 23, ../../src/sass/messenger.sass */
+.fixed-messenger .messenger {
+  max-width: 800px;
+  margin: 0 auto;
+}
+/* line 27, ../../src/sass/messenger.sass */
 .fixed-messenger .message {
   min-width: 0;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
-/* line 27, ../../src/sass/messenger.sass */
+/* line 32, ../../src/sass/messenger.sass */
 .fixed-messenger .message .actions {
   float: left;
   margin-top: 10px;
 }
-/* line 32, ../../src/sass/messenger.sass */
+/* line 37, ../../src/sass/messenger.sass */
 .fixed-messenger.on-right {
   right: 20px;
   bottom: 5px;
   width: 350px;
 }
-/* line 38, ../../src/sass/messenger.sass */
+/* line 43, ../../src/sass/messenger.sass */
 .fixed-messenger.on-top {
   left: 10%;
   top: 20px;

@@ -146,8 +146,14 @@
     };
 
     Message.prototype.template = function(opts) {
-      var $action, $actions, $link, $message, action, _i, _len, _ref;
-      $message = $("<div class='message alert " + opts.type + " alert-" + opts.type + "'><div>" + opts.message + "</div></div>");
+      var $action, $actions, $cancel, $link, $message, $text, action, _i, _len, _ref;
+      $message = $("<div class='message alert " + opts.type + " alert-" + opts.type + "'>");
+      if (opts.showCloseButton) {
+        $cancel = $('<button type="button" class="close" data-dismiss="alert">&times;</button>');
+        $message.append($cancel);
+      }
+      $text = $("<div>" + opts.message + "</div>");
+      $message.append($text);
       $actions = $('<div class="actions">');
       _ref = opts.actions;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {

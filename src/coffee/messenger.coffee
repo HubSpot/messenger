@@ -104,7 +104,19 @@ class Message extends Backbone.View
         return actions
 
     template: (opts) ->
-        $message = $ "<div class='message alert #{ opts.type } alert-#{ opts.type }'><div>#{ opts.message }</div></div>"
+        $message = $ "<div class='message alert #{ opts.type } alert-#{ opts.type }'>"
+      
+        if opts.showCloseButton
+            $cancel = $ '<button type="button" class="close" data-dismiss="alert">&times;</button>'
+            $cancel.click =>
+              do (@cancel ? @hide)
+
+              true
+
+            $message.append $cancel
+
+        $text = $ "<div>#{ opts.message }</div>"
+        $message.append $text
 
         $actions = $ '<div class="actions">'
         for action in opts.actions

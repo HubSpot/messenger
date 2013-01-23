@@ -8,7 +8,6 @@ class Message extends Backbone.View
     constructor: (@messenger, @opts={}) ->
         @shown = false
         @rendered = false
-        @events = {}
 
         @opts = $.extend {}, @defaults, @opts
 
@@ -38,7 +37,7 @@ class Message extends Backbone.View
         
         @rendered = false
         
-        @events = @opts.events
+        @events = @opts.events ? {}
 
         do @render
 

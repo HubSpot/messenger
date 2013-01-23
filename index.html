@@ -101,6 +101,7 @@ If you're not using Bootstrap: /build/css/no-bootstrap.css
     <span class="nv">message: </span><span class="s">'There was an explosion while processing your request.'</span>
     <span class="nv">type: </span><span class="s">'error'</span>
 </code>
+
 <code executable><span class="nv">msg = </span><span class="nx">$</span><span class="p">.</span><span class="nx">globalMessenger</span><span class="p">().</span><span class="nx">post</span> <span class="s">"My Message"</span>
 <span class="nx">msg</span><span class="p">.</span><span class="nx">update</span> <span class="s">"I changed my mind, this is my message"</span>
 <span class="nx">msg</span><span class="p">.</span><span class="nx">hide</span><span class="p">()</span>
@@ -230,8 +231,8 @@ If you're not using Bootstrap: /build/css/no-bootstrap.css
 
 <span class="p">{</span>
   <span class="s">'injectIntoPage'</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
-  <span class="s">'fixedMessageClasses'</span><span class="o">:</span> <span class="s">'hs-fixed-message-box'</span><span class="p">,</span>
-  <span class="s">'injectedMessageClasses'</span><span class="o">:</span> <span class="s">'hs-message-box'</span><span class="p">,</span>
+  <span class="s">'fixedClasses'</span><span class="o">:</span> <span class="s">'fixed-messenger on-right'</span><span class="p">,</span>
+  <span class="s">'injectedClasses'</span><span class="o">:</span> <span class="s">'injected-messenger'</span><span class="p">,</span>
   <span class="s">'injectionLocations'</span><span class="o">:</span> <span class="p">[</span><span class="s">'.row-content'</span><span class="p">,</span> <span class="s">'.left'</span><span class="p">,</span> <span class="s">'.page'</span><span class="p">,</span> <span class="s">'body'</span><span class="p">]</span>
 <span class="p">}</span>
 

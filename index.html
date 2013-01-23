@@ -79,17 +79,17 @@ If you're not using Bootstrap: /build/css/no-bootstrap.css
 
 <div class="highlight"><pre>
 <span class="c1"># Replace:</span>
-<span class="nx">$</span><span class="p">.</span><span class="nx">ajax</span>
+<code executable><span class="nx">$</span><span class="p">.</span><span class="nx">ajax</span>
     <span class="nv">url: </span><span class="s">"/some-url"</span>
     <span class="nv">success: </span><span class="o">-&gt;</span>
-
+</code>
 <span class="c1"># With:</span>
-<span class="nx">$</span><span class="p">.</span><span class="nx">globalMessenger</span><span class="p">().</span><span class="nx">do</span>
+<code executable><span class="nx">$</span><span class="p">.</span><span class="nx">globalMessenger</span><span class="p">().</span><span class="nx">do</span>
     <span class="nv">errorMessage: </span><span class="s">"This did not go well."</span>
 <span class="p">,</span>
     <span class="nv">url: </span><span class="s">"/some-url"</span>
     <span class="nv">success: </span><span class="o">-&gt;</span>
-
+</code>
 </pre></div>
 
 <h2>Usage <span class="subtitle">Click Code to Execute</span></h2>

@@ -1,6 +1,8 @@
 $ = jQuery
 
 class Message extends Backbone.View
+    className: 'message alert'
+    
     defaults:
         hideAfter: 10
         scroll: true
@@ -103,6 +105,26 @@ class Message extends Backbone.View
 
         return actions
 
+    template: (ctx) ->
+        @$el.html ctx.message
+
+        $actions = $ '<div>'
+        $actions.addClass actions
+        for action in ctx.actions
+            $action = $ '<span>'
+            $action.attr 'data-action', action.name
+
+            $link = $ '<a>'
+            $link.attr 'href', "##{ action.name }"
+            $link.html action.label
+
+            $action.append $ '<span class="phrase">'
+            $action.append $link
+   
+            $actions.append $action
+
+        @$el.append $actions
+            
     render: ->
         if @rendered
             return
@@ -115,7 +137,8 @@ class Message extends Backbone.View
         opts = $.extend {}, @opts,
             actions: do @parseActions
 
-        @$el.html Handlebars.templates.message opts
+        @$el.addClass "#{ opts.type } alert-#{ opts.type }"
+        @template opts
 
         @rendered = true
 
@@ -204,7 +227,7 @@ class Messenger
             msg.opts.id == id
 
     render: ->
-        @$rootEl.html Handlebars.templates.messenger
+        @$rootEl.html '<div class="messenger"></div>'
 
         @$el = @$rootEl.find('.messenger')
 

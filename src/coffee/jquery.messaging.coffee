@@ -443,9 +443,9 @@ $.globalMessenger = (opts) ->
     defaultOpts =
       injectIntoPage: false
       injectionLocations: ['.row-content', '.left', '.page', 'body']
-      injectedMessageClasses: 'hs-message-box'
+      injectedClasses: 'injected-messenger'
       
-      fixedMessageClasses: 'hs-fixed-message-box'
+      fixedClasses: 'fixed-messenger on-right'
 
     opts = $.extend defaultOpts, opts
 
@@ -465,7 +465,7 @@ $.globalMessenger = (opts) ->
 
         if not inst
             $el = $('<div>')
-            $el.addClass opts.injectedMessageClasses
+            $el.addClass opts.injectedClasses
 
             $parent.prepend $el
 
@@ -480,7 +480,7 @@ $.globalMessenger = (opts) ->
     else
         if not inst
             $el = $('<div>')
-            $el.addClass opts.fixedMessageClasses
+            $el.addClass opts.fixedClasses
 
             $parent = $('body')
             $parent.append $el

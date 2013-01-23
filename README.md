@@ -172,7 +172,7 @@ $('div#message-container').messenger().post "My message"
 # corner of the screen.  If there is already a messenger instance on the page, it will use that one.
 
 # Alternativly, pass {injectIntoPage: true} to globalMessenger to have a messenger instance injected into the page in a few likely
-# places.  This will only work if an instance has not yet been created.
+# places.  
 
 $.globalMessenger({injectIntoPage: true})
 
@@ -180,9 +180,10 @@ $.globalMessenger({injectIntoPage: true})
 
 {
   'injectIntoPage': false,
-  'fixedMessageClasses': 'hs-fixed-message-box',
-  'injectedMessageClasses': 'hs-message-box',
+  'injectedClasses': 'injected-messenger',
   'injectionLocations': ['.row-content', '.left', '.page', 'body']
+  
+  'fixedClasses': 'fixed-messenger on-right',
 }
 
 # You can also use the views directly

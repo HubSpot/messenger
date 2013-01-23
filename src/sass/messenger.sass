@@ -1,0 +1,42 @@
+@import "compass/utilities/general/clearfix"
+@import "compass/css3/box-sizing"
+
+.messenger .message
+  +clearfix
+
+  /* Some basic styles to get you started, bootstrap will do most of the real work */
+  background: #EEE
+  border: 1px solid gray
+  padding: 10px
+  margin-top: 10px
+
+  .actions
+    float: right
+
+    a
+      text-decoration: underline
+
+.fixed-messenger
+  position: fixed
+
+  .message
+    min-width: 0
+    
+    +box-sizing(border-box)
+
+  .message .actions
+    float: left
+
+    margin-top: 10px
+
+  &.on-right
+    right: 20px
+    bottom: 5px
+
+    width: 350px
+
+  &.on-top
+    left: 10%
+    top: 20px
+    
+    width: 80%

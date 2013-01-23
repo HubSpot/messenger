@@ -1,0 +1,12 @@
+<div class="message {{ type }} alert alert-{{ type }}">
+    {{ message }}
+
+    <div class="actions">
+        {{#each actions}}
+            <span data-action="{{ this.name }}">
+                <span class="phrase"></span>
+                <a href="#{{ this.name }}">{{{ this.label }}}</a>
+            </span>
+        {{/each}}
+    </div>
+</div>

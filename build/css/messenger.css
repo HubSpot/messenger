@@ -36,15 +36,14 @@
 /* line 29, ../../src/sass/messenger.sass */
 .fixed-messenger .message .actions {
   float: left;
-  margin-top: 10px;
 }
-/* line 34, ../../src/sass/messenger.sass */
+/* line 32, ../../src/sass/messenger.sass */
 .fixed-messenger.on-right {
   right: 20px;
   bottom: 5px;
   width: 350px;
 }
-/* line 40, ../../src/sass/messenger.sass */
+/* line 38, ../../src/sass/messenger.sass */
 .fixed-messenger.on-top {
   left: 10%;
   top: 20px;

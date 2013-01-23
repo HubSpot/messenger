@@ -16,7 +16,7 @@ Including
 --------
 
 ### JS
-    messenger/build/js/jquery.messenger.js
+    messenger/build/js/messenger.js
 
 ### CSS
     messenger/build/css/messenger.css
@@ -195,4 +195,4 @@ messenger.post "Yay!!!"
 Contributing
 ==========
 
-You can build the output files by running `build.sh`.  It requires coffeescript, compass and handlebars.
+You can build the output files by running `build.sh`.  It requires coffeescript and compass.

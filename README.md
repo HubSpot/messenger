@@ -195,4 +195,4 @@ messenger.post "Yay!!!"
 Contributing
 ==========
 
-You can build the output files by running `build.sh`.  It requires coffeescript, sass and handlebars.
+You can build the output files by running `build.sh`.  It requires coffeescript, compass and handlebars.

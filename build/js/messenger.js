@@ -21,7 +21,6 @@
       this.opts = opts != null ? opts : {};
       this.shown = false;
       this.rendered = false;
-      this.events = {};
       this.opts = $.extend({}, this.defaults, this.opts);
       Message.__super__.constructor.apply(this, arguments);
     }
@@ -44,11 +43,12 @@
     };
 
     Message.prototype.update = function(opts) {
-      var _this = this;
+      var _ref,
+        _this = this;
       $.extend(this.opts, opts);
       this.lastUpdate = new Date();
       this.rendered = false;
-      this.events = this.opts.events;
+      this.events = (_ref = this.opts.events) != null ? _ref : {};
       this.render();
       this.actionsToEvents();
       this.delegateEvents();

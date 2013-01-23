@@ -11,12 +11,9 @@
     <link rel="stylesheet" type="text/css" media="screen" href="build/css/messenger.css">
 
     <style>
-      code[executable] {
-        cursor: pointer;
-      }
-      code[executable]:hover {
-        box-shadow: 0 1px 5px #BBB;
-      }
+      h2 .subtitle {
+        font-size: 14px;
+      } 
     </style>
 
     <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
@@ -101,7 +98,7 @@ If you're not using Bootstrap: /build/css/no-bootstrap.css
 
 </pre></div>
 
-<h2>Usage</h2>
+<h2>Usage <span class="subtitle">Click to Execute</span></h2>
 
 <div class="highlight"><pre>
 <code executable><span class="nx">$</span><span class="p">.</span><span class="nx">globalMessenger</span><span class="p">().</span><span class="nx">post</span> <span class="s">"Your request has succeded!"</span>
@@ -115,8 +112,7 @@ If you're not using Bootstrap: /build/css/no-bootstrap.css
 <span class="nx">msg</span><span class="p">.</span><span class="nx">hide</span><span class="p">()</span>
 </code>
 <span class="c1"># Want to put actions at the end of your messages?</span>
-<code executable>
-<span class="nv">msg = </span><span class="nx">$</span><span class="p">.</span><span class="nx">globalMessenger</span><span class="p">().</span><span class="nx">post</span>
+<code executable><span class="nv">msg = </span><span class="nx">$</span><span class="p">.</span><span class="nx">globalMessenger</span><span class="p">().</span><span class="nx">post</span>
     <span class="nv">message: </span><span class="s">'Launching thermonuclear war...'</span>
     <span class="nv">type: </span><span class="s">'info'</span>
     <span class="nv">actions:</span>

@@ -146,7 +146,7 @@
 
     Message.prototype.template = function(opts) {
       var $action, $actions, $link, $message, action, _i, _len, _ref;
-      $message = "<div class='message alert " + opts.type + " alert-" + opts.type + "'>" + opts.message + "</div>";
+      $message = $("<div class='message alert " + opts.type + " alert-" + opts.type + "'>" + opts.message + "</div>");
       $actions = $('<div class="actions">');
       _ref = opts.actions;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {

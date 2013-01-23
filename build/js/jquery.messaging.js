@@ -144,6 +144,26 @@
       return actions;
     };
 
+    Message.prototype.template = function(ctx) {
+      var $action, $actions, $link, $message, action, _i, _len, _ref;
+      $message = "<div class='message alert " + opts.type + " alert-" + opts.type + "'>" + opts.message + "</div>";
+      $actions = $('<div class="actions">');
+      _ref = ctx.actions;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        action = _ref[_i];
+        $action = $('<span>');
+        $action.attr('data-action', action.name);
+        $link = $('<a>');
+        $link.attr('href', "#" + action.name);
+        $link.html(action.label);
+        $action.append($('<span class="phrase">'));
+        $action.append($link);
+        $actions.append($action);
+      }
+      $message.append($actions);
+      return $message;
+    };
+
     Message.prototype.render = function() {
       var opts;
       if (this.rendered) {
@@ -156,7 +176,8 @@
       opts = $.extend({}, this.opts, {
         actions: this.parseActions()
       });
-      this.$el.html(Handlebars.templates.message(opts));
+      this.$el.addClass("" + opts.type + " alert-" + opts.type);
+      this.$el.html(this.template(opts));
       return this.rendered = true;
     };
 
@@ -279,7 +300,7 @@
     };
 
     Messenger.prototype.render = function() {
-      this.$rootEl.html(Handlebars.templates.messenger);
+      this.$rootEl.html('<div class="messenger"></div>');
       return this.$el = this.$rootEl.find('.messenger');
     };
 

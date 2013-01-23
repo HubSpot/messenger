@@ -36,7 +36,7 @@ class Message extends Backbone.View
         @lastUpdate = new Date()
         
         @rendered = false
-        
+       
         @events = @opts.events ? {}
 
         do @render
@@ -94,7 +94,7 @@ class Message extends Backbone.View
     parseActions: ->
         actions = []
 
-        for name, act of @opts.actions
+        for name, act of @opts.actions ? []
             n_act = $.extend {}, act
             n_act.name = name
             n_act.label ?= name

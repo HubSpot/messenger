@@ -130,14 +130,14 @@
     };
 
     Message.prototype.parseActions = function() {
-      var act, actions, n_act, name, _ref, _ref1;
+      var act, actions, n_act, name, _ref, _ref1, _ref2;
       actions = [];
-      _ref = this.opts.actions;
-      for (name in _ref) {
-        act = _ref[name];
+      _ref1 = (_ref = this.opts.actions) != null ? _ref : [];
+      for (name in _ref1) {
+        act = _ref1[name];
         n_act = $.extend({}, act);
         n_act.name = name;
-        if ((_ref1 = n_act.label) == null) {
+        if ((_ref2 = n_act.label) == null) {
           n_act.label = name;
         }
         actions.push(n_act);

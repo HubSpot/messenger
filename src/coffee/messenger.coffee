@@ -105,7 +105,7 @@ class Message extends Backbone.View
         return actions
 
     template: (opts) ->
-        $message = $ "<div class='message alert #{ opts.type } alert-#{ opts.type }'>#{ opts.message }</div>"
+        $message = $ "<div class='message alert #{ opts.type } alert-#{ opts.type }'><div>#{ opts.message }</div></div>"
 
         $actions = $ '<div class="actions">'
         for action in opts.actions

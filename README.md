@@ -1,10 +1,8 @@
-Hubspot Messaging Library
-=========================
+## Hubspot Messaging Library
 
 Show transactional messages in your app.
 
-Requires
---------
+### Requires
 
 - jQuery
 - Backbone.js
@@ -12,20 +10,17 @@ Requires
 
 Plays well with bootstrap
 
-Including
---------
+### Including
 
-### JS
+__JS__
     messenger/build/js/messenger.js
 
-### CSS
+__CSS__
     messenger/build/css/messenger.css
 
-Really Quick Usage
------
+### Really Quick Usage
 
 ```coffeescript
-
 # Replace:
 $.ajax
     url: "/some-url"
@@ -37,14 +32,11 @@ $.globalMessenger().do
 ,
     url: "/some-url"
     success: ->
-    
 ```
 
-Usage
------
+### Usage
 
 ```coffeescript
-
 $.globalMessenger().post "Your request has succeded!"
 
 $.globalMessenger().post
@@ -189,10 +181,8 @@ $.globalMessenger({injectIntoPage: true})
 # You can also use the views directly
 messenger = new ActionMessenger $('div#message-container')
 messenger.post "Yay!!!"
-
 ```
 
-Contributing
-==========
+### Contributing
 
 You can build the output files by running `build.sh`.  It requires coffeescript and compass.

@@ -14,15 +14,11 @@ class Message extends Backbone.View
         super
 
     show: ->
-        # We're only allowing one message at a time for now.
-        @messenger.hideAll()
-
         do @render
 
         @$el.show()
 
-        if not @shown
-            @trigger 'show'
+        @trigger('show') unless @shown
 
         @shown = true
 
@@ -30,8 +26,7 @@ class Message extends Backbone.View
     hide: ->
         @$el.hide()
 
-        if @shown
-            @trigger 'hide'
+        @trigger('hide') if @shown
 
         @shown = false
 
@@ -88,7 +83,7 @@ class Message extends Backbone.View
 
     checkClickable: ->
         for name, evt of @events
-            if name == 'click'
+            if name is 'click'
                 @$el.addClass 'clickable'
 
     undelegateEvents: ->
@@ -442,11 +437,22 @@ $.fn.messenger = (func, args...) ->
     else
         return $el.data('messenger')[func](args...)
 
-$.globalMessenger = (injectIntoPage=false) ->
+$.globalMessenger = (opts) ->
     inst = $._messengerInstance
 
-    if injectIntoPage
-        locations = ['.row-content', '.left', '.page', 'body']
+    defaultOpts =
+      injectIntoPage: false
+      injectionLocations: ['.row-content', '.left', '.page', 'body']
+      injectedMessageClasses: 'hs-message-box'
+      
+      fixedMessageClasses: 'hs-fixed-message-box'
+
+    opts = $.extend defaultOpts, opts
+
+    # Should we insert the messenger into the flow of the page, or
+    # place it in the body to be position fixed or absolute.
+    if opts.injectIntoPage
+        locations = opts.injectionLocations
         $parent = null
         choosen_loc = null
 
@@ -459,6 +465,7 @@ $.globalMessenger = (injectIntoPage=false) ->
 
         if not inst
             $el = $('<div>')
+            $el.addClass opts.injectedMessageClasses
 
             $parent.prepend $el
 
@@ -473,7 +480,7 @@ $.globalMessenger = (injectIntoPage=false) ->
     else
         if not inst
             $el = $('<div>')
-            $el.addClass 'hs-fixed-message-box'
+            $el.addClass opts.fixedMessageClasses
 
             $parent = $('body')
             $parent.append $el

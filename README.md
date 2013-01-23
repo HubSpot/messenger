@@ -10,6 +10,8 @@ Requires
 - Backbone.js
 - jQuery.scrollTo.js - optionally
 
+Plays well with bootstrap
+
 Including
 --------
 
@@ -169,10 +171,19 @@ $('div#message-container').messenger().post "My message"
 # By default, the global messenger will create an ActionMessenger instance fixed to the bottom-right
 # corner of the screen.  If there is already a messenger instance on the page, it will use that one.
 
-# Alternativly, pass true to globalMessenger to have a messenger instance injected into the page in a few likely
+# Alternativly, pass {injectIntoPage: true} to globalMessenger to have a messenger instance injected into the page in a few likely
 # places.  This will only work if an instance has not yet been created.
 
-$.globalMessenger(true)
+$.globalMessenger({injectIntoPage: true})
+
+# All the options for globalMessenger and their defaults:
+
+{
+  'injectIntoPage': false,
+  'fixedMessageClasses': 'hs-fixed-message-box',
+  'injectedMessageClasses': 'hs-message-box',
+  'injectionLocations': ['.row-content', '.left', '.page', 'body']
+}
 
 # You can also use the views directly
 messenger = new ActionMessenger $('div#message-container')
@@ -183,4 +194,4 @@ messenger.post "Yay!!!"
 Contributing
 ==========
 
-You can build the output files by running build.sh.  It requires coffeescript, sass and handlebars.
+You can build the output files by running `build.sh`.  It requires coffeescript, sass and handlebars.

@@ -1,3 +1,3 @@
 $(function(){
-  $.globalMessenger().post("My message");
+  $.globalMessenger().post("Thanks for checking out Messenger!");
 });

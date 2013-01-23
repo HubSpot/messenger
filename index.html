@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="Messenger : Alerts for the 21st century" />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Messenger</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/HubSpot/messenger">View on GitHub</a>
+
+          <h1 id="project_title">Messenger</h1>
+          <h2 id="project_tagline">Alerts for the 21st century</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/HubSpot/messenger/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/HubSpot/messenger/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h1>Hubspot Messaging Library</h1>
+
+<p>Show transactional messages in your app.</p>
+
+<h2>Requires</h2>
+
+<ul>
+<li>jQuery</li>
+<li>Backbone.js</li>
+<li>jQuery.scrollTo.js - optionally</li>
+</ul><p>Plays well with bootstrap</p>
+
+<h2>Including</h2>
+
+<h3>JS</h3>
+
+<pre><code>messenger/build/js/jquery.messenger.js
+</code></pre>
+
+<h3>CSS</h3>
+
+<pre><code>messenger/build/css/messenger.css
+</code></pre>
+
+<h2>Really Quick Usage</h2>
+
+<div class="highlight"><pre>
+<span class="c1"># Replace:</span>
+<span class="nx">$</span><span class="p">.</span><span class="nx">ajax</span>
+    <span class="nv">url: </span><span class="s">"/some-url"</span>
+    <span class="nv">success: </span><span class="o">-&gt;</span>
+
+<span class="c1"># With:</span>
+<span class="nx">$</span><span class="p">.</span><span class="nx">globalMessenger</span><span class="p">().</span><span class="nx">do</span>
+    <span class="nv">errorMessage: </span><span class="s">"This did not go well."</span>
+<span class="p">,</span>
+    <span class="nv">url: </span><span class="s">"/some-url"</span>
+    <span class="nv">success: </span><span class="o">-&gt;</span>
+
+</pre></div>
+
+<h2>Usage</h2>
+
+<div class="highlight"><pre>
+<span class="nx">$</span><span class="p">.</span><span class="nx">globalMessenger</span><span class="p">().</span><span class="nx">post</span> <span class="s">"Your request has succeded!"</span>
+
+<span class="nx">$</span><span class="p">.</span><span class="nx">globalMessenger</span><span class="p">().</span><span class="nx">post</span>
+    <span class="nv">message: </span><span class="s">'There was an explosion while processing your request.'</span>
+    <span class="nv">type: </span><span class="s">'error'</span>
+
+<span class="nv">msg = </span><span class="nx">$</span><span class="p">.</span><span class="nx">globalMessenger</span><span class="p">().</span><span class="nx">post</span> <span class="s">"My Message"</span>
+<span class="nx">msg</span><span class="p">.</span><span class="nx">update</span> <span class="s">"I changed my mind, this is my message"</span>
+<span class="nx">msg</span><span class="p">.</span><span class="nx">hide</span><span class="p">()</span>
+
+<span class="c1"># Want to put actions at the end of your messages?</span>
+<span class="nv">msg = </span><span class="nx">$</span><span class="p">.</span><span class="nx">globalMessenger</span><span class="p">().</span><span class="nx">post</span>
+    <span class="nv">message: </span><span class="s">'Launching thermonuclear war...'</span>
+    <span class="nv">type: </span><span class="s">'info'</span>
+    <span class="nv">actions:</span>
+        <span class="nv">cancel:</span>
+            <span class="nv">label: </span><span class="s">'cancel launch'</span>
+            <span class="nv">action: </span><span class="o">-&gt;</span>
+                <span class="nx">msg</span><span class="p">.</span><span class="nx">update</span>
+                    <span class="nv">message: </span><span class="s">'Thermonuclear war averted'</span>
+                    <span class="nv">type: </span><span class="s">'success'</span>
+
+<span class="c1"># Have an error? How about auto retrys with a Gmail-style countdown?:</span>
+<span class="nv">msg = </span><span class="nx">$</span><span class="p">.</span><span class="nx">globalMessenger</span><span class="p">().</span><span class="nx">post</span>
+    <span class="nv">message: </span><span class="s">"I'm sorry Hal, I just can't do that."</span>
+    <span class="nv">actions:</span>
+        <span class="nv">retry:</span>
+            <span class="nv">label: </span><span class="s">'retry now'</span>
+            <span class="nv">phrase: </span><span class="s">'Retrying TIME'</span>
+            <span class="nv">auto: </span><span class="kc">true</span>
+            <span class="nv">delay: </span><span class="mi">10</span>
+            <span class="nv">action: </span><span class="o">-&gt;</span>
+                <span class="c1"># Do some retrying...</span>
+
+        <span class="nv">cancel:</span>
+            <span class="nv">action: </span><span class="o">-&gt;</span>
+                <span class="nx">do</span> <span class="nx">msg</span><span class="p">.</span><span class="nx">cancel</span>
+
+<span class="c1"># You can bind to action events as well:</span>
+<span class="nx">msg</span><span class="p">.</span><span class="kc">on</span> <span class="s">'action:retry'</span><span class="p">,</span> <span class="o">-&gt;</span>
+    <span class="nx">alert</span><span class="p">(</span><span class="s">'Hey, you retried!'</span><span class="p">)</span>
+
+<span class="c1"># Need more control? You can bind events backbone-style based on the type of message.</span>
+<span class="nx">msg</span><span class="p">.</span><span class="nx">update</span>
+    <span class="nv">events:</span>
+        <span class="s">'success click'</span><span class="o">:</span> <span class="o">-&gt;</span>
+            <span class="c1"># Will fire when the user clicks the message in a success state.</span>
+
+        <span class="s">'error click a.awesome-class'</span><span class="o">:</span> <span class="o">-&gt;</span>
+            <span class="c1"># Rock on</span>
+
+<span class="c1"># Need your message to hide after a while, or when the Backbone router changes the page?</span>
+<span class="nx">$</span><span class="p">.</span><span class="nx">globalMessenger</span><span class="p">().</span><span class="nx">post</span>
+    <span class="nv">message: </span><span class="s">"Weeeeee"</span>
+
+    <span class="nv">hideAfter: </span><span class="mi">10</span>
+    <span class="nv">hideOnNavigate: </span><span class="kc">true</span>
+
+<span class="c1"># Don't want your message hidden on a long page? (Not necessary if you're using the default</span>
+<span class="c1"># fixed positioning)</span>
+<span class="nv">msg = </span><span class="nx">$</span><span class="p">.</span><span class="nx">globalMessenger</span><span class="p">().</span><span class="nx">post</span>
+    <span class="nv">message: </span><span class="s">"You'll see me!"</span>
+
+    <span class="nv">scrollTo: </span><span class="kc">true</span>
+    <span class="c1"># Requires jQuery scrollTo plugin</span>
+
+<span class="nx">msg</span><span class="p">.</span><span class="nx">scrollTo</span><span class="p">()</span> <span class="c1"># also works</span>
+
+<span class="c1"># Lazy/smart? How about messenger does it all for you?  All the retry magic comes with.</span>
+<span class="nx">$</span><span class="p">.</span><span class="nx">globalMessenger</span><span class="p">().</span><span class="nx">do</span>
+    <span class="nv">successMessage: </span><span class="s">'Data saved.'</span>
+    <span class="nv">errorMessage: </span><span class="s">'Error saving data'</span>
+    <span class="nv">progressMessage: </span><span class="s">'Saving data'</span> <span class="c1"># Don't include messages you don't want to appear.</span>
+
+    <span class="c1"># Any standard message opts can go here</span>
+<span class="p">,</span>
+    <span class="c1"># All the standard jQuery ajax options here</span>
+
+    <span class="nv">url: </span><span class="s">'/data'</span>
+
+<span class="c1"># Need to override the messages based on the response?</span>
+<span class="nx">$</span><span class="p">.</span><span class="nx">globalMessenger</span><span class="p">().</span><span class="nx">do</span>
+    <span class="nv">errorMessage: </span><span class="s">'Oops'</span>
+<span class="p">,</span>
+    <span class="nv">url: </span><span class="s">'/data'</span>
+    <span class="nv">error: </span><span class="nf">(xhr) -&gt;</span>
+        <span class="c1"># Whatever you return from your handlers will replace the default messages</span>
+
+        <span class="k">if</span> <span class="nx">xhr</span><span class="o">?</span><span class="p">.</span><span class="nx">status</span> <span class="o">is</span> <span class="mi">404</span>
+            <span class="k">return</span> <span class="s">"Data not found"</span>
+
+        <span class="c1"># Return true or undefined for your predefined message</span>
+        <span class="c1"># Return false to not show any message</span>
+
+        <span class="k">return</span> <span class="kc">true</span>
+
+<span class="c1"># Sometimes you only want to show the success message when a retry succeeds, not if a retry wasen't required:</span>
+<span class="nx">$</span><span class="p">.</span><span class="nx">globalMessenger</span><span class="p">().</span><span class="nx">do</span>
+    <span class="nv">successMessage: </span><span class="s">'Successfully saved.'</span>
+    <span class="nv">errorMessage: </span><span class="s">'Error saving'</span>
+
+    <span class="nv">showSuccessWithoutError: </span><span class="kc">false</span>
+<span class="p">,</span>
+    <span class="nv">url: </span><span class="s">'/data'</span>
+
+<span class="c1"># You don't have to use $.ajax as your action, messenger works great for any async process:</span>
+<span class="nx">$</span><span class="p">.</span><span class="nx">globalMessenger</span><span class="p">().</span><span class="nx">do</span>
+    <span class="nv">successMessage: </span><span class="s">'Bomb defused successfully'</span>
+
+    <span class="nv">action: </span><span class="nx">defuseBomb</span>
+<span class="p">,</span>
+    <span class="c1"># You can put options for defuseBomb here</span>
+    <span class="c1"># It will be passed success and error callbacks</span>
+
+<span class="c1"># Need to hide all messages?</span>
+<span class="nx">$</span><span class="p">.</span><span class="nx">globalMessenger</span><span class="p">().</span><span class="nx">hideAll</span><span class="p">()</span>
+
+<span class="c1"># Do you use Backbone? Hook all backbone calls:</span>
+<span class="nx">$</span><span class="p">.</span><span class="nx">globalMessenger</span><span class="p">().</span><span class="nx">hookBackboneAjax</span><span class="p">()</span>
+
+<span class="c1"># You don't have to use the global messenger</span>
+<span class="nx">$</span><span class="p">(</span><span class="s">'div#message-container'</span><span class="p">).</span><span class="nx">messenger</span><span class="p">().</span><span class="nx">post</span> <span class="s">"My message"</span>
+
+<span class="c1"># By default, the global messenger will create an ActionMessenger instance fixed to the bottom-right</span>
+<span class="c1"># corner of the screen.  If there is already a messenger instance on the page, it will use that one.</span>
+
+<span class="c1"># Alternativly, pass {injectIntoPage: true} to globalMessenger to have a messenger instance injected into the page in a few likely</span>
+<span class="c1"># places.  This will only work if an instance has not yet been created.</span>
+
+<span class="nx">$</span><span class="p">.</span><span class="nx">globalMessenger</span><span class="p">({</span><span class="nv">injectIntoPage: </span><span class="kc">true</span><span class="p">})</span>
+
+<span class="c1"># All the options for globalMessenger and their defaults:</span>
+
+<span class="p">{</span>
+  <span class="s">'injectIntoPage'</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+  <span class="s">'fixedMessageClasses'</span><span class="o">:</span> <span class="s">'hs-fixed-message-box'</span><span class="p">,</span>
+  <span class="s">'injectedMessageClasses'</span><span class="o">:</span> <span class="s">'hs-message-box'</span><span class="p">,</span>
+  <span class="s">'injectionLocations'</span><span class="o">:</span> <span class="p">[</span><span class="s">'.row-content'</span><span class="p">,</span> <span class="s">'.left'</span><span class="p">,</span> <span class="s">'.page'</span><span class="p">,</span> <span class="s">'body'</span><span class="p">]</span>
+<span class="p">}</span>
+
+<span class="c1"># You can also use the views directly</span>
+<span class="nv">messenger = </span><span class="k">new</span> <span class="nx">ActionMessenger</span> <span class="nx">$</span><span class="p">(</span><span class="s">'div#message-container'</span><span class="p">)</span>
+<span class="nx">messenger</span><span class="p">.</span><span class="nx">post</span> <span class="s">"Yay!!!"</span>
+
+</pre></div>
+
+<h1>Contributing</h1>
+
+<p>You can build the output files by running <code>build.sh</code>.  It requires coffeescript, sass and handlebars.</p>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Messenger maintained by <a href="https://github.com/HubSpot">HubSpot</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>

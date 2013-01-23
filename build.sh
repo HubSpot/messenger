@@ -3,4 +3,4 @@ handlebars src/handlebars/messenger.handlebars > build/js/templates/messenger.js
 
 coffee -o build/js src/coffee
 
-sass --update src/sass:build/css
+compass compile . --sass-dir "src/sass" --css-dir "build/css" --javascripts-dir "build/js" --images-dir "build/images"

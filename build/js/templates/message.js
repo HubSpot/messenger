@@ -20,7 +20,11 @@ function program1(depth0,data) {
   buffer += "</a>\n            </span>\n        ";
   return buffer;}
 
-  buffer += "<div class=\"message hs-message ";
+  buffer += "<div class=\"message ";
+  foundHelper = helpers.type;
+  if (foundHelper) { stack1 = foundHelper.call(depth0, {hash:{}}); }
+  else { stack1 = depth0.type; stack1 = typeof stack1 === functionType ? stack1() : stack1; }
+  buffer += escapeExpression(stack1) + " alert alert-";
   foundHelper = helpers.type;
   if (foundHelper) { stack1 = foundHelper.call(depth0, {hash:{}}); }
   else { stack1 = depth0.type; stack1 = typeof stack1 === functionType ? stack1() : stack1; }
@@ -32,6 +36,6 @@ function program1(depth0,data) {
   stack1 = depth0.actions;
   stack1 = helpers.each.call(depth0, stack1, {hash:{},inverse:self.noop,fn:self.program(1, program1, data)});
   if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\n    </div>\n    <div style=\"clear:both\"></div>\n</div>\n";
+  buffer += "\n    </div>\n</div>\n";
   return buffer;});
 })();

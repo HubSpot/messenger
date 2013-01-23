@@ -26,7 +26,6 @@
     }
 
     Message.prototype.show = function() {
-      this.messenger.hideAll();
       this.render();
       this.$el.show();
       if (!this.shown) {
@@ -557,14 +556,18 @@
     }
   };
 
-  $.globalMessenger = function(injectIntoPage) {
-    var $el, $parent, choosen_loc, chosen_loc, inst, loc, locations, _i, _len;
-    if (injectIntoPage == null) {
-      injectIntoPage = false;
-    }
+  $.globalMessenger = function(opts) {
+    var $el, $parent, choosen_loc, chosen_loc, defaultOpts, inst, loc, locations, _i, _len;
     inst = $._messengerInstance;
-    if (injectIntoPage) {
-      locations = ['.row-content', '.left', '.page', 'body'];
+    defaultOpts = {
+      injectIntoPage: false,
+      injectionLocations: ['.row-content', '.left', '.page', 'body'],
+      injectedClasses: 'injected-messenger',
+      fixedClasses: 'fixed-messenger on-right'
+    };
+    opts = $.extend(defaultOpts, opts);
+    if (opts.injectIntoPage) {
+      locations = opts.injectionLocations;
       $parent = null;
       choosen_loc = null;
       for (_i = 0, _len = locations.length; _i < _len; _i++) {
@@ -577,6 +580,7 @@
       }
       if (!inst) {
         $el = $('<div>');
+        $el.addClass(opts.injectedClasses);
         $parent.prepend($el);
         inst = $el.messenger();
         inst._location = chosen_loc;
@@ -587,7 +591,7 @@
     } else {
       if (!inst) {
         $el = $('<div>');
-        $el.addClass('hs-fixed-message-box');
+        $el.addClass(opts.fixedClasses);
         $parent = $('body');
         $parent.append($el);
         inst = $el.messenger();

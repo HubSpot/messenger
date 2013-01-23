@@ -21,6 +21,7 @@
       this.opts = opts != null ? opts : {};
       this.shown = false;
       this.rendered = false;
+      this.events = {};
       this.opts = $.extend({}, this.defaults, this.opts);
       Message.__super__.constructor.apply(this, arguments);
     }

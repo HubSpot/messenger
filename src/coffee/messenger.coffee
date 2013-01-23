@@ -8,7 +8,8 @@ class Message extends Backbone.View
     constructor: (@messenger, @opts={}) ->
         @shown = false
         @rendered = false
-        
+        @events = {}
+
         @opts = $.extend {}, @defaults, @opts
 
         super

@@ -10,13 +10,31 @@
     <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/bootstrap/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" media="screen" href="build/css/messenger.css">
 
+    <style>
+      code[executable] {
+        cursor: pointer;
+      }
+      code[executable]:hover {
+        box-shadow: 0 1px 5px #BBB;
+      }
+    </style>
+
     <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
     <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.3/underscore-min.js"></script>
     <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/backbone.js/0.9.10/backbone-min.js"></script>
     <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.2.2/bootstrap.min.js"></script>
     <script type="text/javascript" src="build/js/messenger.js"></script>
 
+    <script type="text/coffeescript" src="javascripts/execute.coffee"></script>
+    
     <script type="text/javascript" src="javascripts/demo.js"></script>
+
+    <script type="text/javascript" src="http://github.com/jashkenas/coffee-script/raw/master/extras/coffee-script.js"></script>
+
+    <script type="text/coffeescript">
+      $ ->
+        $('body').executr()
+    </script>
 
     <title>Messenger</title>
   </head>
@@ -86,17 +104,18 @@ If you're not using Bootstrap: /build/css/no-bootstrap.css
 <h2>Usage</h2>
 
 <div class="highlight"><pre>
-<span class="nx">$</span><span class="p">.</span><span class="nx">globalMessenger</span><span class="p">().</span><span class="nx">post</span> <span class="s">"Your request has succeded!"</span>
-
-<span class="nx">$</span><span class="p">.</span><span class="nx">globalMessenger</span><span class="p">().</span><span class="nx">post</span>
+<code executable><span class="nx">$</span><span class="p">.</span><span class="nx">globalMessenger</span><span class="p">().</span><span class="nx">post</span> <span class="s">"Your request has succeded!"</span>
+</code>
+<code executable><span class="nx">$</span><span class="p">.</span><span class="nx">globalMessenger</span><span class="p">().</span><span class="nx">post</span>
     <span class="nv">message: </span><span class="s">'There was an explosion while processing your request.'</span>
     <span class="nv">type: </span><span class="s">'error'</span>
-
-<span class="nv">msg = </span><span class="nx">$</span><span class="p">.</span><span class="nx">globalMessenger</span><span class="p">().</span><span class="nx">post</span> <span class="s">"My Message"</span>
+</code>
+<code executable><span class="nv">msg = </span><span class="nx">$</span><span class="p">.</span><span class="nx">globalMessenger</span><span class="p">().</span><span class="nx">post</span> <span class="s">"My Message"</span>
 <span class="nx">msg</span><span class="p">.</span><span class="nx">update</span> <span class="s">"I changed my mind, this is my message"</span>
 <span class="nx">msg</span><span class="p">.</span><span class="nx">hide</span><span class="p">()</span>
-
+</code>
 <span class="c1"># Want to put actions at the end of your messages?</span>
+<code executable>
 <span class="nv">msg = </span><span class="nx">$</span><span class="p">.</span><span class="nx">globalMessenger</span><span class="p">().</span><span class="nx">post</span>
     <span class="nv">message: </span><span class="s">'Launching thermonuclear war...'</span>
     <span class="nv">type: </span><span class="s">'info'</span>
@@ -107,9 +126,9 @@ If you're not using Bootstrap: /build/css/no-bootstrap.css
                 <span class="nx">msg</span><span class="p">.</span><span class="nx">update</span>
                     <span class="nv">message: </span><span class="s">'Thermonuclear war averted'</span>
                     <span class="nv">type: </span><span class="s">'success'</span>
-
+</code>
 <span class="c1"># Have an error? How about auto retrys with a Gmail-style countdown?:</span>
-<span class="nv">msg = </span><span class="nx">$</span><span class="p">.</span><span class="nx">globalMessenger</span><span class="p">().</span><span class="nx">post</span>
+<code executable><span class="nv">msg = </span><span class="nx">$</span><span class="p">.</span><span class="nx">globalMessenger</span><span class="p">().</span><span class="nx">post</span>
     <span class="nv">message: </span><span class="s">"I'm sorry Hal, I just can't do that."</span>
     <span class="nv">actions:</span>
         <span class="nv">retry:</span>
@@ -123,39 +142,38 @@ If you're not using Bootstrap: /build/css/no-bootstrap.css
         <span class="nv">cancel:</span>
             <span class="nv">action: </span><span class="o">-&gt;</span>
                 <span class="nx">do</span> <span class="nx">msg</span><span class="p">.</span><span class="nx">cancel</span>
-
-<span class="c1"># You can bind to action events as well:</span>
+</code><code executable><span class="c1"># You can bind to action events as well:</span>
 <span class="nx">msg</span><span class="p">.</span><span class="kc">on</span> <span class="s">'action:retry'</span><span class="p">,</span> <span class="o">-&gt;</span>
     <span class="nx">alert</span><span class="p">(</span><span class="s">'Hey, you retried!'</span><span class="p">)</span>
-
+</code>
 <span class="c1"># Need more control? You can bind events backbone-style based on the type of message.</span>
-<span class="nx">msg</span><span class="p">.</span><span class="nx">update</span>
+<code executable><span class="nx">msg</span><span class="p">.</span><span class="nx">update</span>
     <span class="nv">events:</span>
         <span class="s">'success click'</span><span class="o">:</span> <span class="o">-&gt;</span>
             <span class="c1"># Will fire when the user clicks the message in a success state.</span>
 
         <span class="s">'error click a.awesome-class'</span><span class="o">:</span> <span class="o">-&gt;</span>
             <span class="c1"># Rock on</span>
-
+</code>
 <span class="c1"># Need your message to hide after a while, or when the Backbone router changes the page?</span>
-<span class="nx">$</span><span class="p">.</span><span class="nx">globalMessenger</span><span class="p">().</span><span class="nx">post</span>
+<code executable><span class="nx">$</span><span class="p">.</span><span class="nx">globalMessenger</span><span class="p">().</span><span class="nx">post</span>
     <span class="nv">message: </span><span class="s">"Weeeeee"</span>
 
     <span class="nv">hideAfter: </span><span class="mi">10</span>
     <span class="nv">hideOnNavigate: </span><span class="kc">true</span>
-
+</code>
 <span class="c1"># Don't want your message hidden on a long page? (Not necessary if you're using the default</span>
 <span class="c1"># fixed positioning)</span>
-<span class="nv">msg = </span><span class="nx">$</span><span class="p">.</span><span class="nx">globalMessenger</span><span class="p">().</span><span class="nx">post</span>
+<code executable><span class="nv">msg = </span><span class="nx">$</span><span class="p">.</span><span class="nx">globalMessenger</span><span class="p">().</span><span class="nx">post</span>
     <span class="nv">message: </span><span class="s">"You'll see me!"</span>
 
     <span class="nv">scrollTo: </span><span class="kc">true</span>
     <span class="c1"># Requires jQuery scrollTo plugin</span>
-
-<span class="nx">msg</span><span class="p">.</span><span class="nx">scrollTo</span><span class="p">()</span> <span class="c1"># also works</span>
-
+</code>
+<code executable><span class="nx">msg</span><span class="p">.</span><span class="nx">scrollTo</span><span class="p">()</span> <span class="c1"># also works</span>
+</code>
 <span class="c1"># Lazy/smart? How about messenger does it all for you?  All the retry magic comes with.</span>
-<span class="nx">$</span><span class="p">.</span><span class="nx">globalMessenger</span><span class="p">().</span><span class="nx">do</span>
+<code executable><span class="nx">$</span><span class="p">.</span><span class="nx">globalMessenger</span><span class="p">().</span><span class="nx">do</span>
     <span class="nv">successMessage: </span><span class="s">'Data saved.'</span>
     <span class="nv">errorMessage: </span><span class="s">'Error saving data'</span>
     <span class="nv">progressMessage: </span><span class="s">'Saving data'</span> <span class="c1"># Don't include messages you don't want to appear.</span>
@@ -165,9 +183,9 @@ If you're not using Bootstrap: /build/css/no-bootstrap.css
     <span class="c1"># All the standard jQuery ajax options here</span>
 
     <span class="nv">url: </span><span class="s">'/data'</span>
-
+</code>
 <span class="c1"># Need to override the messages based on the response?</span>
-<span class="nx">$</span><span class="p">.</span><span class="nx">globalMessenger</span><span class="p">().</span><span class="nx">do</span>
+<code executable><span class="nx">$</span><span class="p">.</span><span class="nx">globalMessenger</span><span class="p">().</span><span class="nx">do</span>
     <span class="nv">errorMessage: </span><span class="s">'Oops'</span>
 <span class="p">,</span>
     <span class="nv">url: </span><span class="s">'/data'</span>
@@ -181,28 +199,28 @@ If you're not using Bootstrap: /build/css/no-bootstrap.css
         <span class="c1"># Return false to not show any message</span>
 
         <span class="k">return</span> <span class="kc">true</span>
-
+</code>
 <span class="c1"># Sometimes you only want to show the success message when a retry succeeds, not if a retry wasen't required:</span>
-<span class="nx">$</span><span class="p">.</span><span class="nx">globalMessenger</span><span class="p">().</span><span class="nx">do</span>
+<code executable><span class="nx">$</span><span class="p">.</span><span class="nx">globalMessenger</span><span class="p">().</span><span class="nx">do</span>
     <span class="nv">successMessage: </span><span class="s">'Successfully saved.'</span>
     <span class="nv">errorMessage: </span><span class="s">'Error saving'</span>
 
     <span class="nv">showSuccessWithoutError: </span><span class="kc">false</span>
 <span class="p">,</span>
     <span class="nv">url: </span><span class="s">'/data'</span>
-
+</code>
 <span class="c1"># You don't have to use $.ajax as your action, messenger works great for any async process:</span>
-<span class="nx">$</span><span class="p">.</span><span class="nx">globalMessenger</span><span class="p">().</span><span class="nx">do</span>
+<code executable><span class="nx">$</span><span class="p">.</span><span class="nx">globalMessenger</span><span class="p">().</span><span class="nx">do</span>
     <span class="nv">successMessage: </span><span class="s">'Bomb defused successfully'</span>
 
     <span class="nv">action: </span><span class="nx">defuseBomb</span>
 <span class="p">,</span>
     <span class="c1"># You can put options for defuseBomb here</span>
     <span class="c1"># It will be passed success and error callbacks</span>
-
+</code>
 <span class="c1"># Need to hide all messages?</span>
-<span class="nx">$</span><span class="p">.</span><span class="nx">globalMessenger</span><span class="p">().</span><span class="nx">hideAll</span><span class="p">()</span>
-
+<code executable><span class="nx">$</span><span class="p">.</span><span class="nx">globalMessenger</span><span class="p">().</span><span class="nx">hideAll</span><span class="p">()</span>
+</code>
 <span class="c1"># Do you use Backbone? Hook all backbone calls:</span>
 <span class="nx">$</span><span class="p">.</span><span class="nx">globalMessenger</span><span class="p">().</span><span class="nx">hookBackboneAjax</span><span class="p">()</span>
 

@@ -27,19 +27,23 @@
 
     Message.prototype.show = function() {
       this.render();
-      this.$el.show();
+      this.$message.show();
+      this.shown = true;
       if (!this.shown) {
-        this.trigger('show');
+        return this.trigger('show');
       }
-      return this.shown = true;
     };
 
     Message.prototype.hide = function() {
-      this.$el.hide();
+      this.$message.hide();
+      this.shown = false;
       if (this.shown) {
-        this.trigger('hide');
+        return this.trigger('hide');
       }
-      return this.shown = false;
+    };
+
+    Message.prototype.cancel = function() {
+      return this.hide();
     };
 
     Message.prototype.update = function(opts) {
@@ -146,10 +150,15 @@
     };
 
     Message.prototype.template = function(opts) {
-      var $action, $actions, $cancel, $link, $message, $text, action, _i, _len, _ref;
+      var $action, $actions, $cancel, $link, $message, $text, action, _i, _len, _ref,
+        _this = this;
       $message = $("<div class='message alert " + opts.type + " alert-" + opts.type + "'>");
       if (opts.showCloseButton) {
         $cancel = $('<button type="button" class="close" data-dismiss="alert">&times;</button>');
+        $cancel.click(function() {
+          _this.cancel();
+          return true;
+        });
         $message.append($cancel);
       }
       $text = $("<div>" + opts.message + "</div>");
@@ -183,9 +192,11 @@
       opts = $.extend({}, this.opts, {
         actions: this.parseActions()
       });
-      this.$el.addClass("" + opts.type + " alert-" + opts.type);
-      this.$el.html(this.template(opts));
-      return this.rendered = true;
+      this.$message = $(this.template(opts));
+      this.$el.html(this.$message);
+      this.shown = true;
+      this.rendered = true;
+      return this.trigger('render');
     };
 
     return Message;
@@ -301,8 +312,8 @@
     }
 
     Messenger.prototype.findById = function(id) {
-      return _.filter(this.history, function(msg) {
-        return msg.opts.id === id;
+      return _.filter(this.history, function(rec) {
+        return rec.msg.opts.id === id;
       });
     };
 
@@ -313,9 +324,13 @@
 
     Messenger.prototype._reserveMessageSlot = function(msg) {
       var $slot;
-      this.history.push(msg);
       $slot = $('<div></div>');
+      $slot.addClass('message-slot');
       this.$el.prepend($slot);
+      this.history.push({
+        msg: msg,
+        $slot: $slot
+      });
       return $slot;
     };
 
@@ -327,20 +342,43 @@
       }
       msg = new MagicMessage(this, opts);
       msg.on('show', function() {
-        if (_this.$rootEl.css('position') !== 'fixed') {
+        if (opts.scrollTo && _this.$rootEl.css('position') !== 'fixed') {
           return msg.scrollTo();
         }
       });
+      msg.on('hide show render', this.updateMessageSlotClasses, this);
       return msg;
     };
 
+    Messenger.prototype.updateMessageSlotClasses = function() {
+      var last, rec, willBeFirst, _i, _len, _ref;
+      willBeFirst = true;
+      last = null;
+      _ref = this.history;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        rec = _ref[_i];
+        rec.$slot.removeClass('first last has-message');
+        if (rec.msg.shown && rec.msg.rendered) {
+          rec.$slot.addClass('has-message');
+          last = rec;
+          if (willBeFirst) {
+            willBeFirst = false;
+            rec.$slot.addClass('first');
+          }
+        }
+      }
+      if (last != null) {
+        return last.$slot.addClass('last');
+      }
+    };
+
     Messenger.prototype.hideAll = function() {
-      var msg, _i, _len, _ref, _results;
+      var rec, _i, _len, _ref, _results;
       _ref = this.history;
       _results = [];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        msg = _ref[_i];
-        _results.push(msg.hide());
+        rec = _ref[_i];
+        _results.push(rec.msg.hide());
       }
       return _results;
     };
@@ -405,12 +443,14 @@
         return Backbone.ajax = _ajax;
       } else {
         _old_sync = Backbone.sync;
-        return Backbone.sync = function() {
-          var args, _old_ajax;
-          args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+        return Backbone.sync = function(method, model, options) {
+          var _old_ajax;
           _old_ajax = $.ajax;
           $.ajax = _ajax;
-          _old_sync.call.apply(_old_sync, [Backbone].concat(__slice.call(args)));
+          if (options.messenger != null) {
+            _.extend(msgr_opts, options.messenger);
+          }
+          _old_sync.call(Backbone, method, model, options);
           return $.ajax = _old_ajax;
         };
       }

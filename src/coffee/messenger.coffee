@@ -16,19 +16,22 @@ class Message extends Backbone.View
     show: ->
         do @render
 
-        @$el.show()
-
-        @trigger('show') unless @shown
+        @$message.show()
 
         @shown = true
 
+        @trigger('show') unless @shown
+
 
     hide: ->
-        @$el.hide()
-
-        @trigger('hide') if @shown
+        @$message.hide()
 
         @shown = false
+        
+        @trigger('hide') if @shown
+
+    cancel: ->
+        do @hide
 
     update: (opts) ->
         $.extend(@opts, opts)
@@ -109,7 +112,7 @@ class Message extends Backbone.View
         if opts.showCloseButton
             $cancel = $ '<button type="button" class="close" data-dismiss="alert">&times;</button>'
             $cancel.click =>
-              do (@cancel ? @hide)
+              do @cancel
 
               true
 
@@ -148,10 +151,13 @@ class Message extends Backbone.View
         opts = $.extend {}, @opts,
             actions: do @parseActions
 
-        @$el.addClass "#{ opts.type } alert-#{ opts.type }"
-        @$el.html @template opts
+        @$message = $ @template opts
+        @$el.html @$message
 
+        @shown = true
         @rendered = true
+
+        @trigger 'render'
 
 class MagicMessage extends Message
     constructor: ->
@@ -234,8 +240,8 @@ class Messenger
         do @render
 
     findById: (id) ->
-        _.filter @history, (msg) ->
-            msg.opts.id == id
+        _.filter @history, (rec) ->
+            rec.msg.opts.id == id
 
     render: ->
         @$rootEl.html '<div class="messenger"></div>'
@@ -243,23 +249,46 @@ class Messenger
         @$el = @$rootEl.find('.messenger')
 
     _reserveMessageSlot: (msg) ->
-        @history.push msg
-
         $slot = $('<div></div>')
+        $slot.addClass 'message-slot'
         @$el.prepend $slot
+
+        @history.push {msg, $slot}
 
         return $slot
 
     newMessage: (opts={}) ->
         msg = new MagicMessage(@, opts)
         msg.on 'show', =>
-            do msg.scrollTo unless @$rootEl.css('position') is 'fixed'
+            if opts.scrollTo and @$rootEl.css('position') isnt 'fixed'
+                do msg.scrollTo
+
+        msg.on 'hide show render', @updateMessageSlotClasses, @
 
         msg
 
+    updateMessageSlotClasses: ->
+        willBeFirst = true
+        last = null
+
+        for rec in @history
+            rec.$slot.removeClass 'first last has-message'
+
+            if rec.msg.shown and rec.msg.rendered
+                rec.$slot.addClass 'has-message'
+
+                last = rec
+                if willBeFirst
+                    willBeFirst = false
+                    rec.$slot.addClass 'first'
+
+        if last?
+            last.$slot.addClass 'last'
+            
+
     hideAll: ->
-        for msg in @history
-            msg.hide()
+        for rec in @history
+            rec.msg.hide()
 
     post: (opts) ->
         if _.isString opts
@@ -306,11 +335,14 @@ class ActionMessenger extends Messenger
             Backbone.ajax = _ajax
         else
             _old_sync = Backbone.sync
-            Backbone.sync = (args...) ->
+            Backbone.sync = (method, model, options) ->
                 _old_ajax = $.ajax
                 $.ajax = _ajax
 
-                _old_sync.call(Backbone, args...)
+                if options.messenger?
+                    _.extend msgr_opts, options.messenger
+
+                _old_sync.call(Backbone, method, model, options)
 
                 $.ajax = _old_ajax
 

@@ -217,6 +217,8 @@ If you're not using Bootstrap: /build/css/no-bootstrap.css
 </code>
 <span class="c1"># Do you use Backbone? Hook all backbone calls:</span>
 <span class="nx">$</span><span class="p">.</span><span class="nx">globalMessenger</span><span class="p">().</span><span class="nx">hookBackboneAjax</span><span class="p">()</span>
+<span class="c1"># By default, there will be no error message, return an error message from your backbone error handler, or add an errorMessage to the messenger opts to set one.</span>
+<span class="c1"># You can override these options by passing them into hookBackboneAjax, or adding a {'messenger': } hash to your fetch call.</span>
 
 <span class="c1"># You don't have to use the global messenger</span>
 <span class="nx">$</span><span class="p">(</span><span class="s">'div#message-container'</span><span class="p">).</span><span class="nx">messenger</span><span class="p">().</span><span class="nx">post</span> <span class="s">"My message"</span>

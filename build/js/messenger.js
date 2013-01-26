@@ -11,33 +11,42 @@
 
     __extends(Message, _super);
 
+    function Message() {
+      return Message.__super__.constructor.apply(this, arguments);
+    }
+
     Message.prototype.defaults = {
       hideAfter: 10,
       scroll: true
     };
 
-    function Message(messenger, opts) {
-      this.messenger = messenger;
-      this.opts = opts != null ? opts : {};
+    Message.prototype.initialize = function(opts) {
+      if (opts == null) {
+        opts = {};
+      }
       this.shown = false;
       this.rendered = false;
-      this.opts = $.extend({}, this.defaults, this.opts);
-      Message.__super__.constructor.apply(this, arguments);
-    }
+      this.messenger = opts.messenger;
+      return this.options = $.extend({}, this.options, opts, this.defaults);
+    };
 
     Message.prototype.show = function() {
+      var wasShown;
       this.render();
       this.$message.show();
+      wasShown = this.shown;
       this.shown = true;
-      if (!this.shown) {
+      if (!wasShown) {
         return this.trigger('show');
       }
     };
 
     Message.prototype.hide = function() {
+      var wasShown;
       this.$message.hide();
+      wasShown = this.shown;
       this.shown = false;
-      if (this.shown) {
+      if (wasShown) {
         return this.trigger('hide');
       }
     };
@@ -49,23 +58,23 @@
     Message.prototype.update = function(opts) {
       var _ref,
         _this = this;
-      $.extend(this.opts, opts);
+      $.extend(this.options, opts);
       this.lastUpdate = new Date();
       this.rendered = false;
-      this.events = (_ref = this.opts.events) != null ? _ref : {};
+      this.events = (_ref = this.options.events) != null ? _ref : {};
       this.render();
       this.actionsToEvents();
       this.delegateEvents();
       this.checkClickable();
-      if (this.opts.hideAfter) {
+      if (this.options.hideAfter) {
         if (this._hideTimeout != null) {
           clearTimeout(this._hideTimeout);
         }
         this._hideTimeout = setTimeout(function() {
           return _this.hide();
-        }, this.opts.hideAfter * 1000);
+        }, this.options.hideAfter * 1000);
       }
-      if (this.opts.hideOnNavigate) {
+      if (this.options.hideOnNavigate) {
         if (Backbone.history != null) {
           return Backbone.history.on('route', function() {
             return _this.hide();
@@ -75,7 +84,7 @@
     };
 
     Message.prototype.scrollTo = function() {
-      if (!this.opts.scroll) {
+      if (!this.options.scroll) {
         return;
       }
       return $.scrollTo(this.$el, {
@@ -97,11 +106,11 @@
 
     Message.prototype.actionsToEvents = function() {
       var act, name, _ref, _results;
-      _ref = this.opts.actions;
+      _ref = this.options.actions;
       _results = [];
       for (name in _ref) {
         act = _ref[name];
-        _results.push(this.events["click a[href=#" + name + "]"] = (function(act) {
+        _results.push(this.events["click a[data-action=\"" + name + "\"]"] = (function(act) {
           var _this = this;
           return function(e) {
             e.preventDefault();
@@ -136,7 +145,7 @@
     Message.prototype.parseActions = function() {
       var act, actions, n_act, name, _ref, _ref1, _ref2;
       actions = [];
-      _ref1 = (_ref = this.opts.actions) != null ? _ref : [];
+      _ref1 = (_ref = this.options.actions) != null ? _ref : [];
       for (name in _ref1) {
         act = _ref1[name];
         n_act = $.extend({}, act);
@@ -168,9 +177,8 @@
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         action = _ref[_i];
         $action = $('<span>');
-        $action.attr('data-action', action.name);
         $link = $('<a>');
-        $link.attr('href', "#" + action.name);
+        $link.attr('data-action', "" + action.name);
         $link.html(action.label);
         $action.append($('<span class="phrase">'));
         $action.append($link);
@@ -189,7 +197,7 @@
         this.setElement(this.messenger._reserveMessageSlot(this));
         this._hasSlot = true;
       }
-      opts = $.extend({}, this.opts, {
+      opts = $.extend({}, this.options, {
         actions: this.parseActions()
       });
       this.$message = $(this.template(opts));
@@ -208,9 +216,13 @@
     __extends(MagicMessage, _super);
 
     function MagicMessage() {
-      MagicMessage.__super__.constructor.apply(this, arguments);
-      this._timers = {};
+      return MagicMessage.__super__.constructor.apply(this, arguments);
     }
+
+    MagicMessage.prototype.initialize = function() {
+      MagicMessage.__super__.initialize.apply(this, arguments);
+      return this._timers = {};
+    };
 
     MagicMessage.prototype.cancel = function() {
       this.clearTimers();
@@ -235,7 +247,7 @@
       var action, name, _ref, _results;
       MagicMessage.__super__.render.apply(this, arguments);
       this.clearTimers();
-      _ref = this.opts.actions;
+      _ref = this.options.actions;
       _results = [];
       for (name in _ref) {
         action = _ref[name];
@@ -299,32 +311,33 @@
 
   })(Message);
 
-  Messenger = (function() {
+  Messenger = (function(_super) {
+
+    __extends(Messenger, _super);
+
+    function Messenger() {
+      return Messenger.__super__.constructor.apply(this, arguments);
+    }
+
+    Messenger.prototype.tagName = 'ul';
 
     Messenger.prototype.OPT_DEFAULTS = {
       type: 'info'
     };
 
-    function Messenger($rootEl) {
-      this.$rootEl = $rootEl;
-      this.history = [];
-      this.render();
-    }
+    Messenger.prototype.initialize = function(options) {
+      return this.history = [];
+    };
 
     Messenger.prototype.findById = function(id) {
       return _.filter(this.history, function(rec) {
-        return rec.msg.opts.id === id;
+        return rec.msg.options.id === id;
       });
-    };
-
-    Messenger.prototype.render = function() {
-      this.$rootEl.html('<div class="messenger"></div>');
-      return this.$el = this.$rootEl.find('.messenger');
     };
 
     Messenger.prototype._reserveMessageSlot = function(msg) {
       var $slot;
-      $slot = $('<div></div>');
+      $slot = $('<li>');
       $slot.addClass('message-slot');
       this.$el.prepend($slot);
       this.history.push({
@@ -340,9 +353,10 @@
       if (opts == null) {
         opts = {};
       }
-      msg = new MagicMessage(this, opts);
+      opts.messenger = this;
+      msg = new MagicMessage(opts);
       msg.on('show', function() {
-        if (opts.scrollTo && _this.$rootEl.css('position') !== 'fixed') {
+        if (opts.scrollTo && _this.$el.css('position') !== 'fixed') {
           return msg.scrollTo();
         }
       });
@@ -357,9 +371,9 @@
       _ref = this.history;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         rec = _ref[_i];
-        rec.$slot.removeClass('first last has-message');
+        rec.$slot.removeClass('first last shown');
         if (rec.msg.shown && rec.msg.rendered) {
-          rec.$slot.addClass('has-message');
+          rec.$slot.addClass('shown');
           last = rec;
           if (willBeFirst) {
             willBeFirst = false;
@@ -399,7 +413,7 @@
 
     return Messenger;
 
-  })();
+  })(Backbone.View);
 
   ActionMessenger = (function(_super) {
 
@@ -615,7 +629,9 @@
     $el = this;
     if (!(func != null)) {
       if (!($el.data('messenger') != null)) {
-        $el.data('messenger', new ActionMessenger($el));
+        $el.data('messenger', new ActionMessenger({
+          el: $el
+        }));
         $._messengerInstance = $el.data('messenger');
       }
       return $el.data('messenger');
@@ -628,44 +644,31 @@
     var $el, $parent, choosen_loc, chosen_loc, defaultOpts, inst, loc, locations, _i, _len;
     inst = $._messengerInstance;
     defaultOpts = {
-      injectIntoPage: false,
-      injectionLocations: ['.row-content', '.left', '.page', 'body'],
-      injectedClasses: 'injected-messenger',
-      fixedClasses: 'fixed-messenger on-right'
+      extraClasses: 'fixed-messenger on-bottom on-right',
+      parentLocations: ['body']
     };
     opts = $.extend(defaultOpts, opts);
-    if (opts.injectIntoPage) {
-      locations = opts.injectionLocations;
-      $parent = null;
-      choosen_loc = null;
-      for (_i = 0, _len = locations.length; _i < _len; _i++) {
-        loc = locations[_i];
-        $parent = $(loc);
-        if ($parent.length) {
-          chosen_loc = loc;
-          break;
-        }
-      }
-      if (!inst) {
-        $el = $('<div>');
-        $el.addClass(opts.injectedClasses);
-        $parent.prepend($el);
-        inst = $el.messenger();
-        inst._location = chosen_loc;
-      } else if ($(inst._location) !== $(chosen_loc)) {
-        inst.$el.detach();
-        $parent.prepend(inst.$el);
-      }
-    } else {
-      if (!inst) {
-        $el = $('<div>');
-        $el.addClass(opts.fixedClasses);
-        $parent = $('body');
-        $parent.append($el);
-        inst = $el.messenger();
-        inst._location = $parent;
+    locations = opts.parentLocations;
+    $parent = null;
+    choosen_loc = null;
+    for (_i = 0, _len = locations.length; _i < _len; _i++) {
+      loc = locations[_i];
+      $parent = $(loc);
+      if ($parent.length) {
+        chosen_loc = loc;
+        break;
       }
     }
+    if (!inst) {
+      $el = $('<ul>');
+      $parent.prepend($el);
+      inst = $el.messenger();
+      inst._location = chosen_loc;
+    } else if ($(inst._location) !== $(chosen_loc)) {
+      inst.$el.detach();
+      $parent.prepend(inst.$el);
+    }
+    inst.$el.attr('class', "messenger " + opts.extraClasses);
     return inst;
   };
 

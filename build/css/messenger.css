@@ -1,51 +1,111 @@
 /* line 4, ../../src/sass/messenger.sass */
-.messenger .message {
+ul.messenger {
+  margin: 0;
+  padding: 0;
+}
+/* line 8, ../../src/sass/messenger.sass */
+ul.messenger li {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+/* line 14, ../../src/sass/messenger.sass */
+ul.messenger .message {
   overflow: hidden;
   *zoom: 1;
 }
-/* line 7, ../../src/sass/messenger.sass */
-.messenger .message .phrase, .messenger .message .actions a {
+/* line 17, ../../src/sass/messenger.sass */
+ul.messenger .message .phrase, ul.messenger .message .actions a {
   padding-right: 5px;
 }
-/* line 10, ../../src/sass/messenger.sass */
-.messenger .message .actions {
+/* line 20, ../../src/sass/messenger.sass */
+ul.messenger .message .actions {
   float: right;
 }
-/* line 13, ../../src/sass/messenger.sass */
-.messenger .message .actions a {
+/* line 23, ../../src/sass/messenger.sass */
+ul.messenger .message .actions a {
   text-decoration: underline;
 }
 
-/* line 16, ../../src/sass/messenger.sass */
+/* line 26, ../../src/sass/messenger.sass */
 .fixed-messenger {
   position: fixed;
   z-index: 10000;
 }
-/* line 20, ../../src/sass/messenger.sass */
-.fixed-messenger .messenger {
-  max-width: 800px;
-  margin: 0 auto;
-}
-/* line 24, ../../src/sass/messenger.sass */
+/* line 30, ../../src/sass/messenger.sass */
 .fixed-messenger .message {
   min-width: 0;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
-/* line 29, ../../src/sass/messenger.sass */
+/* line 35, ../../src/sass/messenger.sass */
 .fixed-messenger .message .actions {
   float: left;
 }
-/* line 32, ../../src/sass/messenger.sass */
-.fixed-messenger.on-right {
-  right: 20px;
+/* line 38, ../../src/sass/messenger.sass */
+.fixed-messenger.on-top, .fixed-messenger.on-bottom {
+  left: 10%;
+  /* 800px or 80%, whichever is narrower */
+  width: 80%;
+}
+/* line 44, ../../src/sass/messenger.sass */
+.fixed-messenger.on-top .message-slot, .fixed-messenger.on-bottom .message-slot {
+  margin: 0 auto;
+  max-width: 800px;
+}
+/* line 48, ../../src/sass/messenger.sass */
+.fixed-messenger.on-top {
+  top: 20px;
+}
+/* line 51, ../../src/sass/messenger.sass */
+.fixed-messenger.on-bottom {
+  bottom: 20px;
+}
+/* line 54, ../../src/sass/messenger.sass */
+.fixed-messenger.on-right, .fixed-messenger.on-left {
   bottom: 5px;
   width: 350px;
 }
-/* line 38, ../../src/sass/messenger.sass */
-.fixed-messenger.on-top {
-  left: 10%;
-  top: 20px;
-  width: 80%;
+/* line 59, ../../src/sass/messenger.sass */
+.fixed-messenger.on-right {
+  right: 20px;
+  left: auto;
+}
+/* line 63, ../../src/sass/messenger.sass */
+.fixed-messenger.on-left {
+  left: 20px;
+}
+
+/* line 66, ../../src/sass/messenger.sass */
+.messenger.block-theme {
+  width: 100%;
+  top: 0;
+  left: 0;
+}
+/* line 71, ../../src/sass/messenger.sass */
+.messenger.block-theme.on-bottom {
+  top: auto;
+  bottom: 0;
+}
+/* line 75, ../../src/sass/messenger.sass */
+.messenger.block-theme.on-right, .messenger.block-theme.on-left {
+  width: 350px;
+}
+/* line 78, ../../src/sass/messenger.sass */
+.messenger.block-theme.on-right {
+  left: auto;
+  right: 0;
+}
+/* line 82, ../../src/sass/messenger.sass */
+.messenger.block-theme .message-slot {
+  max-width: none;
+}
+/* line 85, ../../src/sass/messenger.sass */
+.messenger.block-theme .message {
+  margin-bottom: 0;
+  text-align: center;
+  padding: 1em;
+  font-size: 120%;
+  border-radius: 0;
 }

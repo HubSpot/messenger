@@ -1,25 +1,31 @@
 @import "compass/utilities/general/clearfix"
 @import "compass/css3/box-sizing"
 
-.messenger .message
-  +clearfix
+ul.messenger
+  margin: 0
+  padding: 0
 
-  .phrase, .actions a
-    padding-right: 5px
+  li
+    list-style: none
 
-  .actions
-    float: right
+    margin: 0
+    padding: 0
 
-    a
-      text-decoration: underline
+  .message
+    +clearfix
+
+    .phrase, .actions a
+      padding-right: 5px
+
+    .actions
+      float: right
+
+      a
+        text-decoration: underline
 
 .fixed-messenger
   position: fixed
   z-index: 10000
-
-  .messenger
-    max-width: 800px
-    margin: 0 auto
 
   .message
     min-width: 0
@@ -29,14 +35,57 @@
   .message .actions
     float: left
 
-  &.on-right
-    right: 20px
-    bottom: 5px
-
-    width: 350px
+  &.on-top, &.on-bottom
+    left: 10%
+    
+    /* 800px or 80%, whichever is narrower */
+    width: 80% 
+  
+    .message-slot
+      margin: 0 auto
+      max-width: 800px
 
   &.on-top
-    left: 10%
     top: 20px
     
-    width: 80%
+  &.on-bottom
+    bottom: 20px
+    
+  &.on-right, &.on-left
+    bottom: 5px
+  
+    width: 350px
+
+  &.on-right
+    right: 20px
+    left: auto
+
+  &.on-left
+    left: 20px
+
+.messenger.block-theme
+  width: 100%
+  top: 0
+  left: 0
+
+  &.on-bottom
+    top: auto
+    bottom: 0
+
+  &.on-right, &.on-left
+    width: 350px
+
+  &.on-right
+    left: auto
+    right: 0
+
+  .message-slot
+    max-width: none
+
+  .message
+    margin-bottom: 0
+
+    text-align: center
+    padding: 1em
+    font-size: 120%
+    border-radius: 0

@@ -5,42 +5,43 @@ class Message extends Backbone.View
         hideAfter: 10
         scroll: true
 
-    constructor: (@messenger, @opts={}) ->
+    initialize: (opts={}) ->
         @shown = false
         @rendered = false
 
-        @opts = $.extend {}, @defaults, @opts
+        @messenger = opts.messenger
 
-        super
+        @options = $.extend {}, @options, opts, @defaults
 
     show: ->
         do @render
 
         @$message.show()
 
+        wasShown = @shown
         @shown = true
 
-        @trigger('show') unless @shown
-
+        @trigger('show') unless wasShown
 
     hide: ->
         @$message.hide()
 
+        wasShown = @shown
         @shown = false
-        
-        @trigger('hide') if @shown
+      
+        @trigger('hide') if wasShown
 
     cancel: ->
         do @hide
 
     update: (opts) ->
-        $.extend(@opts, opts)
+        $.extend(@options, opts)
 
         @lastUpdate = new Date()
         
         @rendered = false
        
-        @events = @opts.events ? {}
+        @events = @options.events ? {}
 
         do @render
 
@@ -49,21 +50,21 @@ class Message extends Backbone.View
 
         do @checkClickable
 
-        if @opts.hideAfter
+        if @options.hideAfter
             if @_hideTimeout?
                 clearTimeout @_hideTimeout
 
             @_hideTimeout = setTimeout =>
                 do @hide
-            , @opts.hideAfter * 1000
+            , @options.hideAfter * 1000
 
-        if @opts.hideOnNavigate
+        if @options.hideOnNavigate
             if Backbone.history?
                 Backbone.history.on 'route', =>
                     do @hide
 
     scrollTo: ->
-        return unless @opts.scroll
+        return unless @options.scroll
 
         $.scrollTo @$el,
             duration: 400
@@ -75,8 +76,8 @@ class Message extends Backbone.View
         return if @lastUpdate then ((new Date) - @lastUpdate) else null
 
     actionsToEvents: ->
-        for name, act of @opts.actions
-            @events["click a[href=##{ name }]"] = ((act) ->
+        for name, act of @options.actions
+            @events["click a[data-action=\"#{ name }\"]"] = ((act) ->
                 return (e) =>
                     do e.preventDefault
                     do e.stopPropagation
@@ -97,7 +98,7 @@ class Message extends Backbone.View
     parseActions: ->
         actions = []
 
-        for name, act of @opts.actions ? []
+        for name, act of @options.actions ? []
             n_act = $.extend {}, act
             n_act.name = name
             n_act.label ?= name
@@ -124,10 +125,9 @@ class Message extends Backbone.View
         $actions = $ '<div class="actions">'
         for action in opts.actions
             $action = $ '<span>'
-            $action.attr 'data-action', action.name
 
             $link = $ '<a>'
-            $link.attr 'href', "##{ action.name }"
+            $link.attr 'data-action', "#{ action.name }"
             $link.html action.label
 
             $action.append $ '<span class="phrase">'
@@ -148,7 +148,7 @@ class Message extends Backbone.View
 
             @_hasSlot = true
 
-        opts = $.extend {}, @opts,
+        opts = $.extend {}, @options,
             actions: do @parseActions
 
         @$message = $ @template opts
@@ -160,7 +160,7 @@ class Message extends Backbone.View
         @trigger 'render'
 
 class MagicMessage extends Message
-    constructor: ->
+    initialize: ->
         super
 
         @_timers = {}
@@ -181,7 +181,7 @@ class MagicMessage extends Message
 
         do @clearTimers
 
-        for name, action of @opts.actions
+        for name, action of @options.actions
             if action.auto
                 @startCountdown name, action
 
@@ -230,26 +230,21 @@ class MagicMessage extends Message
 
         do tick
 
-class Messenger
+class Messenger extends Backbone.View
+    tagName: 'ul'
+
     OPT_DEFAULTS:
         type: 'info'
 
-    constructor: (@$rootEl) ->
+    initialize: (options) ->
         @history = []
-
-        do @render
 
     findById: (id) ->
         _.filter @history, (rec) ->
-            rec.msg.opts.id == id
-
-    render: ->
-        @$rootEl.html '<div class="messenger"></div>'
-
-        @$el = @$rootEl.find('.messenger')
+            rec.msg.options.id == id
 
     _reserveMessageSlot: (msg) ->
-        $slot = $('<div></div>')
+        $slot = $('<li>')
         $slot.addClass 'message-slot'
         @$el.prepend $slot
 
@@ -258,9 +253,11 @@ class Messenger
         return $slot
 
     newMessage: (opts={}) ->
-        msg = new MagicMessage(@, opts)
+        opts.messenger = @
+        msg = new MagicMessage(opts)
+
         msg.on 'show', =>
-            if opts.scrollTo and @$rootEl.css('position') isnt 'fixed'
+            if opts.scrollTo and @$el.css('position') isnt 'fixed'
                 do msg.scrollTo
 
         msg.on 'hide show render', @updateMessageSlotClasses, @
@@ -272,10 +269,10 @@ class Messenger
         last = null
 
         for rec in @history
-            rec.$slot.removeClass 'first last has-message'
+            rec.$slot.removeClass 'first last shown'
 
             if rec.msg.shown and rec.msg.rendered
-                rec.$slot.addClass 'has-message'
+                rec.$slot.addClass 'shown'
 
                 last = rec
                 if willBeFirst
@@ -496,7 +493,7 @@ $.fn.messenger = (func, args...) ->
 
     if not func?
         if not $el.data('messenger')?
-            $el.data('messenger', new ActionMessenger($el))
+            $el.data('messenger', new ActionMessenger({el: $el}))
             $._messengerInstance = $el.data('messenger')
 
         return $el.data('messenger')
@@ -507,51 +504,37 @@ $.globalMessenger = (opts) ->
     inst = $._messengerInstance
 
     defaultOpts =
-      injectIntoPage: false
-      injectionLocations: ['.row-content', '.left', '.page', 'body']
-      injectedClasses: 'injected-messenger'
-      
-      fixedClasses: 'fixed-messenger on-right'
+        extraClasses: 'fixed-messenger on-bottom on-right'
+
+        parentLocations: ['body']
 
     opts = $.extend defaultOpts, opts
 
-    # Should we insert the messenger into the flow of the page, or
-    # place it in the body to be position fixed or absolute.
-    if opts.injectIntoPage
-        locations = opts.injectionLocations
-        $parent = null
-        choosen_loc = null
+    locations = opts.parentLocations
+    $parent = null
+    choosen_loc = null
 
-        for loc in locations
-            $parent = $(loc)
+    for loc in locations
+        $parent = $(loc)
 
-            if $parent.length
-                chosen_loc = loc
-                break
+        if $parent.length
+            chosen_loc = loc
+            break
 
-        if not inst
-            $el = $('<div>')
-            $el.addClass opts.injectedClasses
+    if not inst
+        $el = $('<ul>')
 
-            $parent.prepend $el
+        $parent.prepend $el
 
-            inst = $el.messenger()
-            inst._location = chosen_loc
+        inst = $el.messenger()
+        inst._location = chosen_loc
 
-        else if $(inst._location) != $(chosen_loc)
-            # A better location has since become avail on the page.
+    else if $(inst._location) != $(chosen_loc)
+        # A better location has since become avail on the page.
 
-            inst.$el.detach()
-            $parent.prepend inst.$el
-    else
-        if not inst
-            $el = $('<div>')
-            $el.addClass opts.fixedClasses
+        inst.$el.detach()
+        $parent.prepend inst.$el
 
-            $parent = $('body')
-            $parent.append $el
-
-            inst = $el.messenger()
-            inst._location = $parent
+    inst.$el.attr 'class', "messenger #{ opts.extraClasses }"
 
     return inst

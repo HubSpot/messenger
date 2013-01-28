@@ -1,5 +1,5 @@
 @import "compass/utilities/general/clearfix"
-@import "compass/css3/box-sizing"
+@import "compass/css3"
 
 ul.messenger
   margin: 0
@@ -11,81 +11,59 @@ ul.messenger
     margin: 0
     padding: 0
 
-  .message
+  .messenger-message
     +clearfix
 
-    .phrase, .actions a
+    &.messenger-hidden
+      display: none
+
+    .messenger-phrase, .messenger-actions a
       padding-right: 5px
 
-    .actions
+    .messenger-actions
       float: right
 
       a
+        cursor: pointer
         text-decoration: underline
 
-.fixed-messenger
-  position: fixed
-  z-index: 10000
+  &.messenger-fixed
+    position: fixed
+    z-index: 10000
 
-  .message
-    min-width: 0
-    
-    +box-sizing(border-box)
+    .messenger-message
+      min-width: 0
 
-  .message .actions
-    float: left
+      +box-sizing(border-box)
 
-  &.on-top, &.on-bottom
-    left: 10%
-    
-    /* 800px or 80%, whichever is narrower */
-    width: 80% 
-  
-    .message-slot
-      margin: 0 auto
-      max-width: 800px
+    .message .messenger-actions
+      float: left
 
-  &.on-top
-    top: 20px
-    
-  &.on-bottom
-    bottom: 20px
-    
-  &.on-right, &.on-left
-    bottom: 5px
-  
-    width: 350px
+    &.messenger-on-top
+      top: 20px
 
-  &.on-right
-    right: 20px
-    left: auto
+    &.messenger-on-bottom
+      bottom: 20px
 
-  &.on-left
-    left: 20px
+    &.messenger-on-top, &.messenger-on-bottom
+      left: 50%
+      width: 800px
+      margin-left: -400px
 
-.messenger.block-theme
-  width: 100%
-  top: 0
-  left: 0
+      @media (max-width: 960px)
+        left: 10%
+        width: 80%
+        margin-left: 0px
 
-  &.on-bottom
-    top: auto
-    bottom: 0
+      &.messenger-on-right
+        right: 20px
+        left: auto
 
-  &.on-right, &.on-left
-    width: 350px
+      &.messenger-on-left
+        left: 20px
 
-  &.on-right
-    left: auto
-    right: 0
+    &.messenger-on-right, &.messenger-on-left
+      width: 350px
 
-  .message-slot
-    max-width: none
-
-  .message
-    margin-bottom: 0
-
-    text-align: center
-    padding: 1em
-    font-size: 120%
-    border-radius: 0
+      .messenger-actions
+        float: left

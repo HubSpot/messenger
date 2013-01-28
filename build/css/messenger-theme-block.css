@@ -1,0 +1,32 @@
+/* line 4, ../../src/sass/messenger-theme-block.sass */
+.messenger-theme-block {
+  width: 100%;
+  top: 0;
+  left: 0;
+}
+/* line 9, ../../src/sass/messenger-theme-block.sass */
+.messenger-theme-block.messenger-on-bottom {
+  top: auto;
+  bottom: 0;
+}
+/* line 13, ../../src/sass/messenger-theme-block.sass */
+.messenger-theme-block.messenger-on-right, .messenger-theme-block.messenger-on-left {
+  width: 350px;
+}
+/* line 16, ../../src/sass/messenger-theme-block.sass */
+.messenger-theme-block.messenger-on-right {
+  left: auto;
+  right: 0;
+}
+/* line 20, ../../src/sass/messenger-theme-block.sass */
+.messenger-theme-block .messenger-message-slot {
+  max-width: none;
+}
+/* line 23, ../../src/sass/messenger-theme-block.sass */
+.messenger-theme-block .messenger-message {
+  margin-bottom: 0;
+  text-align: center;
+  padding: 1em;
+  font-size: 120%;
+  border-radius: 0;
+}

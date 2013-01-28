@@ -16,7 +16,7 @@ class Message extends Backbone.View
     show: ->
         do @render
 
-        @$message.show()
+        @$message.removeClass('messenger-hidden')
 
         wasShown = @shown
         @shown = true
@@ -24,11 +24,13 @@ class Message extends Backbone.View
         @trigger('show') unless wasShown
 
     hide: ->
-        @$message.hide()
+        return unless @rendered
+
+        @$message.addClass('messenger-hidden')
 
         wasShown = @shown
         @shown = false
-      
+
         @trigger('hide') if wasShown
 
     cancel: ->
@@ -38,9 +40,9 @@ class Message extends Backbone.View
         $.extend(@options, opts)
 
         @lastUpdate = new Date()
-        
+
         @rendered = false
-       
+
         @events = @options.events ? {}
 
         do @render
@@ -88,17 +90,17 @@ class Message extends Backbone.View
     checkClickable: ->
         for name, evt of @events
             if name is 'click'
-                @$el.addClass 'clickable'
+                @$el.addClass 'messenger-clickable'
 
     undelegateEvents: ->
         super
 
-        @$el.removeClass 'clickable'
+        @$el.removeClass 'messenger-clickable'
 
     parseActions: ->
         actions = []
 
-        for name, act of @options.actions ? []
+        for name, act of @options.actions
             n_act = $.extend {}, act
             n_act.name = name
             n_act.label ?= name
@@ -108,8 +110,8 @@ class Message extends Backbone.View
         return actions
 
     template: (opts) ->
-        $message = $ "<div class='message alert #{ opts.type } alert-#{ opts.type }'>"
-      
+        $message = $ "<div class='messenger-message message alert #{ opts.type } message-#{ opts.type } alert-#{ opts.type }'>"
+
         if opts.showCloseButton
             $cancel = $ '<button type="button" class="close" data-dismiss="alert">&times;</button>'
             $cancel.click =>
@@ -119,10 +121,12 @@ class Message extends Backbone.View
 
             $message.append $cancel
 
-        $text = $ "<div>#{ opts.message }</div>"
+        $text = $ """<div class="messenger-message-inner">#{ opts.message }</div>"""
         $message.append $text
 
-        $actions = $ '<div class="actions">'
+        if opts.actions.length
+            $actions = $ '<div class="messenger-actions">'
+
         for action in opts.actions
             $action = $ '<span>'
 
@@ -130,13 +134,13 @@ class Message extends Backbone.View
             $link.attr 'data-action', "#{ action.name }"
             $link.html action.label
 
-            $action.append $ '<span class="phrase">'
+            $action.append $ '<span class="messenger-phrase">'
             $action.append $link
-   
+
             $actions.append $action
 
         $message.append $actions
-            
+
         $message
 
     render: ->
@@ -213,7 +217,7 @@ class MagicMessage extends Message
 
 
     startCountdown: (name, action) ->
-        $phrase = @$el.find("[data-action='#{ name }'] .phrase")
+        $phrase = @$el.find("[data-action='#{ name }'] .messenger-phrase")
 
         remaining = action.delay ? 3
 
@@ -232,6 +236,7 @@ class MagicMessage extends Message
 
 class Messenger extends Backbone.View
     tagName: 'ul'
+    className: 'messenger'
 
     OPT_DEFAULTS:
         type: 'info'
@@ -239,13 +244,16 @@ class Messenger extends Backbone.View
     initialize: (options) ->
         @history = []
 
+    render: ->
+        do @updateMessageSlotClasses
+
     findById: (id) ->
         _.filter @history, (rec) ->
             rec.msg.options.id == id
 
     _reserveMessageSlot: (msg) ->
         $slot = $('<li>')
-        $slot.addClass 'message-slot'
+        $slot.addClass 'messenger-message-slot'
         @$el.prepend $slot
 
         @history.push {msg, $slot}
@@ -268,11 +276,14 @@ class Messenger extends Backbone.View
         willBeFirst = true
         last = null
 
+        anyShown = false
+
         for rec in @history
             rec.$slot.removeClass 'first last shown'
 
             if rec.msg.shown and rec.msg.rendered
                 rec.$slot.addClass 'shown'
+                anyShown = true
 
                 last = rec
                 if willBeFirst
@@ -281,7 +292,8 @@ class Messenger extends Backbone.View
 
         if last?
             last.$slot.addClass 'last'
-            
+
+        @$el["#{if anyShown then 'remove' else 'add'}Class"]('messenger-empty')
 
     hideAll: ->
         for rec in @history
@@ -404,7 +416,7 @@ class ActionMessenger extends Messenger
         msg = m_opts.messageInstance ? @newMessage m_opts
 
         if m_opts.id?
-            msg.opts.id = m_opts.id
+            msg.options.id = m_opts.id
 
         if m_opts.progressMessage?
             msg.update $.extend {}, m_opts,
@@ -493,8 +505,10 @@ $.fn.messenger = (func, args...) ->
 
     if not func?
         if not $el.data('messenger')?
-            $el.data('messenger', new ActionMessenger({el: $el}))
-            $._messengerInstance = $el.data('messenger')
+            $el.data('messenger', instance = new ActionMessenger({el: $el}))
+            instance.render()
+
+            $._messengerInstance = instance
 
         return $el.data('messenger')
     else
@@ -504,11 +518,11 @@ $.globalMessenger = (opts) ->
     inst = $._messengerInstance
 
     defaultOpts =
-        extraClasses: 'fixed-messenger on-bottom on-right'
+        extraClasses: 'messenger-fixed messenger-on-bottom messenger-on-right'
 
         parentLocations: ['body']
 
-    opts = $.extend defaultOpts, opts
+    opts = $.extend defaultOpts, $._messengerDefaults, opts
 
     locations = opts.parentLocations
     $parent = null
@@ -535,6 +549,10 @@ $.globalMessenger = (opts) ->
         inst.$el.detach()
         $parent.prepend inst.$el
 
-    inst.$el.attr 'class', "messenger #{ opts.extraClasses }"
+    if inst._addedClasses?
+        inst.$el.removeClass inst._addedClasses
+
+    inst.$el.addClass classes = "#{ inst.className } #{ opts.extraClasses }"
+    inst._addedClasses = classes
 
     return inst

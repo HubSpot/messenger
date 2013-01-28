@@ -498,6 +498,11 @@ class ActionMessenger extends Messenger
 
         msg._actionInstance = m_opts.action opts, args...
 
+        promiseAttrs = ['done', 'progress', 'fail', 'state', 'then']
+        for attr in promiseAttrs
+          delete msg[attr] if msg[attr]?
+          msg[attr] = msg._actionInstance?[attr]
+
         return msg
 
 $.fn.messenger = (func, args...) ->

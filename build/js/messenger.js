@@ -659,7 +659,7 @@
     var $el, $parent, choosen_loc, chosen_loc, classes, defaultOpts, inst, loc, locations, _i, _len;
     inst = $._messengerInstance;
     defaultOpts = {
-      extraClasses: 'messenger-fixed messenger-on-bottom messenger-on-right',
+      extraClasses: 'messenger-fixed messenger-on-bottom messenger-on-right messenger-theme-future',
       parentLocations: ['body']
     };
     opts = $.extend(defaultOpts, $._messengerDefaults, opts);

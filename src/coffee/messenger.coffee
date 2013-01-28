@@ -518,7 +518,7 @@ $.globalMessenger = (opts) ->
     inst = $._messengerInstance
 
     defaultOpts =
-        extraClasses: 'messenger-fixed messenger-on-bottom messenger-on-right'
+        extraClasses: 'messenger-fixed messenger-on-bottom messenger-on-right messenger-theme-future'
 
         parentLocations: ['body']
 

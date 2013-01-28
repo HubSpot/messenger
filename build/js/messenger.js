@@ -113,7 +113,7 @@
       _results = [];
       for (name in _ref) {
         act = _ref[name];
-        _results.push(this.events["click a[data-action=\"" + name + "\"]"] = (function(act) {
+        _results.push(this.events["click [data-action=\"" + name + "\"] a"] = (function(act) {
           var _this = this;
           return function(e) {
             e.preventDefault();
@@ -182,8 +182,8 @@
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         action = _ref[_i];
         $action = $('<span>');
+        $action.attr('data-action', "" + action.name);
         $link = $('<a>');
-        $link.attr('data-action', "" + action.name);
         $link.html(action.label);
         $action.append($('<span class="messenger-phrase">'));
         $action.append($link);

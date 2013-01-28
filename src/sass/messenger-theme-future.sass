@@ -1,14 +1,20 @@
 @import "compass/utilities/general/clearfix"
 @import "compass/css3"
 
+@mixin unselectable
+  -moz-user-select: none
+  -webkit-user-select: none
+  -o-user-select: none
+  user-select: none
+
 $defaultThemeBorderRadius: 4px
 
 ul.messenger-theme-future
   +box-shadow(inset 0px 1px rgba(255, 255, 255, 0.24), 0px 1px 5px rgba(0, 0, 0, 0.6))
   +border-radius($defaultThemeBorderRadius)
   +background(rgb(92, 91, 91) linear-gradient(rgb(92, 91, 91), rgb(53, 53, 53)))
+  +unselectable
   border: 1px solid rgba(0, 0, 0, 0.5)
-  -webkit-user-select: none
 
   &.messenger-empty
     display: none

@@ -79,7 +79,7 @@ class Message extends Backbone.View
 
     actionsToEvents: ->
         for name, act of @options.actions
-            @events["click a[data-action=\"#{ name }\"]"] = ((act) ->
+            @events["click [data-action=\"#{ name }\"] a"] = ((act) ->
                 return (e) =>
                     do e.preventDefault
                     do e.stopPropagation
@@ -129,9 +129,9 @@ class Message extends Backbone.View
 
         for action in opts.actions
             $action = $ '<span>'
+            $action.attr 'data-action', "#{ action.name }"
 
             $link = $ '<a>'
-            $link.attr 'data-action', "#{ action.name }"
             $link.html action.label
 
             $action.append $ '<span class="messenger-phrase">'

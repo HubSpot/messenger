@@ -1,0 +1,29 @@
+@import "compass/utilities/general/clearfix"
+@import "compass/css3"
+
+.messenger-theme-block
+  width: 100%
+  top: 0
+  left: 0
+
+  &.messenger-on-bottom
+    top: auto
+    bottom: 0
+
+  &.messenger-on-right, &.messenger-on-left
+    width: 350px
+
+  &.messenger-on-right
+    left: auto
+    right: 0
+
+  .messenger-message-slot
+    max-width: none
+
+  .messenger-message
+    margin-bottom: 0
+
+    text-align: center
+    padding: 1em
+    font-size: 120%
+    border-radius: 0

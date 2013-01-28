@@ -231,22 +231,20 @@ If you're not using Bootstrap: /build/css/no-bootstrap.css
 <span class="c1"># By default, the global messenger will create an ActionMessenger instance fixed to the bottom-right</span>
 <span class="c1"># corner of the screen.  If there is already a messenger instance on the page, it will use that one.</span>
 
-<span class="c1"># Alternativly, pass {injectIntoPage: true} to globalMessenger to have a messenger instance injected into the page in a few likely</span>
-<span class="c1"># places.  This will only work if an instance has not yet been created.</span>
-
 <span class="nx">$</span><span class="p">.</span><span class="nx">globalMessenger</span><span class="p">({</span><span class="nv">injectIntoPage: </span><span class="kc">true</span><span class="p">})</span>
 
 <span class="c1"># All the options for globalMessenger and their defaults:</span>
 
 <span class="p">{</span>
-  <span class="s">'injectIntoPage'</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
-  <span class="s">'fixedClasses'</span><span class="o">:</span> <span class="s">'fixed-messenger on-right'</span><span class="p">,</span>
-  <span class="s">'injectedClasses'</span><span class="o">:</span> <span class="s">'injected-messenger'</span><span class="p">,</span>
-  <span class="s">'injectionLocations'</span><span class="o">:</span> <span class="p">[</span><span class="s">'.row-content'</span><span class="p">,</span> <span class="s">'.left'</span><span class="p">,</span> <span class="s">'.page'</span><span class="p">,</span> <span class="s">'body'</span><span class="p">]</span>
+  <span class="s">'parentLocations'</span><span class="o">:</span> <span class="kc">['body']</span><span class="p">,</span>
+  <span class="s">'extraClasses'</span><span class="o">:</span> <span class="s">'fixed-messenger on-right on-bottom'</span><span class="p">,</span>
 <span class="p">}</span>
+
+<span class="c1"># You can also set default options on the $._messengerDefaults object.</span>
 
 <span class="c1"># You can also use the views directly</span>
 <span class="nv">messenger = </span><span class="k">new</span> <span class="nx">ActionMessenger</span> <span class="nx">$</span><span class="p">(</span><span class="s">'div#message-container'</span><span class="p">)</span>
+<span class="nx">messenger</span><span class="p">.</span><span class="nx">render</span><span class="s">()</span>
 <span class="nx">messenger</span><span class="p">.</span><span class="nx">post</span> <span class="s">"Yay!!!"</span>
 
 </pre></div>

@@ -533,7 +533,7 @@
     };
 
     ActionMessenger.prototype["do"] = function() {
-      var args, events, m, m_opts, msg, opts, _i, _len, _ref, _ref1,
+      var args, attr, events, m, m_opts, msg, opts, promiseAttrs, _i, _j, _len, _len1, _ref, _ref1, _ref2,
         _this = this;
       m_opts = arguments[0], opts = arguments[1], args = 3 <= arguments.length ? __slice.call(arguments, 2) : [];
       if (opts == null) {
@@ -630,6 +630,14 @@
         };
       });
       msg._actionInstance = m_opts.action.apply(m_opts, [opts].concat(__slice.call(args)));
+      promiseAttrs = ['done', 'progress', 'fail', 'state', 'then'];
+      for (_j = 0, _len1 = promiseAttrs.length; _j < _len1; _j++) {
+        attr = promiseAttrs[_j];
+        if (msg[attr] != null) {
+          delete msg[attr];
+        }
+        msg[attr] = (_ref2 = msg._actionInstance) != null ? _ref2[attr] : void 0;
+      }
       return msg;
     };
 

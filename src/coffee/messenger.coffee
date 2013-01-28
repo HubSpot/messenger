@@ -24,6 +24,8 @@ class Message extends Backbone.View
         @trigger('show') unless wasShown
 
     hide: ->
+        return unless @rendered
+
         @$message.addClass('messenger-hidden')
 
         wasShown = @shown
@@ -98,7 +100,7 @@ class Message extends Backbone.View
     parseActions: ->
         actions = []
 
-        for name, act of @options.actions ? []
+        for name, act of @options.actions
             n_act = $.extend {}, act
             n_act.name = name
             n_act.label ?= name
@@ -108,7 +110,7 @@ class Message extends Backbone.View
         return actions
 
     template: (opts) ->
-        $message = $ "<div class='messenger-message alert #{ opts.type } alert-#{ opts.type }'>"
+        $message = $ "<div class='messenger-message message alert #{ opts.type } message-#{ opts.type } alert-#{ opts.type }'>"
 
         if opts.showCloseButton
             $cancel = $ '<button type="button" class="close" data-dismiss="alert">&times;</button>'
@@ -234,12 +236,16 @@ class MagicMessage extends Message
 
 class Messenger extends Backbone.View
     tagName: 'ul'
+    className: 'messenger'
 
     OPT_DEFAULTS:
         type: 'info'
 
     initialize: (options) ->
         @history = []
+
+    render: ->
+        do @updateMessageSlotClasses
 
     findById: (id) ->
         _.filter @history, (rec) ->
@@ -410,7 +416,7 @@ class ActionMessenger extends Messenger
         msg = m_opts.messageInstance ? @newMessage m_opts
 
         if m_opts.id?
-            msg.opts.id = m_opts.id
+            msg.options.id = m_opts.id
 
         if m_opts.progressMessage?
             msg.update $.extend {}, m_opts,
@@ -499,8 +505,10 @@ $.fn.messenger = (func, args...) ->
 
     if not func?
         if not $el.data('messenger')?
-            $el.data('messenger', new ActionMessenger({el: $el}))
-            $._messengerInstance = $el.data('messenger')
+            $el.data('messenger', instance = new ActionMessenger({el: $el}))
+            instance.render()
+
+            $._messengerInstance = instance
 
         return $el.data('messenger')
     else
@@ -514,7 +522,7 @@ $.globalMessenger = (opts) ->
 
         parentLocations: ['body']
 
-    opts = $.extend defaultOpts, opts
+    opts = $.extend defaultOpts, $._messengerDefaults, opts
 
     locations = opts.parentLocations
     $parent = null
@@ -541,6 +549,10 @@ $.globalMessenger = (opts) ->
         inst.$el.detach()
         $parent.prepend inst.$el
 
-    inst.$el.attr 'class', "messenger #{ opts.extraClasses }"
+    if inst._addedClasses?
+        inst.$el.removeClass inst._addedClasses
+
+    inst.$el.addClass classes = "#{ inst.className } #{ opts.extraClasses }"
+    inst._addedClasses = classes
 
     return inst

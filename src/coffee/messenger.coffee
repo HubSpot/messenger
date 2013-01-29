@@ -241,7 +241,7 @@ class Messenger extends Backbone.View
     OPT_DEFAULTS:
         type: 'info'
 
-    initialize: (options) ->
+    initialize: (@options) ->
         @history = []
 
     render: ->
@@ -257,6 +257,11 @@ class Messenger extends Backbone.View
         @$el.prepend $slot
 
         @history.push {msg, $slot}
+
+        while @options.maxMessages and @history.length > @options.maxMessages
+          dmsg = @history.pop()
+          dmsg.msg.remove()
+          dmsg.$slot.remove()
 
         return $slot
 
@@ -505,12 +510,14 @@ class ActionMessenger extends Messenger
 
         msg
 
-$.fn.messenger = (func, args...) ->
+$.fn.messenger = (func={}, args...) ->
     $el = this
 
-    if not func?
+    if not func? or not _.isString(func)
+        opts = func
+
         if not $el.data('messenger')?
-            $el.data('messenger', instance = new ActionMessenger({el: $el}))
+            $el.data('messenger', instance = new ActionMessenger($.extend({el: $el}, opts)))
             instance.render()
 
             $._messengerInstance = instance
@@ -525,6 +532,7 @@ $.globalMessenger = (opts) ->
     defaultOpts =
         extraClasses: 'messenger-fixed messenger-on-bottom messenger-on-right messenger-theme-future'
 
+        maxMessages: 9
         parentLocations: ['body']
 
     opts = $.extend defaultOpts, $._messengerDefaults, opts
@@ -545,7 +553,7 @@ $.globalMessenger = (opts) ->
 
         $parent.prepend $el
 
-        inst = $el.messenger()
+        inst = $el.messenger(opts)
         inst._location = chosen_loc
 
     else if $(inst._location) != $(chosen_loc)

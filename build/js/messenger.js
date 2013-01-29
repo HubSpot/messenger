@@ -357,7 +357,7 @@
         $slot: $slot
       });
       while (this.options.maxMessages && this.history.length > this.options.maxMessages) {
-        dmsg = this.history.pop();
+        dmsg = this.history.shift();
         dmsg.msg.remove();
         dmsg.$slot.remove();
       }

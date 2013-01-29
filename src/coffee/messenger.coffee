@@ -259,7 +259,7 @@ class Messenger extends Backbone.View
         @history.push {msg, $slot}
 
         while @options.maxMessages and @history.length > @options.maxMessages
-          dmsg = @history.pop()
+          dmsg = @history.shift()
           dmsg.msg.remove()
           dmsg.$slot.remove()
 

@@ -503,7 +503,7 @@ class ActionMessenger extends Messenger
           delete msg[attr] if msg[attr]?
           msg[attr] = msg._actionInstance?[attr]
 
-        return msg
+        msg
 
 $.fn.messenger = (func, args...) ->
     $el = this

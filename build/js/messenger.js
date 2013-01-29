@@ -333,6 +333,7 @@
     };
 
     Messenger.prototype.initialize = function(options) {
+      this.options = options;
       return this.history = [];
     };
 
@@ -347,7 +348,7 @@
     };
 
     Messenger.prototype._reserveMessageSlot = function(msg) {
-      var $slot;
+      var $slot, dmsg;
       $slot = $('<li>');
       $slot.addClass('messenger-message-slot');
       this.$el.prepend($slot);
@@ -355,6 +356,11 @@
         msg: msg,
         $slot: $slot
       });
+      while (this.options.maxMessages && this.history.length > this.options.maxMessages) {
+        dmsg = this.history.pop();
+        dmsg.msg.remove();
+        dmsg.$slot.remove();
+      }
       return $slot;
     };
 
@@ -646,14 +652,18 @@
   })(Messenger);
 
   $.fn.messenger = function() {
-    var $el, args, func, instance, _ref;
+    var $el, args, func, instance, opts, _ref;
     func = arguments[0], args = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
+    if (func == null) {
+      func = {};
+    }
     $el = this;
-    if (!(func != null)) {
+    if (!(func != null) || !_.isString(func)) {
+      opts = func;
       if (!($el.data('messenger') != null)) {
-        $el.data('messenger', instance = new ActionMessenger({
+        $el.data('messenger', instance = new ActionMessenger($.extend({
           el: $el
-        }));
+        }, opts)));
         instance.render();
         $._messengerInstance = instance;
       }
@@ -668,6 +678,7 @@
     inst = $._messengerInstance;
     defaultOpts = {
       extraClasses: 'messenger-fixed messenger-on-bottom messenger-on-right messenger-theme-future',
+      maxMessages: 9,
       parentLocations: ['body']
     };
     opts = $.extend(defaultOpts, $._messengerDefaults, opts);
@@ -685,7 +696,7 @@
     if (!inst) {
       $el = $('<ul>');
       $parent.prepend($el);
-      inst = $el.messenger();
+      inst = $el.messenger(opts);
       inst._location = chosen_loc;
     } else if ($(inst._location) !== $(chosen_loc)) {
       inst.$el.detach();

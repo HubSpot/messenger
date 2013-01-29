@@ -416,7 +416,7 @@ class ActionMessenger extends Messenger
                 if m_opts.singleton
                     return false
                 else
-                    do m.hide
+                    do m.msg.hide
 
         msg = m_opts.messageInstance ? @newMessage m_opts
 

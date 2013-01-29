@@ -1,5 +1,5 @@
 (function() {
-  var $, ActionMessenger, MagicMessage, Message, Messenger;
+  var $, ActionMessenger, MagicMessage, Message, Messenger, spinner_template;
   var __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
     for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
     function ctor() { this.constructor = child; }
@@ -9,6 +9,7 @@
     return child;
   }, __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; }, __slice = Array.prototype.slice;
   $ = jQuery;
+  spinner_template = '<div class="messenger-spinner">\n    <span class="messenger-spinner-side messenger-spinner-side-left">\n        <span class="messenger-spinner-fill"></span>\n    </span>\n    <span class="messenger-spinner-side messenger-spinner-side-right">\n        <span class="messenger-spinner-fill"></span>\n    </span>\n</div>';
   Message = (function() {
     __extends(Message, Backbone.View);
     function Message() {
@@ -152,6 +153,7 @@
       }
       $text = $("<div class=\"messenger-message-inner\">" + opts.message + "</div>");
       $message.append($text);
+      $message.append($(spinner_template));
       if (opts.actions.length) {
         $actions = $('<div class="messenger-actions">');
       }

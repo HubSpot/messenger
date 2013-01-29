@@ -1,5 +1,16 @@
 $ = jQuery
 
+spinner_template = '''
+    <div class="messenger-spinner">
+        <span class="messenger-spinner-side messenger-spinner-side-left">
+            <span class="messenger-spinner-fill"></span>
+        </span>
+        <span class="messenger-spinner-side messenger-spinner-side-right">
+            <span class="messenger-spinner-fill"></span>
+        </span>
+    </div>
+'''
+
 class Message extends Backbone.View
     defaults:
         hideAfter: 10
@@ -121,6 +132,8 @@ class Message extends Backbone.View
 
         $text = $ """<div class="messenger-message-inner">#{ opts.message }</div>"""
         $message.append $text
+
+        $message.append $ spinner_template
 
         if opts.actions.length
             $actions = $ '<div class="messenger-actions">'

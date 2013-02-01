@@ -15,7 +15,8 @@ $spinnerSize: 32px
 ul.messenger-theme-future
   +box-shadow(inset 0px 1px rgba(255, 255, 255, 0.24), 0px 1px 5px rgba(0, 0, 0, 0.6))
   +border-radius($defaultThemeBorderRadius)
-  +background(rgb(92, 91, 91) linear-gradient(rgb(92, 91, 91), rgb(53, 53, 53)))
+  +background-image(linear-gradient(rgb(92, 91, 91), rgb(53, 53, 53)))
+  background-color: rgb(92, 91, 91)
   +unselectable
   border: 1px solid rgba(0, 0, 0, 0.5)
 
@@ -103,19 +104,22 @@ ul.messenger-theme-future
       +ui-spinner(#333, $spinnerSize, transparent, rgb(95, 202, 74), 1, 10s)
 
       .messenger-message-inner:before
-        +background(rgb(95, 202, 74) linear-gradient(top, rgb(95, 202, 74), rgb(9, 141, 56)))
+        +background-image(linear-gradient(top, rgb(95, 202, 74), rgb(9, 141, 56)))
+        background-color: rgb(95, 202, 74)
 
     &.alert-error
       +ui-spinner(#333, $spinnerSize, transparent, rgb(221, 106, 69), 1, 10s)
 
       .messenger-message-inner:before
-        +background(rgb(221, 106, 69) linear-gradient(top, rgb(221, 106, 69), rgb(145, 54, 26)))
+        +background-image(linear-gradient(top, rgb(221, 106, 69), rgb(145, 54, 26)))
+        background-color: rgb(221, 106, 69)
 
     &.alert-info
       +ui-spinner(#333, $spinnerSize, transparent, rgb(97, 196, 184), 1, 10s)
 
       .messenger-message-inner:before
-        +background(rgb(97, 196, 184) linear-gradient(top, rgb(97, 196, 184), rgb(25, 146, 163)))
+        +background-image(linear-gradient(top, rgb(97, 196, 184), rgb(25, 146, 163)))
+        background-color: rgb(97, 196, 184)
 
   .messenger-message-slot
 

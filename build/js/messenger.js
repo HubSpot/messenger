@@ -554,7 +554,7 @@
           if (m_opts.singleton) {
             return false;
           } else {
-            m.hide();
+            m.msg.hide();
           }
         }
       }

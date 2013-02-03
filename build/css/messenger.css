@@ -77,12 +77,13 @@ ul.messenger.messenger-fixed.messenger-on-top.messenger-on-right, ul.messenger.m
 /* line 62, ../../src/sass/messenger.sass */
 ul.messenger.messenger-fixed.messenger-on-top.messenger-on-left, ul.messenger.messenger-fixed.messenger-on-bottom.messenger-on-left {
   left: 20px;
+  margin-left: 0px;
 }
-/* line 65, ../../src/sass/messenger.sass */
+/* line 66, ../../src/sass/messenger.sass */
 ul.messenger.messenger-fixed.messenger-on-right, ul.messenger.messenger-fixed.messenger-on-left {
   width: 350px;
 }
-/* line 68, ../../src/sass/messenger.sass */
+/* line 69, ../../src/sass/messenger.sass */
 ul.messenger.messenger-fixed.messenger-on-right .messenger-actions, ul.messenger.messenger-fixed.messenger-on-left .messenger-actions {
   float: left;
 }

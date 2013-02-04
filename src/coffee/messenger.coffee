@@ -535,31 +535,33 @@ $.globalMessenger = (opts) ->
     opts = $.extend defaultOpts, $._messengerDefaults, opts
 
     inst = opts.instance or $._messengerInstance
-    locations = opts.parentLocations
-    $parent = null
-    choosen_loc = null
+    
+    unless opts.instance?
+        locations = opts.parentLocations
+        $parent = null
+        choosen_loc = null
 
-    for loc in locations
-        $parent = $(loc)
+        for loc in locations
+            $parent = $(loc)
 
-        if $parent.length
-            chosen_loc = loc
-            break
+            if $parent.length
+                chosen_loc = loc
+                break
 
-    if not inst
-        $el = $('<ul>')
-
-        $parent.prepend $el
-
-        inst = $el.messenger(opts)
-        inst._location = chosen_loc
-        $._messengerInstance = inst
-
-    else if $(inst._location) != $(chosen_loc)
-        # A better location has since become avail on the page.
-
-        inst.$el.detach()
-        $parent.prepend inst.$el
+        if not inst
+            $el = $('<ul>')
+    
+            $parent.prepend $el
+    
+            inst = $el.messenger(opts)
+            inst._location = chosen_loc
+            $._messengerInstance = inst
+    
+        else $(inst._location) != $(chosen_loc)
+            # A better location has since become avail on the page.
+    
+            inst.$el.detach()
+            $parent.prepend inst.$el
 
     if inst._addedClasses?
         inst.$el.removeClass inst._addedClasses

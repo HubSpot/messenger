@@ -520,14 +520,11 @@ $.fn.messenger = (func={}, args...) ->
             $el.data('messenger', instance = new ActionMessenger($.extend({el: $el}, opts)))
             instance.render()
 
-            $._messengerInstance = instance
-
         return $el.data('messenger')
     else
         return $el.data('messenger')[func](args...)
 
 $.globalMessenger = (opts) ->
-    inst = $._messengerInstance
 
     defaultOpts =
         extraClasses: 'messenger-fixed messenger-on-bottom messenger-on-right messenger-theme-future'
@@ -537,6 +534,7 @@ $.globalMessenger = (opts) ->
 
     opts = $.extend defaultOpts, $._messengerDefaults, opts
 
+    inst = opts.instance or $._messengerInstance
     locations = opts.parentLocations
     $parent = null
     choosen_loc = null
@@ -555,6 +553,7 @@ $.globalMessenger = (opts) ->
 
         inst = $el.messenger(opts)
         inst._location = chosen_loc
+        $._messengerInstance = inst
 
     else if $(inst._location) != $(chosen_loc)
         # A better location has since become avail on the page.

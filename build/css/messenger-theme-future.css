@@ -244,15 +244,6 @@ ul.messenger-theme-future {
   -ms-border-radius: 4px;
   -o-border-radius: 4px;
   border-radius: 4px;
-<<<<<<< HEAD
-=======
-  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #5c5b5b), color-stop(100%, #353535));
-  background-image: -webkit-linear-gradient(#5c5b5b, #353535);
-  background-image: -moz-linear-gradient(#5c5b5b, #353535);
-  background-image: -o-linear-gradient(#5c5b5b, #353535);
-  background-image: linear-gradient(#5c5b5b, #353535);
-  background-color: #5c5b5b;
->>>>>>> message_spinner
   -moz-user-select: none;
   -webkit-user-select: none;
   -o-user-select: none;
@@ -265,19 +256,11 @@ ul.messenger-theme-future {
   background-color: #5c5b5b;
   border: 1px solid rgba(0, 0, 0, 0.5);
 }
-<<<<<<< HEAD
-/* line 20, ../../src/sass/messenger-theme-future.sass */
+/* line 24, ../../src/sass/messenger-theme-future.sass */
 ul.messenger-theme-future.messenger-empty {
   display: none;
 }
-/* line 23, ../../src/sass/messenger-theme-future.sass */
-=======
-/* line 23, ../../src/sass/messenger-theme-future.sass */
-ul.messenger-theme-future.messenger-empty {
-  display: none;
-}
-/* line 26, ../../src/sass/messenger-theme-future.sass */
->>>>>>> message_spinner
+/* line 27, ../../src/sass/messenger-theme-future.sass */
 ul.messenger-theme-future .messenger-message {
   -webkit-box-shadow: inset 0px 1px rgba(255, 255, 255, 0.13), inset 0px -1px rgba(0, 0, 0, 0.23), inset 48px 0px 0px rgba(0, 0, 0, 0.3), inset 46px 0px 0px rgba(255, 255, 255, 0.07);
   -moz-box-shadow: inset 0px 1px rgba(255, 255, 255, 0.13), inset 0px -1px rgba(0, 0, 0, 0.23), inset 48px 0px 0px rgba(0, 0, 0, 0.3), inset 46px 0px 0px rgba(255, 255, 255, 0.07);
@@ -297,11 +280,7 @@ ul.messenger-theme-future .messenger-message {
   font-weight: 500;
   padding: 10px 30px 13px 65px;
 }
-<<<<<<< HEAD
-/* line 36, ../../src/sass/messenger-theme-future.sass */
-=======
-/* line 39, ../../src/sass/messenger-theme-future.sass */
->>>>>>> message_spinner
+/* line 40, ../../src/sass/messenger-theme-future.sass */
 ul.messenger-theme-future .messenger-message .close {
   position: absolute;
   top: 0px;
@@ -319,36 +298,20 @@ ul.messenger-theme-future .messenger-message .close {
   border: 0;
   -webkit-appearance: none;
 }
-<<<<<<< HEAD
-/* line 53, ../../src/sass/messenger-theme-future.sass */
+/* line 57, ../../src/sass/messenger-theme-future.sass */
 ul.messenger-theme-future .messenger-message .close:hover {
   color: #bbbbbb;
 }
-/* line 56, ../../src/sass/messenger-theme-future.sass */
+/* line 60, ../../src/sass/messenger-theme-future.sass */
 ul.messenger-theme-future .messenger-message .close:active {
   color: #777777;
 }
-/* line 59, ../../src/sass/messenger-theme-future.sass */
-=======
-/* line 56, ../../src/sass/messenger-theme-future.sass */
-ul.messenger-theme-future .messenger-message .close:hover {
-  color: #bbbbbb;
-}
-/* line 59, ../../src/sass/messenger-theme-future.sass */
-ul.messenger-theme-future .messenger-message .close:active {
-  color: #777777;
-}
-/* line 62, ../../src/sass/messenger-theme-future.sass */
->>>>>>> message_spinner
+/* line 63, ../../src/sass/messenger-theme-future.sass */
 ul.messenger-theme-future .messenger-message .messenger-actions {
   float: none;
   margin-top: 10px;
 }
-<<<<<<< HEAD
-/* line 63, ../../src/sass/messenger-theme-future.sass */
-=======
-/* line 66, ../../src/sass/messenger-theme-future.sass */
->>>>>>> message_spinner
+/* line 67, ../../src/sass/messenger-theme-future.sass */
 ul.messenger-theme-future .messenger-message .messenger-actions a {
   -webkit-box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.2), inset 0px 1px rgba(255, 255, 255, 0.1);
   -moz-box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.2), inset 0px 1px rgba(255, 255, 255, 0.1);
@@ -367,22 +330,14 @@ ul.messenger-theme-future .messenger-message .messenger-actions a {
   padding: 3px 10px 5px;
   text-transform: capitalize;
 }
-<<<<<<< HEAD
-/* line 75, ../../src/sass/messenger-theme-future.sass */
-=======
-/* line 78, ../../src/sass/messenger-theme-future.sass */
->>>>>>> message_spinner
+/* line 79, ../../src/sass/messenger-theme-future.sass */
 ul.messenger-theme-future .messenger-message .messenger-actions a:hover {
   -webkit-box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.2), inset 0px 1px rgba(255, 255, 255, 0.2);
   -moz-box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.2), inset 0px 1px rgba(255, 255, 255, 0.2);
   box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.2), inset 0px 1px rgba(255, 255, 255, 0.2);
   color: #f0f0f0;
 }
-<<<<<<< HEAD
-/* line 79, ../../src/sass/messenger-theme-future.sass */
-=======
-/* line 82, ../../src/sass/messenger-theme-future.sass */
->>>>>>> message_spinner
+/* line 83, ../../src/sass/messenger-theme-future.sass */
 ul.messenger-theme-future .messenger-message .messenger-actions a:active {
   -webkit-box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.28), inset 0px 1px rgba(0, 0, 0, 0.1);
   -moz-box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.28), inset 0px 1px rgba(0, 0, 0, 0.1);
@@ -390,19 +345,11 @@ ul.messenger-theme-future .messenger-message .messenger-actions a:active {
   background: rgba(0, 0, 0, 0.04);
   color: #aaaaaa;
 }
-<<<<<<< HEAD
-/* line 84, ../../src/sass/messenger-theme-future.sass */
+/* line 88, ../../src/sass/messenger-theme-future.sass */
 ul.messenger-theme-future .messenger-message .messenger-actions .messenger-phrase {
   display: none;
 }
-/* line 87, ../../src/sass/messenger-theme-future.sass */
-=======
-/* line 87, ../../src/sass/messenger-theme-future.sass */
-ul.messenger-theme-future .messenger-message .messenger-actions .messenger-phrase {
-  display: none;
-}
-/* line 90, ../../src/sass/messenger-theme-future.sass */
->>>>>>> message_spinner
+/* line 91, ../../src/sass/messenger-theme-future.sass */
 ul.messenger-theme-future .messenger-message .messenger-message-inner:before {
   -webkit-box-shadow: inset 0px 1px 3px rgba(0, 0, 0, 0.6), 0px 0px 0px 1px rgba(0, 0, 0, 0.2);
   -moz-box-shadow: inset 0px 1px 3px rgba(0, 0, 0, 0.6), 0px 0px 0px 1px rgba(0, 0, 0, 0.2);
@@ -438,9 +385,6 @@ ul.messenger-theme-future .messenger-message.alert-success .messenger-spinner .m
   animation-duration: 10s;
   opacity: 1;
 }
-<<<<<<< HEAD
-/* line 99, ../../src/sass/messenger-theme-future.sass */
-=======
 /* line 45, ../../src/sass/messenger-spinner.scss */
 ul.messenger-theme-future .messenger-message.alert-success .messenger-spinner:after {
   content: "";
@@ -453,8 +397,7 @@ ul.messenger-theme-future .messenger-message.alert-success .messenger-spinner:af
   left: 3px;
   display: block;
 }
-/* line 106, ../../src/sass/messenger-theme-future.sass */
->>>>>>> message_spinner
+/* line 107, ../../src/sass/messenger-theme-future.sass */
 ul.messenger-theme-future .messenger-message.alert-success .messenger-message-inner:before {
   background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #5fca4a), color-stop(100%, #098d38));
   background-image: -webkit-linear-gradient(top, #5fca4a, #098d38);
@@ -463,9 +406,6 @@ ul.messenger-theme-future .messenger-message.alert-success .messenger-message-in
   background-image: linear-gradient(top, #5fca4a, #098d38);
   background-color: #5fca4a;
 }
-<<<<<<< HEAD
-/* line 103, ../../src/sass/messenger-theme-future.sass */
-=======
 /* line 32, ../../src/sass/messenger-spinner.scss */
 ul.messenger-theme-future .messenger-message.alert-error .messenger-spinner {
   width: 32px;
@@ -494,8 +434,7 @@ ul.messenger-theme-future .messenger-message.alert-error .messenger-spinner:afte
   left: 3px;
   display: block;
 }
-/* line 113, ../../src/sass/messenger-theme-future.sass */
->>>>>>> message_spinner
+/* line 114, ../../src/sass/messenger-theme-future.sass */
 ul.messenger-theme-future .messenger-message.alert-error .messenger-message-inner:before {
   background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #dd6a45), color-stop(100%, #91361a));
   background-image: -webkit-linear-gradient(top, #dd6a45, #91361a);
@@ -504,9 +443,6 @@ ul.messenger-theme-future .messenger-message.alert-error .messenger-message-inne
   background-image: linear-gradient(top, #dd6a45, #91361a);
   background-color: #dd6a45;
 }
-<<<<<<< HEAD
-/* line 107, ../../src/sass/messenger-theme-future.sass */
-=======
 /* line 32, ../../src/sass/messenger-spinner.scss */
 ul.messenger-theme-future .messenger-message.alert-info .messenger-spinner {
   width: 32px;
@@ -535,8 +471,7 @@ ul.messenger-theme-future .messenger-message.alert-info .messenger-spinner:after
   left: 3px;
   display: block;
 }
-/* line 120, ../../src/sass/messenger-theme-future.sass */
->>>>>>> message_spinner
+/* line 121, ../../src/sass/messenger-theme-future.sass */
 ul.messenger-theme-future .messenger-message.alert-info .messenger-message-inner:before {
   background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #61c4b8), color-stop(100%, #1992a3));
   background-image: -webkit-linear-gradient(top, #61c4b8, #1992a3);
@@ -545,11 +480,7 @@ ul.messenger-theme-future .messenger-message.alert-info .messenger-message-inner
   background-image: linear-gradient(top, #61c4b8, #1992a3);
   background-color: #61c4b8;
 }
-<<<<<<< HEAD
-/* line 113, ../../src/sass/messenger-theme-future.sass */
-=======
-/* line 126, ../../src/sass/messenger-theme-future.sass */
->>>>>>> message_spinner
+/* line 127, ../../src/sass/messenger-theme-future.sass */
 ul.messenger-theme-future .messenger-message-slot.last .messenger-message {
   -webkit-border-radius: 4px 4px 0px 0px;
   -moz-border-radius: 4px 4px 0px 0px;
@@ -557,11 +488,7 @@ ul.messenger-theme-future .messenger-message-slot.last .messenger-message {
   -o-border-radius: 4px 4px 0px 0px;
   border-radius: 4px 4px 0px 0px;
 }
-<<<<<<< HEAD
-/* line 116, ../../src/sass/messenger-theme-future.sass */
-=======
-/* line 129, ../../src/sass/messenger-theme-future.sass */
->>>>>>> message_spinner
+/* line 130, ../../src/sass/messenger-theme-future.sass */
 ul.messenger-theme-future .messenger-message-slot.first .messenger-message {
   -webkit-border-radius: 0px 0px 4px 4px;
   -moz-border-radius: 0px 0px 4px 4px;
@@ -572,11 +499,7 @@ ul.messenger-theme-future .messenger-message-slot.first .messenger-message {
   -moz-box-shadow: inset 0px 1px rgba(255, 255, 255, 0.13), inset 48px 0px 0px rgba(0, 0, 0, 0.3), inset 46px 0px 0px rgba(255, 255, 255, 0.07);
   box-shadow: inset 0px 1px rgba(255, 255, 255, 0.13), inset 48px 0px 0px rgba(0, 0, 0, 0.3), inset 46px 0px 0px rgba(255, 255, 255, 0.07);
 }
-<<<<<<< HEAD
-/* line 120, ../../src/sass/messenger-theme-future.sass */
-=======
-/* line 133, ../../src/sass/messenger-theme-future.sass */
->>>>>>> message_spinner
+/* line 134, ../../src/sass/messenger-theme-future.sass */
 ul.messenger-theme-future .messenger-message-slot.first.last .messenger-message {
   -webkit-box-shadow: inset 48px 0px 0px rgba(0, 0, 0, 0.3), inset 46px 0px 0px rgba(255, 255, 255, 0.07);
   -moz-box-shadow: inset 48px 0px 0px rgba(0, 0, 0, 0.3), inset 46px 0px 0px rgba(255, 255, 255, 0.07);
@@ -587,7 +510,7 @@ ul.messenger-theme-future .messenger-message-slot.first.last .messenger-message 
   -o-border-radius: 4px;
   border-radius: 4px;
 }
-/* line 137, ../../src/sass/messenger-theme-future.sass */
+/* line 138, ../../src/sass/messenger-theme-future.sass */
 ul.messenger-theme-future .messenger-spinner {
   display: block;
   position: absolute;

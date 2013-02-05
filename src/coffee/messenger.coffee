@@ -26,6 +26,7 @@ class Message extends Backbone.View
 
     show: ->
         do @render
+        console.log 'being shown'
 
         @$message.removeClass('messenger-hidden')
 
@@ -36,6 +37,7 @@ class Message extends Backbone.View
 
     hide: ->
         return unless @rendered
+        console.log 'being hidden'
 
         @$message.addClass('messenger-hidden')
 
@@ -75,6 +77,8 @@ class Message extends Backbone.View
             if Backbone.history?
                 Backbone.history.on 'route', =>
                     do @hide
+
+        @trigger 'update', @
 
     scrollTo: ->
         return unless @options.scroll
@@ -271,12 +275,28 @@ class Messenger extends Backbone.View
 
         @history.push {msg, $slot}
 
+        @_enforceIdConstraint msg
+        msg.on 'update', => @_enforceIdConstraint(msg)
+
         while @options.maxMessages and @history.length > @options.maxMessages
           dmsg = @history.shift()
           dmsg.msg.remove()
           dmsg.$slot.remove()
 
         return $slot
+
+    _enforceIdConstraint: (msg) ->
+      return unless msg.options.id?
+
+      for entry in @history
+        _msg = entry.msg
+
+        if _msg.options.id? and _msg.options.id is msg.options.id and msg isnt _msg
+          if msg.options.singleton
+            msg.hide()
+            return
+          else
+            _msg.hide()
 
     newMessage: (opts={}) ->
         opts.messenger = @
@@ -325,7 +345,6 @@ class Messenger extends Backbone.View
 
         msg = @newMessage opts
         msg.update opts
-        msg.show()
         return msg
 
 class ActionMessenger extends Messenger
@@ -423,13 +442,6 @@ class ActionMessenger extends Messenger
     do: (m_opts, opts={}, args...) ->
         m_opts = $.extend true, {}, @ACTION_DEFAULTS, m_opts ? {}
         events = @_parseEvents m_opts.events
-
-        if not m_opts.messageInstance and m_opts.id
-            for m in @findById(m_opts.id)
-                if m_opts.singleton
-                    return false
-                else
-                    do m.msg.hide
 
         msg = m_opts.messageInstance ? @newMessage m_opts
 

@@ -87,7 +87,7 @@ ul.messenger.messenger-fixed.messenger-on-right, ul.messenger.messenger-fixed.me
 ul.messenger.messenger-fixed.messenger-on-right .messenger-actions, ul.messenger.messenger-fixed.messenger-on-left .messenger-actions {
   float: left;
 }
-/* line 71, ../../src/sass/messenger.sass */
+/* line 72, ../../src/sass/messenger.sass */
 ul.messenger .messenger-spinner {
   display: none;
 }

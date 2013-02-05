@@ -142,7 +142,15 @@ If you're not using Bootstrap: /build/css/no-bootstrap.css
         <span class="nv">cancel:</span>
             <span class="nv">action: </span><span class="o">-&gt;</span>
                 <span class="nx">do</span> <span class="nx">msg</span><span class="p">.</span><span class="nx">cancel</span>
-</code><code executable><span class="c1"># You can bind to action events as well:</span>
+</code>
+
+<code executable>
+# This guy will 500
+$.globalMessenger().do
+  action: (opts) -> opts.error({status: 500, readyState: 0, responseText: 0})
+</code>
+
+<code executable><span class="c1"># You can bind to action events as well:</span>
 <span class="nx">msg</span><span class="p">.</span><span class="kc">on</span> <span class="s">'action:retry'</span><span class="p">,</span> <span class="o">-&gt;</span>
     <span class="nx">alert</span><span class="p">(</span><span class="s">'Hey, you retried!'</span><span class="p">)</span>
 </code>

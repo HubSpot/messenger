@@ -36,7 +36,7 @@ $default-duration: 3s;
 
         .messenger-spinner-side .messenger-spinner-fill {
             background: $bkg-color-dark;
-            @include experimental(animation-duration, $duration);
+            @include experimental(animation-duration, $duration * 2);
             opacity: $opacity;
         }
 

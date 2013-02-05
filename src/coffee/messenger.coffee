@@ -66,17 +66,24 @@ class Message extends Backbone.View
         do @checkClickable
 
         if @options.hideAfter
+            @$message.addClass 'messenger-will-hide-after'
+            
             if @_hideTimeout?
                 clearTimeout @_hideTimeout
 
             @_hideTimeout = setTimeout =>
                 do @hide
             , @options.hideAfter * 1000
+        else
+            @$message.removeClass 'messenger-will-hide-after'
 
         if @options.hideOnNavigate
+            @$message.addClass 'messenger-will-hide-on-navigate'
             if Backbone.history?
                 Backbone.history.on 'route', =>
                     do @hide
+        else
+            @$message.removeClass 'messenger-will-hide-on-navigate'
 
         @trigger 'update', @
 
@@ -105,12 +112,12 @@ class Message extends Backbone.View
     checkClickable: ->
         for name, evt of @events
             if name is 'click'
-                @$el.addClass 'messenger-clickable'
+                @$messenger.addClass 'messenger-clickable'
 
     undelegateEvents: ->
         super
 
-        @$el.removeClass 'messenger-clickable'
+        @$messenger?.removeClass 'messenger-clickable'
 
     parseActions: ->
         actions = []
@@ -197,6 +204,8 @@ class MagicMessage extends Message
         for name, timer of @_timers
             clearTimeout timer
 
+        @$message?.removeClass 'messenger-retry-soon messenger-retry-later'
+
     render: ->
         super
 
@@ -234,9 +243,16 @@ class MagicMessage extends Message
 
 
     startCountdown: (name, action) ->
-        $phrase = @$el.find("[data-action='#{ name }'] .messenger-phrase")
+        $phrase = @$message.find("[data-action='#{ name }'] .messenger-phrase")
 
         remaining = action.delay ? 3
+
+        if remaining <= 10
+          @$message.removeClass 'messenger-retry-later'
+          @$message.addClass 'messenger-retry-soon'
+        else
+          @$message.removeClass 'messenger-retry-soon'
+          @$message.addClass 'messenger-retry-later'
 
         tick = =>
             remaining -= 1
@@ -246,6 +262,7 @@ class MagicMessage extends Message
             if remaining > 0
                 @_timers[name] = setTimeout tick, 1000
             else
+                @$message.removeClass 'messenger-retry-soon messenger-retry-later'
                 delete @_timers[name]
                 do action.action
 
@@ -473,8 +490,8 @@ class ActionMessenger extends Messenger
                     m_opts['successMessage'] = null
 
                 if type is 'error'
-                    msg.errorCount ?= 0
-                    msg.errorCount += 1
+                    m_opts.errorCount ?= 0
+                    m_opts.errorCount += 1
 
                 msgText = @_getMessage(r=old(resp...), m_opts[type + 'Message'])
 
@@ -494,8 +511,16 @@ class ActionMessenger extends Messenger
 
                     if type is 'error' and xhr?.status >= 500
                         if msgOpts.retry?.allow
+
+                            unless msgOpts.retry.delay?
+                              if msgOpts.errorCount < 4
+                                msgOpts.retry.delay = 10
+                              else
+                                msgOpts.retry.delay = 5 * 60
+
                             if msgOpts.hideAfter
-                              msgOpts.hideAfter += (msgOpts.retry.delay ? 10)
+                              msgOpts._hideAfter ?= msgOpts.hideAfter
+                              msgOpts.hideAfter = msgOpts._hideAfter + msgOpts.retry.delay
 
                             msgOpts._retryActions = true
                             msgOpts.actions =
@@ -503,10 +528,10 @@ class ActionMessenger extends Messenger
                                     label: 'retry now'
                                     phrase: 'Retrying TIME'
                                     auto: msgOpts.retry.auto
-                                    delay: msgOpts.retry.delay ? 10
+                                    delay: msgOpts.retry.delay
                                     action: =>
                                         msgOpts.messageInstance = msg
-                                        msgOpts.retry.delay = (msgOpts.retry.delay ? 10) * 2
+
                                         @do msgOpts, opts, args...
                                 cancel:
                                     action: =>

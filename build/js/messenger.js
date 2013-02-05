@@ -74,19 +74,25 @@
       this.delegateEvents();
       this.checkClickable();
       if (this.options.hideAfter) {
+        this.$message.addClass('messenger-will-hide-after');
         if (this._hideTimeout != null) {
           clearTimeout(this._hideTimeout);
         }
         this._hideTimeout = setTimeout(function() {
           return _this.hide();
         }, this.options.hideAfter * 1000);
+      } else {
+        this.$message.removeClass('messenger-will-hide-after');
       }
       if (this.options.hideOnNavigate) {
+        this.$message.addClass('messenger-will-hide-on-navigate');
         if (Backbone.history != null) {
           Backbone.history.on('route', function() {
             return _this.hide();
           });
         }
+      } else {
+        this.$message.removeClass('messenger-will-hide-on-navigate');
       }
       return this.trigger('update', this);
     };
@@ -137,7 +143,7 @@
       for (name in _ref) {
         evt = _ref[name];
         if (name === 'click') {
-          _results.push(this.$el.addClass('messenger-clickable'));
+          _results.push(this.$messenger.addClass('messenger-clickable'));
         } else {
           _results.push(void 0);
         }
@@ -146,8 +152,9 @@
     };
 
     Message.prototype.undelegateEvents = function() {
+      var _ref;
       Message.__super__.undelegateEvents.apply(this, arguments);
-      return this.$el.removeClass('messenger-clickable');
+      return (_ref = this.$messenger) != null ? _ref.removeClass('messenger-clickable') : void 0;
     };
 
     Message.prototype.parseActions = function() {
@@ -244,14 +251,13 @@
     };
 
     MagicMessage.prototype.clearTimers = function() {
-      var name, timer, _ref, _results;
+      var name, timer, _ref, _ref1;
       _ref = this._timers;
-      _results = [];
       for (name in _ref) {
         timer = _ref[name];
-        _results.push(clearTimeout(timer));
+        clearTimeout(timer);
       }
-      return _results;
+      return (_ref1 = this.$message) != null ? _ref1.removeClass('messenger-retry-soon messenger-retry-later') : void 0;
     };
 
     MagicMessage.prototype.render = function() {
@@ -303,14 +309,22 @@
     MagicMessage.prototype.startCountdown = function(name, action) {
       var $phrase, remaining, tick, _ref,
         _this = this;
-      $phrase = this.$el.find("[data-action='" + name + "'] .messenger-phrase");
+      $phrase = this.$message.find("[data-action='" + name + "'] .messenger-phrase");
       remaining = (_ref = action.delay) != null ? _ref : 3;
+      if (remaining <= 10) {
+        this.$message.removeClass('messenger-retry-later');
+        this.$message.addClass('messenger-retry-soon');
+      } else {
+        this.$message.removeClass('messenger-retry-soon');
+        this.$message.addClass('messenger-retry-later');
+      }
       tick = function() {
         remaining -= 1;
         $phrase.text(_this.renderPhrase(action, remaining));
         if (remaining > 0) {
           return _this._timers[name] = setTimeout(tick, 1000);
         } else {
+          _this.$message.removeClass('messenger-retry-soon messenger-retry-later');
           delete _this._timers[name];
           return action.action();
         }
@@ -591,17 +605,17 @@
         var old, _ref1;
         old = (_ref1 = opts[type]) != null ? _ref1 : function() {};
         return opts[type] = function() {
-          var data, msgOpts, msgText, r, reason, resp, xhr, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7;
+          var data, msgOpts, msgText, r, reason, resp, xhr, _ref2, _ref3, _ref4, _ref5, _ref6;
           resp = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
           _ref2 = _this._normalizeResponse.apply(_this, resp), reason = _ref2[0], data = _ref2[1], xhr = _ref2[2];
           if (type === 'success' && !(msg.errorCount != null) && m_opts.showSuccessWithoutError === false) {
             m_opts['successMessage'] = null;
           }
           if (type === 'error') {
-            if ((_ref3 = msg.errorCount) == null) {
-              msg.errorCount = 0;
+            if ((_ref3 = m_opts.errorCount) == null) {
+              m_opts.errorCount = 0;
             }
-            msg.errorCount += 1;
+            m_opts.errorCount += 1;
           }
           msgText = _this._getMessage(r = old.apply(null, resp), m_opts[type + 'Message']);
           if (type === 'error' && ((xhr != null ? xhr.status : void 0) === 0 || reason === 'abort')) {
@@ -617,8 +631,18 @@
             });
             if (type === 'error' && (xhr != null ? xhr.status : void 0) >= 500) {
               if ((_ref5 = msgOpts.retry) != null ? _ref5.allow : void 0) {
+                if (msgOpts.retry.delay == null) {
+                  if (msgOpts.errorCount < 4) {
+                    msgOpts.retry.delay = 10;
+                  } else {
+                    msgOpts.retry.delay = 5 * 60;
+                  }
+                }
                 if (msgOpts.hideAfter) {
-                  msgOpts.hideAfter += (_ref6 = msgOpts.retry.delay) != null ? _ref6 : 10;
+                  if ((_ref6 = msgOpts._hideAfter) == null) {
+                    msgOpts._hideAfter = msgOpts.hideAfter;
+                  }
+                  msgOpts.hideAfter = msgOpts._hideAfter + msgOpts.retry.delay;
                 }
                 msgOpts._retryActions = true;
                 msgOpts.actions = {
@@ -626,11 +650,9 @@
                     label: 'retry now',
                     phrase: 'Retrying TIME',
                     auto: msgOpts.retry.auto,
-                    delay: (_ref7 = msgOpts.retry.delay) != null ? _ref7 : 10,
+                    delay: msgOpts.retry.delay,
                     action: function() {
-                      var _ref8;
                       msgOpts.messageInstance = msg;
-                      msgOpts.retry.delay = ((_ref8 = msgOpts.retry.delay) != null ? _ref8 : 10) * 2;
                       return _this["do"].apply(_this, [msgOpts, opts].concat(__slice.call(args)));
                     }
                   },

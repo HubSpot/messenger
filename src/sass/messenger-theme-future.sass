@@ -102,22 +102,22 @@ ul.messenger-theme-future
       z-index: 20
 
     &.alert-success
-      +ui-spinner(#333, $spinnerSize, transparent, rgb(95, 202, 74), 1, 10s)
-
       .messenger-message-inner:before
         +background-image(linear-gradient(top, rgb(95, 202, 74), rgb(9, 141, 56)))
         background-color: rgb(95, 202, 74)
 
     &.alert-error
-      +ui-spinner(#333, $spinnerSize, transparent, rgb(221, 106, 69), 1, 10s)
+      &.messenger-retry-soon
+        +ui-spinner(#333, $spinnerSize, transparent, rgb(221, 106, 69), 1, 10s)
+
+      &.messenger-retry-later
+        +ui-spinner(#333, $spinnerSize, transparent, rgb(221, 106, 69), 1, 300s)
 
       .messenger-message-inner:before
         +background-image(linear-gradient(top, rgb(221, 106, 69), rgb(145, 54, 26)))
         background-color: rgb(221, 106, 69)
 
     &.alert-info
-      +ui-spinner(#333, $spinnerSize, transparent, rgb(97, 196, 184), 1, 10s)
-
       .messenger-message-inner:before
         +background-image(linear-gradient(top, rgb(97, 196, 184), rgb(25, 146, 163)))
         background-color: rgb(97, 196, 184)

@@ -145,9 +145,18 @@ If you're not using Bootstrap: /build/css/no-bootstrap.css
 </code>
 
 <code executable>
-# This guy will 500
+# This guy will 500 a few times, then succeed
+i = 0
 $.globalMessenger().do
-  action: (opts) -> opts.error({status: 500, readyState: 0, responseText: 0})
+  errorMessage: 'Error destroying alien planet'
+  successMessage: 'Alien planet destroyed!'
+
+  action: (opts) ->
+    if (++i < 3)
+      opts.error({status: 500, readyState: 0, responseText: 0})
+    else
+      opts.success()
+
 </code>
 
 <code executable><span class="c1"># You can bind to action events as well:</span>

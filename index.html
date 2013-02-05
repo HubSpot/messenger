@@ -170,6 +170,33 @@ $.globalMessenger().do
     <span class="nv">hideAfter: </span><span class="mi">10</span>
     <span class="nv">hideOnNavigate: </span><span class="kc">true</span>
 </code>
+<code executable>
+# You can use the id property to ensure that only one 
+# instance of a message will appear on the page at a time 
+# (the older message will be hidden).
+$.globalMessenger().post
+  message: "Only one at a time!"
+  id: "Only-one-message"
+</code><code executable>
+# When you add the singleton attribute, it ensures that no 
+# other messages with that id will ever be shown again 
+# (the newer message will be hidden).
+$.globalMessenger().post
+  message: "It's just me!"
+  id: '4'
+  singleton: true
+
+$.globalMessenger().post
+  message: "You'll never see me"
+  id: '4'
+  singleton: true
+</code><code executable>
+# Rather than hiding and showing multiple messages
+# you can also maintain a single message between
+# requests.
+msg = $.globalMessenger().do()
+$.globalMessenger().do({messageInstance: msg})
+</code>
 <span class="c1"># Don't want your message hidden on a long page? (Not necessary if you're using the default</span>
 <span class="c1"># fixed positioning)</span>
 <code executable><span class="nv">msg = </span><span class="nx">$</span><span class="p">.</span><span class="nx">globalMessenger</span><span class="p">().</span><span class="nx">post</span>
@@ -228,6 +255,12 @@ $.globalMessenger().do
 </code>
 <span class="c1"># Need to hide all messages?</span>
 <code executable><span class="nx">$</span><span class="p">.</span><span class="nx">globalMessenger</span><span class="p">().</span><span class="nx">hideAll</span><span class="p">()</span>
+</code>
+<code executable>
+# If your action responds with a promise-like thing, it's
+# methods will be copied onto the message:
+
+$.globalMessenger().do({}, {url: 'a'}).fail(-> alert "Uh oh")
 </code>
 <span class="c1"># Do you use Backbone? Hook all backbone calls:</span>
 <span class="nx">$</span><span class="p">.</span><span class="nx">globalMessenger</span><span class="p">().</span><span class="nx">hookBackboneAjax</span><span class="p">()</span>

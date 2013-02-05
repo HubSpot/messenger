@@ -1,5 +1,16 @@
 $ = jQuery
 
+spinner_template = '''
+    <div class="messenger-spinner">
+        <span class="messenger-spinner-side messenger-spinner-side-left">
+            <span class="messenger-spinner-fill"></span>
+        </span>
+        <span class="messenger-spinner-side messenger-spinner-side-right">
+            <span class="messenger-spinner-fill"></span>
+        </span>
+    </div>
+'''
+
 class Message extends Backbone.View
     defaults:
         hideAfter: 10
@@ -123,6 +134,8 @@ class Message extends Backbone.View
 
         $text = $ """<div class="messenger-message-inner">#{ opts.message }</div>"""
         $message.append $text
+
+        $message.append $ spinner_template
 
         if opts.actions.length
             $actions = $ '<div class="messenger-actions">'
@@ -520,14 +533,11 @@ $.fn.messenger = (func={}, args...) ->
             $el.data('messenger', instance = new ActionMessenger($.extend({el: $el}, opts)))
             instance.render()
 
-            $._messengerInstance = instance
-
         return $el.data('messenger')
     else
         return $el.data('messenger')[func](args...)
 
 $.globalMessenger = (opts) ->
-    inst = $._messengerInstance
 
     defaultOpts =
         extraClasses: 'messenger-fixed messenger-on-bottom messenger-on-right messenger-theme-future'
@@ -537,30 +547,34 @@ $.globalMessenger = (opts) ->
 
     opts = $.extend defaultOpts, $._messengerDefaults, opts
 
-    locations = opts.parentLocations
-    $parent = null
-    choosen_loc = null
+    inst = opts.instance or $._messengerInstance
+    
+    unless opts.instance?
+        locations = opts.parentLocations
+        $parent = null
+        choosen_loc = null
 
-    for loc in locations
-        $parent = $(loc)
+        for loc in locations
+            $parent = $(loc)
 
-        if $parent.length
-            chosen_loc = loc
-            break
+            if $parent.length
+                chosen_loc = loc
+                break
 
-    if not inst
-        $el = $('<ul>')
-
-        $parent.prepend $el
-
-        inst = $el.messenger(opts)
-        inst._location = chosen_loc
-
-    else if $(inst._location) != $(chosen_loc)
-        # A better location has since become avail on the page.
-
-        inst.$el.detach()
-        $parent.prepend inst.$el
+        if not inst
+            $el = $('<ul>')
+    
+            $parent.prepend $el
+    
+            inst = $el.messenger(opts)
+            inst._location = chosen_loc
+            $._messengerInstance = inst
+    
+        else if $(inst._location) != $(chosen_loc)
+            # A better location has since become avail on the page.
+    
+            inst.$el.detach()
+            $parent.prepend inst.$el
 
     if inst._addedClasses?
         inst.$el.removeClass inst._addedClasses

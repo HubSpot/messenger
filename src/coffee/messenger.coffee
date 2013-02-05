@@ -35,6 +35,8 @@ class Message extends Backbone.View
         @trigger('show') unless wasShown
 
     hide: ->
+        return unless @rendered
+
         @$message.addClass('messenger-hidden')
 
         wasShown = @shown
@@ -88,7 +90,7 @@ class Message extends Backbone.View
 
     actionsToEvents: ->
         for name, act of @options.actions
-            @events["click a[data-action=\"#{ name }\"]"] = ((act) ->
+            @events["click [data-action=\"#{ name }\"] a"] = ((act) ->
                 return (e) =>
                     do e.preventDefault
                     do e.stopPropagation
@@ -109,7 +111,7 @@ class Message extends Backbone.View
     parseActions: ->
         actions = []
 
-        for name, act of @options.actions ? []
+        for name, act of @options.actions
             n_act = $.extend {}, act
             n_act.name = name
             n_act.label ?= name
@@ -119,7 +121,7 @@ class Message extends Backbone.View
         return actions
 
     template: (opts) ->
-        $message = $ "<div class='messenger-message alert #{ opts.type } alert-#{ opts.type }'>"
+        $message = $ "<div class='messenger-message message alert #{ opts.type } message-#{ opts.type } alert-#{ opts.type }'>"
 
         if opts.showCloseButton
             $cancel = $ '<button type="button" class="close" data-dismiss="alert">&times;</button>'
@@ -140,9 +142,9 @@ class Message extends Backbone.View
 
         for action in opts.actions
             $action = $ '<span>'
+            $action.attr 'data-action', "#{ action.name }"
 
             $link = $ '<a>'
-            $link.attr 'data-action', "#{ action.name }"
             $link.html action.label
 
             $action.append $ '<span class="messenger-phrase">'
@@ -247,12 +249,16 @@ class MagicMessage extends Message
 
 class Messenger extends Backbone.View
     tagName: 'ul'
+    className: 'messenger'
 
     OPT_DEFAULTS:
         type: 'info'
 
-    initialize: (options) ->
+    initialize: (@options) ->
         @history = []
+
+    render: ->
+        do @updateMessageSlotClasses
 
     findById: (id) ->
         _.filter @history, (rec) ->
@@ -264,6 +270,11 @@ class Messenger extends Backbone.View
         @$el.prepend $slot
 
         @history.push {msg, $slot}
+
+        while @options.maxMessages and @history.length > @options.maxMessages
+          dmsg = @history.shift()
+          dmsg.msg.remove()
+          dmsg.$slot.remove()
 
         return $slot
 
@@ -418,12 +429,12 @@ class ActionMessenger extends Messenger
                 if m_opts.singleton
                     return false
                 else
-                    do m.hide
+                    do m.msg.hide
 
         msg = m_opts.messageInstance ? @newMessage m_opts
 
         if m_opts.id?
-            msg.opts.id = m_opts.id
+            msg.options.id = m_opts.id
 
         if m_opts.progressMessage?
             msg.update $.extend {}, m_opts,
@@ -505,15 +516,24 @@ class ActionMessenger extends Messenger
 
         msg._actionInstance = m_opts.action opts, args...
 
+        promiseAttrs = ['done', 'progress', 'fail', 'state', 'then']
+        for attr in promiseAttrs
+          delete msg[attr] if msg[attr]?
+          msg[attr] = msg._actionInstance?[attr]
+
         return msg
 
-$.fn.messenger = (func, args...) ->
+$.fn.messenger = (func={}, args...) ->
     $el = this
 
-    if not func?
+    if not func? or not _.isString(func)
+        opts = func
+
         if not $el.data('messenger')?
-            $el.data('messenger', new ActionMessenger({el: $el}))
-            $._messengerInstance = $el.data('messenger')
+            $el.data('messenger', instance = new ActionMessenger($.extend({el: $el}, opts)))
+            instance.render()
+
+            $._messengerInstance = instance
 
         return $el.data('messenger')
     else
@@ -523,11 +543,12 @@ $.globalMessenger = (opts) ->
     inst = $._messengerInstance
 
     defaultOpts =
-        extraClasses: 'messenger-fixed messenger-on-bottom messenger-on-right'
+        extraClasses: 'messenger-fixed messenger-on-bottom messenger-on-right messenger-theme-future'
 
+        maxMessages: 9
         parentLocations: ['body']
 
-    opts = $.extend defaultOpts, opts
+    opts = $.extend defaultOpts, $._messengerDefaults, opts
 
     locations = opts.parentLocations
     $parent = null
@@ -545,7 +566,7 @@ $.globalMessenger = (opts) ->
 
         $parent.prepend $el
 
-        inst = $el.messenger()
+        inst = $el.messenger(opts)
         inst._location = chosen_loc
 
     else if $(inst._location) != $(chosen_loc)
@@ -554,6 +575,10 @@ $.globalMessenger = (opts) ->
         inst.$el.detach()
         $parent.prepend inst.$el
 
-    inst.$el.attr 'class', "messenger #{ opts.extraClasses }"
+    if inst._addedClasses?
+        inst.$el.removeClass inst._addedClasses
+
+    inst.$el.addClass classes = "#{ inst.className } #{ opts.extraClasses }"
+    inst._addedClasses = classes
 
     return inst

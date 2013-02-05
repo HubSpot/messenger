@@ -35,7 +35,6 @@
     Message.prototype.show = function() {
       var wasShown;
       this.render();
-      console.log('being shown');
       this.$message.removeClass('messenger-hidden');
       wasShown = this.shown;
       this.shown = true;
@@ -49,7 +48,6 @@
       if (!this.rendered) {
         return;
       }
-      console.log('being hidden');
       this.$message.addClass('messenger-hidden');
       wasShown = this.shown;
       this.shown = false;

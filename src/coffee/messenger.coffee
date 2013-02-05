@@ -26,7 +26,6 @@ class Message extends Backbone.View
 
     show: ->
         do @render
-        console.log 'being shown'
 
         @$message.removeClass('messenger-hidden')
 
@@ -37,7 +36,6 @@ class Message extends Backbone.View
 
     hide: ->
         return unless @rendered
-        console.log 'being hidden'
 
         @$message.addClass('messenger-hidden')
 

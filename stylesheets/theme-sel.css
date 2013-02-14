@@ -4,4 +4,5 @@
     list-style-type: none;
     color: #43adff;
     text-decoration: underline;
-    cursor: pointer; }
+    cursor: pointer;
+    text-transform: capitalize; }

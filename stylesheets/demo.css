@@ -5,3 +5,19 @@ h2 .subtitle {
 .highlight .c1 {
   font-size: 12px;
 }
+
+.controls {
+  margin-bottom: 20px;
+}
+
+.controls > div {
+  margin: 0 95px;
+  float: left;
+}
+
+.clear {
+  clear: both;
+  height: 0;
+  margin: 0;
+  border-width: 0;
+}

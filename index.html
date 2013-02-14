@@ -7,6 +7,8 @@
     <meta name="description" content="Messenger : Alerts for the 21st century" />
 
     <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/location-sel.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/theme-sel.css">
     <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/demo.css">
     <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/bootstrap/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" media="screen" href="build/css/messenger.css">
@@ -21,6 +23,8 @@
     <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.2.2/bootstrap.min.js"></script>
     <script type="text/javascript" src="build/js/messenger.js"></script>
 
+    <script type="text/javascript" src="javascripts/location-sel.js"></script>
+    <script type="text/javascript" src="javascripts/theme-sel.js"></script>
     <script type="text/javascript" src="javascripts/demo.js"></script>
 
     <script type="text/javascript" src="lib/executr/lib/CodeMirror/codemirror.js"></script>
@@ -99,6 +103,17 @@ $.globalMessenger().do
 </code>
 </pre>
 <h2>Usage <span class="subtitle">Click Code to Edit</span></h2>
+<div class='controls'>
+  <div>
+    <h4>Change Location</h4>
+    <div class='location-selector'></div>
+  </div>
+  <div>
+    <h4>Change Theme</h4>
+    <ul class='theme-selector'></ul>
+  </div>
+  <hr class="clear"></hr>
+</div>
 <pre>
 <code executable>
 $.globalMessenger().post "Your request has succeded!"

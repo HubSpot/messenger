@@ -15,6 +15,10 @@ h2 .subtitle {
   float: left;
 }
 
+.controls h4 {
+  text-align: center;
+}
+
 .clear {
   clear: both;
   height: 0;

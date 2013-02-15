@@ -1,3 +1,6 @@
 [submodule "lib/executr"]
 	path = lib/executr
 	url = git://github.com/HubSpot/executr.git
+[submodule "lib/animate"]
+	path = lib/animate
+	url = git://github.com/daneden/animate.css.git

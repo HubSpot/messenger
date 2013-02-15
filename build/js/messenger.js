@@ -218,6 +218,14 @@
       });
       this.$message = $(this.template(opts));
       this.$el.html(this.$message);
+      if (this._addedClasses != null) {
+        this.$el.removeClass(this._addedClasses);
+        this._addedClasses = null;
+      }
+      if (opts.extraClasses != null) {
+        this.$el.addClass(opts.extraClasses);
+        this._addedClasses = opts.extraClasses;
+      }
       this.shown = true;
       this.rendered = true;
       return this.trigger('render');

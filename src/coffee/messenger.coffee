@@ -180,6 +180,14 @@ class Message extends Backbone.View
         @$message = $ @template opts
         @$el.html @$message
 
+        if @_addedClasses?
+          @$el.removeClass @_addedClasses
+          @_addedClasses = null
+
+        if opts.extraClasses?
+          @$el.addClass opts.extraClasses
+          @_addedClasses = opts.extraClasses
+
         @shown = true
         @rendered = true
 

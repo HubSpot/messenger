@@ -280,11 +280,14 @@ class Messenger extends Backbone.View
     tagName: 'ul'
     className: 'messenger'
 
-    OPT_DEFAULTS:
+    messageDefaults:
         type: 'info'
 
     initialize: (@options) ->
         @history = []
+
+        if @options.messageDefaults
+            @messageDefaults = @options.messageDefaults
 
     render: ->
         do @updateMessageSlotClasses
@@ -366,14 +369,14 @@ class Messenger extends Backbone.View
         if _.isString opts
             opts = {message: opts}
 
-        opts = $.extend(true, {}, @OPT_DEFAULTS, opts)
+        opts = $.extend(true, {}, @messageDefaults, opts)
 
         msg = @newMessage opts
         msg.update opts
         return msg
 
 class ActionMessenger extends Messenger
-    ACTION_DEFAULTS:
+    messageDefaults:
         progressMessage: null
         successMessage: null
         errorMessage: "Error connecting to the server."
@@ -465,7 +468,7 @@ class ActionMessenger extends Messenger
         return [type, data, xhr]
 
     do: (m_opts, opts={}, args...) ->
-        m_opts = $.extend true, {}, @ACTION_DEFAULTS, m_opts ? {}
+        m_opts = $.extend true, {}, @messageDefaults, m_opts ? {}
         events = @_parseEvents m_opts.events
 
         msg = m_opts.messageInstance ? @newMessage m_opts

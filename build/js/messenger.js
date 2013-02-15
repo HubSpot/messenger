@@ -360,11 +360,9 @@
     };
 
     Messenger.prototype.initialize = function(options) {
-      this.options = options;
+      this.options = options != null ? options : {};
       this.history = [];
-      if (this.options.messageDefaults) {
-        return this.messageDefaults = this.options.messageDefaults;
-      }
+      return this.messageDefaults = $.extend({}, this.messageDefaults, this.options.messageDefaults);
     };
 
     Messenger.prototype.render = function() {

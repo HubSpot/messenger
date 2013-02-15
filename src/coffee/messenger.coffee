@@ -281,11 +281,10 @@ class Messenger extends Backbone.View
     messageDefaults:
         type: 'info'
 
-    initialize: (@options) ->
+    initialize: (@options={}) ->
         @history = []
 
-        if @options.messageDefaults
-            @messageDefaults = @options.messageDefaults
+        @messageDefaults = $.extend {}, @messageDefaults, @options.messageDefaults
 
     render: ->
         do @updateMessageSlotClasses

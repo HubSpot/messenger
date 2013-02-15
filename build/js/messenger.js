@@ -354,13 +354,16 @@
 
     Messenger.prototype.className = 'messenger';
 
-    Messenger.prototype.OPT_DEFAULTS = {
+    Messenger.prototype.messageDefaults = {
       type: 'info'
     };
 
     Messenger.prototype.initialize = function(options) {
       this.options = options;
-      return this.history = [];
+      this.history = [];
+      if (this.options.messageDefaults) {
+        return this.messageDefaults = this.options.messageDefaults;
+      }
     };
 
     Messenger.prototype.render = function() {
@@ -475,7 +478,7 @@
           message: opts
         };
       }
-      opts = $.extend(true, {}, this.OPT_DEFAULTS, opts);
+      opts = $.extend(true, {}, this.messageDefaults, opts);
       msg = this.newMessage(opts);
       msg.update(opts);
       return msg;
@@ -493,7 +496,7 @@
       return ActionMessenger.__super__.constructor.apply(this, arguments);
     }
 
-    ActionMessenger.prototype.ACTION_DEFAULTS = {
+    ActionMessenger.prototype.messageDefaults = {
       progressMessage: null,
       successMessage: null,
       errorMessage: "Error connecting to the server.",
@@ -595,7 +598,7 @@
       if (opts == null) {
         opts = {};
       }
-      m_opts = $.extend(true, {}, this.ACTION_DEFAULTS, m_opts != null ? m_opts : {});
+      m_opts = $.extend(true, {}, this.messageDefaults, m_opts != null ? m_opts : {});
       events = this._parseEvents(m_opts.events);
       msg = (_ref = m_opts.messageInstance) != null ? _ref : this.newMessage(m_opts);
       if (m_opts.id != null) {

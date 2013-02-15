@@ -609,7 +609,7 @@ $.globalMessenger = (opts) ->
     
             $parent.prepend $el
     
-            inst = $el.messenger(opts)
+            inst = $el.messenger(opts.messageDefaults)
             inst._location = chosen_loc
             $._messengerInstance = inst
     

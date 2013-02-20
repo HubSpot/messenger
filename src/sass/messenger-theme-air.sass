@@ -1,6 +1,8 @@
 @import "compass/utilities/general/clearfix"
 @import "compass/css3"
 
+@import url("http://fonts.googleapis.com/css?family=Raleway:400")
+
 @import "messenger-spinner"
 
 @mixin unselectable
@@ -13,6 +15,7 @@ $spinnerSize: 24px
 
 ul.messenger-theme-air
   +unselectable
+  font-family: "Raleway", sans-serif
 
   &.messenger-empty
     display: none
@@ -28,7 +31,7 @@ ul.messenger-theme-air
     font-size: 13px
     color: #666
     font-weight: 500
-    padding: 10px 30px 13px 46px
+    padding: 10px 30px 11px 46px
 
     &:hover
       background-color: rgba(255, 255, 255, 1)

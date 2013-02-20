@@ -25,7 +25,7 @@ $(function(){
 
 
   $('.theme-selector').themeSelector({
-    themes: ['future', 'block']
+    themes: ['future', 'block', 'air']
   }).on('update', function(theme){
     style = theme;
 

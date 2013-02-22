@@ -1,3 +1,4 @@
+@import "variables"
 @import "compass/utilities/general/clearfix"
 @import "compass/css3"
 
@@ -12,7 +13,7 @@
 $defaultThemeBorderRadius: 4px
 $spinnerSize: 32px
 
-ul.messenger-theme-future
+ul.#{$prefix}messenger-theme-future
   +box-shadow(inset 0px 1px rgba(255, 255, 255, 0.24), 0px 1px 5px rgba(0, 0, 0, 0.6))
   +border-radius($defaultThemeBorderRadius)
 
@@ -21,10 +22,10 @@ ul.messenger-theme-future
   background-color: rgb(92, 91, 91)
   border: 1px solid rgba(0, 0, 0, 0.5)
 
-  &.messenger-empty
+  &.#{$prefix}messenger-empty
     display: none
 
-  .messenger-message
+  .#{$prefix}messenger-message
     +box-shadow(inset 0px 1px rgba(255, 255, 255, 0.13), inset 0px -1px rgba(0, 0, 0, 0.23), inset 48px 0px 0px rgba(0, 0, 0, 0.3), inset 46px 0px 0px rgba(255, 255, 255, 0.07))
     +border-radius(0px)
     position: relative
@@ -37,7 +38,7 @@ ul.messenger-theme-future
     font-weight: 500
     padding: 10px 30px 13px 65px
 
-    .close
+    .#{$prefix}close
       position: absolute
       top: 0px
       right: 0px
@@ -60,7 +61,7 @@ ul.messenger-theme-future
       &:active
         color: #777
 
-    .messenger-actions
+    .#{$prefix}messenger-actions
       float: none
       margin-top: 10px
 
@@ -85,10 +86,10 @@ ul.messenger-theme-future
           background: rgba(0, 0, 0, 0.04)
           color: #aaa
 
-      .messenger-phrase
+      .#{$prefix}messenger-phrase
         display: none
 
-    .messenger-message-inner:before
+    .#{$prefix}messenger-message-inner:before
       +box-shadow(inset 0px 1px 3px rgba(0, 0, 0, 0.6), 0px 0px 0px 1px rgba(0, 0, 0, 0.2))
       +border-radius(50%)
       position: absolute
@@ -101,41 +102,41 @@ ul.messenger-theme-future
       width: 13px
       z-index: 20
 
-    &.alert-success
-      .messenger-message-inner:before
+    &.#{$prefix}alert-success
+      .#{$prefix}messenger-message-inner:before
         +background-image(linear-gradient(top, rgb(95, 202, 74), rgb(9, 141, 56)))
         background-color: rgb(95, 202, 74)
 
-    &.alert-error
-      &.messenger-retry-soon
+    &.#{$prefix}alert-error
+      &.#{$prefix}messenger-retry-soon
         +ui-spinner(#333, $spinnerSize, transparent, rgb(221, 106, 69), 1, 10s)
 
-      &.messenger-retry-later
+      &.#{$prefix}messenger-retry-later
         +ui-spinner(#333, $spinnerSize, transparent, rgb(221, 106, 69), 1, 300s)
 
-      .messenger-message-inner:before
+      .#{$prefix}messenger-message-inner:before
         +background-image(linear-gradient(top, rgb(221, 106, 69), rgb(145, 54, 26)))
         background-color: rgb(221, 106, 69)
 
-    &.alert-info
-      .messenger-message-inner:before
+    &.#{$prefix}alert-info
+      .#{$prefix}messenger-message-inner:before
         +background-image(linear-gradient(top, rgb(97, 196, 184), rgb(25, 146, 163)))
         background-color: rgb(97, 196, 184)
 
-  .messenger-message-slot
+  .#{$prefix}messenger-message-slot
 
-    &.last .messenger-message
+    &.#{$prefix}last .#{$prefix}messenger-message
       +border-radius($defaultThemeBorderRadius $defaultThemeBorderRadius 0px 0px)
 
-    &.first .messenger-message
+    &.#{$prefix}first .#{$prefix}messenger-message
       +border-radius(0px 0px $defaultThemeBorderRadius $defaultThemeBorderRadius)
       +box-shadow(inset 0px 1px rgba(255, 255, 255, 0.13), inset 48px 0px 0px rgba(0, 0, 0, 0.3), inset 46px 0px 0px rgba(255, 255, 255, 0.07))
 
-    &.first.last .messenger-message
+    &.#{$prefix}first.#{$prefix}last .#{$prefix}messenger-message
       +box-shadow(inset 48px 0px 0px rgba(0, 0, 0, 0.3), inset 46px 0px 0px rgba(255, 255, 255, 0.07))
       +border-radius($defaultThemeBorderRadius)
 
-  .messenger-spinner
+  .#{$prefix}messenger-spinner
     display: block
     position: absolute
     left: 7px

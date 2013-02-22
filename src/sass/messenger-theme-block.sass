@@ -1,37 +1,38 @@
+@import "variables"
 @import "compass/utilities/general/clearfix"
 @import "compass/css3"
 
-ul.messenger.messenger-theme-block.messenger-fixed
+ul.#{$prefix}messenger.#{$prefix}messenger-theme-block.#{$prefix}messenger-fixed
   width: 100%
   top: 0
   left: 0
   margin-left: 0px
 
-  &.messenger-on-bottom
+  &.#{$prefix}messenger-on-bottom
     top: auto
     bottom: 0
 
-  &.messenger-on-top
+  &.#{$prefix}messenger-on-top
     top: 0px
     bottom: auto
 
-  &.messenger-on-top, &.messenger-on-bottom
+  &.#{$prefix}messenger-on-top, &.#{$prefix}messenger-on-bottom
     left: 0px
     right: 0px
 
-    &.messenger-on-right, &.messenger-on-left
+    &.#{$prefix}messenger-on-right, &.#{$prefix}messenger-on-left
       width: 350px
 
-    &.messenger-on-left
+    &.#{$prefix}messenger-on-left
       right: auto
 
-    &.messenger-on-right
+    &.#{$prefix}messenger-on-right
       left: auto
 
-  .messenger-message-slot
+  .#{$prefix}messenger-message-slot
     max-width: none
 
-  .messenger-message
+  .#{$prefix}messenger-message
     margin-bottom: 0
 
     text-align: center

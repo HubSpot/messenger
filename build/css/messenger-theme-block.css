@@ -1,43 +1,43 @@
-/* line 4, ../../src/sass/messenger-theme-block.sass */
-ul.messenger.messenger-theme-block.messenger-fixed {
+/* line 5, ../../src/sass/messenger-theme-block.sass */
+ul.hubspot-messenger.hubspot-messenger-theme-block.hubspot-messenger-fixed {
   width: 100%;
   top: 0;
   left: 0;
   margin-left: 0px;
 }
-/* line 10, ../../src/sass/messenger-theme-block.sass */
-ul.messenger.messenger-theme-block.messenger-fixed.messenger-on-bottom {
+/* line 11, ../../src/sass/messenger-theme-block.sass */
+ul.hubspot-messenger.hubspot-messenger-theme-block.hubspot-messenger-fixed.hubspot-messenger-on-bottom {
   top: auto;
   bottom: 0;
 }
-/* line 14, ../../src/sass/messenger-theme-block.sass */
-ul.messenger.messenger-theme-block.messenger-fixed.messenger-on-top {
+/* line 15, ../../src/sass/messenger-theme-block.sass */
+ul.hubspot-messenger.hubspot-messenger-theme-block.hubspot-messenger-fixed.hubspot-messenger-on-top {
   top: 0px;
   bottom: auto;
 }
-/* line 18, ../../src/sass/messenger-theme-block.sass */
-ul.messenger.messenger-theme-block.messenger-fixed.messenger-on-top, ul.messenger.messenger-theme-block.messenger-fixed.messenger-on-bottom {
+/* line 19, ../../src/sass/messenger-theme-block.sass */
+ul.hubspot-messenger.hubspot-messenger-theme-block.hubspot-messenger-fixed.hubspot-messenger-on-top, ul.hubspot-messenger.hubspot-messenger-theme-block.hubspot-messenger-fixed.hubspot-messenger-on-bottom {
   left: 0px;
   right: 0px;
 }
-/* line 22, ../../src/sass/messenger-theme-block.sass */
-ul.messenger.messenger-theme-block.messenger-fixed.messenger-on-top.messenger-on-right, ul.messenger.messenger-theme-block.messenger-fixed.messenger-on-top.messenger-on-left, ul.messenger.messenger-theme-block.messenger-fixed.messenger-on-bottom.messenger-on-right, ul.messenger.messenger-theme-block.messenger-fixed.messenger-on-bottom.messenger-on-left {
+/* line 23, ../../src/sass/messenger-theme-block.sass */
+ul.hubspot-messenger.hubspot-messenger-theme-block.hubspot-messenger-fixed.hubspot-messenger-on-top.hubspot-messenger-on-right, ul.hubspot-messenger.hubspot-messenger-theme-block.hubspot-messenger-fixed.hubspot-messenger-on-top.hubspot-messenger-on-left, ul.hubspot-messenger.hubspot-messenger-theme-block.hubspot-messenger-fixed.hubspot-messenger-on-bottom.hubspot-messenger-on-right, ul.hubspot-messenger.hubspot-messenger-theme-block.hubspot-messenger-fixed.hubspot-messenger-on-bottom.hubspot-messenger-on-left {
   width: 350px;
 }
-/* line 25, ../../src/sass/messenger-theme-block.sass */
-ul.messenger.messenger-theme-block.messenger-fixed.messenger-on-top.messenger-on-left, ul.messenger.messenger-theme-block.messenger-fixed.messenger-on-bottom.messenger-on-left {
+/* line 26, ../../src/sass/messenger-theme-block.sass */
+ul.hubspot-messenger.hubspot-messenger-theme-block.hubspot-messenger-fixed.hubspot-messenger-on-top.hubspot-messenger-on-left, ul.hubspot-messenger.hubspot-messenger-theme-block.hubspot-messenger-fixed.hubspot-messenger-on-bottom.hubspot-messenger-on-left {
   right: auto;
 }
-/* line 28, ../../src/sass/messenger-theme-block.sass */
-ul.messenger.messenger-theme-block.messenger-fixed.messenger-on-top.messenger-on-right, ul.messenger.messenger-theme-block.messenger-fixed.messenger-on-bottom.messenger-on-right {
+/* line 29, ../../src/sass/messenger-theme-block.sass */
+ul.hubspot-messenger.hubspot-messenger-theme-block.hubspot-messenger-fixed.hubspot-messenger-on-top.hubspot-messenger-on-right, ul.hubspot-messenger.hubspot-messenger-theme-block.hubspot-messenger-fixed.hubspot-messenger-on-bottom.hubspot-messenger-on-right {
   left: auto;
 }
-/* line 31, ../../src/sass/messenger-theme-block.sass */
-ul.messenger.messenger-theme-block.messenger-fixed .messenger-message-slot {
+/* line 32, ../../src/sass/messenger-theme-block.sass */
+ul.hubspot-messenger.hubspot-messenger-theme-block.hubspot-messenger-fixed .hubspot-messenger-message-slot {
   max-width: none;
 }
-/* line 34, ../../src/sass/messenger-theme-block.sass */
-ul.messenger.messenger-theme-block.messenger-fixed .messenger-message {
+/* line 35, ../../src/sass/messenger-theme-block.sass */
+ul.hubspot-messenger.hubspot-messenger-theme-block.hubspot-messenger-fixed .hubspot-messenger-message {
   margin-bottom: 0;
   text-align: center;
   padding: 1em;

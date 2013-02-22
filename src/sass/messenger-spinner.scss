@@ -1,3 +1,4 @@
+@import "variables";
 @import "compass/css3/transition";
 
 // Copied from https://github.com/tomgenoni/ouroboros
@@ -29,12 +30,12 @@ $default-duration: 3s;
     $opacity: $default-opacity,
     $duration: $default-duration
     ) {
-    .messenger-spinner {
+    .#{$prefix}messenger-spinner {
         width: $size;
         height: $size;
         background: $bkg-color-light;
 
-        .messenger-spinner-side .messenger-spinner-fill {
+        .#{$prefix}messenger-spinner-side .#{$prefix}messenger-spinner-fill {
             background: $bkg-color-dark;
             @include experimental(animation-duration, $duration * 2);
             opacity: $opacity;
@@ -113,21 +114,21 @@ $default-duration: 3s;
 // to reveal the left/right side filling or emptying.
 // The damn thing is so complicated I barely understand it anymore.
 
-.messenger-spinner {
+.#{$prefix}messenger-spinner {
     position: relative;
     border-radius: 100%;
 
-    ul.messenger.messenger-spinner-active .messenger-spinner & {
+    ul.#{$prefix}messenger.#{$prefix}messenger-spinner-active .#{$prefix}messenger-spinner & {
         display: block;
     }
 
-    .messenger-spinner-side {
+    .#{$prefix}messenger-spinner-side {
         width: 50%;
         height: 100%;
         overflow: hidden;
         position: absolute;
 
-       .messenger-spinner-fill {
+       .#{$prefix}messenger-spinner-fill {
             border-radius: 999px;
             position: absolute;
             width: 100%;
@@ -137,10 +138,10 @@ $default-duration: 3s;
         }
     }
 
-    .messenger-spinner-side-left {
+    .#{$prefix}messenger-spinner-side-left {
         left: 0;
 
-        .messenger-spinner-fill {
+        .#{$prefix}messenger-spinner-fill {
             left: 100%;
             border-top-left-radius: 0;
             border-bottom-left-radius: 0;
@@ -149,10 +150,10 @@ $default-duration: 3s;
         }
     }
 
-    .messenger-spinner-side-right {
+    .#{$prefix}messenger-spinner-side-right {
         left: 50%;
 
-        .messenger-spinner-fill {
+        .#{$prefix}messenger-spinner-fill {
             left: -100%;
             border-top-right-radius: 0;
             border-bottom-right-radius: 0;

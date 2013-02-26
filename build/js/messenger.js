@@ -622,7 +622,7 @@
             msg.hide();
             return;
           }
-          if (type === 'error' && (_ref4 = xhr != null ? xhr.status : void 0, __indexOf.call(m_opts['ignoredErrorCodes'], _ref4) >= 0)) {
+          if (type === 'error' && ((m_opts.ignoredErrorCodes != null) && (_ref4 = xhr != null ? xhr.status : void 0, __indexOf.call(m_opts.ignoredErrorCodes, _ref4) >= 0))) {
             msg.hide();
             return;
           }

@@ -500,7 +500,7 @@ class ActionMessenger extends Messenger
                     do msg.hide
                     return
 
-                if type is 'error' and (xhr?.status in m_opts['ignoredErrorCodes'])
+                if type is 'error' and (m_opts.ignoredErrorCodes? and xhr?.status in m_opts.ignoredErrorCodes)
                     # We're ignoring this error
                     do msg.hide
                     return

@@ -487,7 +487,7 @@
       return ActionMessenger.__super__.constructor.apply(this, arguments);
     }
 
-    ActionMessenger.prototype.messageDefaults = {
+    ActionMessenger.prototype.doDefaults = {
       progressMessage: null,
       successMessage: null,
       errorMessage: "Error connecting to the server.",
@@ -589,7 +589,7 @@
       if (opts == null) {
         opts = {};
       }
-      m_opts = $.extend(true, {}, this.messageDefaults, m_opts != null ? m_opts : {});
+      m_opts = $.extend(true, {}, this.messageDefaults, this.doDefaults, m_opts != null ? m_opts : {});
       events = this._parseEvents(m_opts.events);
       msg = (_ref = m_opts.messageInstance) != null ? _ref : this.newMessage(m_opts);
       if (m_opts.id != null) {

@@ -4,6 +4,8 @@ $(function(){
   var loc = ['bottom', 'right'];
   var style = 'future';
 
+  var $output = $('.controls output');
+
   var update = function(){
     classes = 'messenger-fixed';
 
@@ -14,7 +16,11 @@ $(function(){
 
     $.globalMessenger({extraClasses: classes});
     $._messengerDefaults = {extraClasses: classes};
+
+    $output.text("$._messengerDefaults = {\n\textraClasses: '" + classes + "'\n}")
   };
+
+  update();
 
   $('.location-selector').locationSelector()
     .on('update', function(pos){

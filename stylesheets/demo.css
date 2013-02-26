@@ -23,5 +23,6 @@ h2 .subtitle {
   clear: both;
   height: 0;
   margin: 0;
+  margin-bottom: 15px;
   border-width: 0;
 }

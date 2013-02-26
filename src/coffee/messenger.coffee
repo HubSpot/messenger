@@ -12,6 +12,9 @@ spinner_template = '''
 '''
 
 class Message extends Backbone.View
+    # Compatibility with Backbone.LayoutManager
+    manage: false
+    
     defaults:
         hideAfter: 10
         scroll: true
@@ -269,6 +272,8 @@ class MagicMessage extends Message
 class Messenger extends Backbone.View
     tagName: 'ul'
     className: 'messenger'
+    # Compatibility with Backbone.LayoutManager
+    manage: false
 
     OPT_DEFAULTS:
         type: 'info'

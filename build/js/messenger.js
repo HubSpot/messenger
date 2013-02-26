@@ -17,6 +17,8 @@
       return Message.__super__.constructor.apply(this, arguments);
     }
 
+    Message.prototype.manage = false;
+
     Message.prototype.defaults = {
       hideAfter: 10,
       scroll: true
@@ -345,6 +347,8 @@
     Messenger.prototype.tagName = 'ul';
 
     Messenger.prototype.className = 'messenger';
+
+    Messenger.prototype.manage = false;
 
     Messenger.prototype.OPT_DEFAULTS = {
       type: 'info'

@@ -6,6 +6,7 @@
 
   .bit
     background-color: #DDD
+    opacity: 0.8
     cursor: pointer
 
     position: absolute 
@@ -37,3 +38,19 @@
     &.left
       left: 0
 
+
+  &.top
+    .bit.top
+       opacity: 1
+
+  &.bottom
+    .bit.bottom
+      opacity: 1
+
+  &.left
+    .bit:not(.left)
+      opacity: 0.8
+
+  &.right
+    .bit:not(.right)
+      opacity: 0.8

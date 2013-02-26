@@ -1,3 +1,8 @@
+.social {
+  position: absolute;
+  top: 10px;
+}
+
 h2 .subtitle {
   font-size: 14px;
 } 

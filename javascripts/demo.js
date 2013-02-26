@@ -5,6 +5,8 @@ $(function(){
   var style = 'future';
 
   var $output = $('.controls output');
+  var $lsel = $('.location-selector');
+  var $tsel = $('.theme-selector');
 
   var update = function(){
     classes = 'messenger-fixed';
@@ -22,7 +24,7 @@ $(function(){
 
   update();
 
-  $('.location-selector').locationSelector()
+  $lsel.locationSelector()
     .on('update', function(pos){
       loc = pos;
 
@@ -30,7 +32,7 @@ $(function(){
     });
 
 
-  $('.theme-selector').themeSelector({
+  $tsel.themeSelector({
     themes: ['future', 'block', 'air']
   }).on('update', function(theme){
     style = theme;

@@ -500,6 +500,11 @@ class ActionMessenger extends Messenger
                     do msg.hide
                     return
 
+                if type is 'error' and (xhr?.status in m_opts['ignoredErrorCodes'])
+                    # We're ignoring this error
+                    do msg.hide
+                    return
+
                 if msgText
                     msgOpts = $.extend {}, m_opts,
                         message: msgText

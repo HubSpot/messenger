@@ -1,0 +1,128 @@
+@import "compass/utilities/general/clearfix"
+@import "compass/css3"
+
+@import url("http://fonts.googleapis.com/css?family=Raleway:400")
+
+@import "messenger-spinner"
+
+@mixin unselectable
+  -moz-user-select: none
+  -webkit-user-select: none
+  -o-user-select: none
+  user-select: none
+
+$spinnerSize: 24px
+
+ul.messenger-theme-air
+  +unselectable
+  font-family: "Raleway", sans-serif
+
+  &.messenger-empty
+    display: none
+
+  .messenger-message
+    +transition(background-color 0.4s)
+    +border-radius(5px)
+    +box-shadow(inset 0 0 0 1px #fff, inset 0 2px #fff, 0 0 0 1px rgba(0, 0, 0, 0.1), 0 1px rgba(0, 0, 0, 0.2))
+    border: 0px
+    background-color: rgba(255, 255, 255, 0.8)
+    position: relative
+    margin-bottom: 1em
+    font-size: 13px
+    color: #666
+    font-weight: 500
+    padding: 10px 30px 11px 46px
+
+    &:hover
+      background-color: rgba(255, 255, 255, 1)
+
+    .close
+      position: absolute
+      top: 0px
+      right: 0px
+      color: #888
+      opacity: 1
+      font-weight: bold
+      display: block
+      font-size: 20px
+      line-height: 20px
+      padding: 8px 10px 7px 7px
+      cursor: pointer
+      background: transparent
+      border: 0
+      -webkit-appearance: none
+
+      &:hover
+        color: #444
+
+      &:active
+        color: #222
+
+    .messenger-actions
+      float: none
+      margin-top: 10px
+
+      a
+        +box-shadow(0px 0px 0px 1px rgba(0, 0, 0, 0.1), inset 0px 1px rgba(255, 255, 255, 0.05))
+        +border-radius(4px)
+        text-decoration: none
+        display: inline-block
+        padding: 10px
+        color: #888
+        margin-right: 10px
+        padding: 3px 10px 5px
+        text-transform: capitalize
+
+        &:hover
+          +box-shadow(0px 0px 0px 1px rgba(0, 0, 0, 0.1), inset 0px 1px rgba(255, 255, 255, 0.15))
+          color: #444
+
+        &:active
+          +box-shadow(0px 0px 0px 1px rgba(0, 0, 0, 0.18), inset 0px 1px rgba(0, 0, 0, 0.05))
+          background: rgba(0, 0, 0, 0.04)
+          color: #444
+
+      .messenger-phrase
+        display: none
+
+    .messenger-message-inner:before
+      +box-shadow(inset 0px 1px 3px rgba(0, 0, 0, 0.3))
+      +border-radius(50%)
+      position: absolute
+      left: 17px
+      display: block
+      content: " "
+      top: 50%
+      margin-top: -8px
+      height: 13px
+      width: 13px
+      z-index: 20
+
+    &.alert-success
+      .messenger-message-inner:before
+        background-color: rgb(95, 202, 74)
+
+    &.alert-error
+      &.messenger-retry-soon
+        +ui-spinner(#fff, $spinnerSize, transparent, rgb(221, 106, 69), 1, 10s)
+
+      &.messenger-retry-later
+        +ui-spinner(#fff, $spinnerSize, transparent, rgb(221, 106, 69), 1, 300s)
+
+      .messenger-message-inner:before
+        background-color: rgb(221, 106, 69)
+
+    &.alert-info
+      .messenger-message-inner:before
+        background-color: rgb(97, 196, 184)
+
+  .messenger-spinner
+    display: block
+    position: absolute
+    left: 12px
+    top: 50%
+    margin-top: -1 * (($spinnerSize / 2) + 1px)
+    z-index: 999
+    height: $spinnerSize
+    width: $spinnerSize
+    z-index: 10

@@ -346,13 +346,14 @@
 
     Messenger.prototype.className = 'messenger';
 
-    Messenger.prototype.OPT_DEFAULTS = {
+    Messenger.prototype.messageDefaults = {
       type: 'info'
     };
 
     Messenger.prototype.initialize = function(options) {
-      this.options = options;
-      return this.history = [];
+      this.options = options != null ? options : {};
+      this.history = [];
+      return this.messageDefaults = $.extend({}, this.messageDefaults, this.options.messageDefaults);
     };
 
     Messenger.prototype.render = function() {
@@ -467,7 +468,7 @@
           message: opts
         };
       }
-      opts = $.extend(true, {}, this.OPT_DEFAULTS, opts);
+      opts = $.extend(true, {}, this.messageDefaults, opts);
       msg = this.newMessage(opts);
       msg.update(opts);
       return msg;
@@ -485,7 +486,7 @@
       return ActionMessenger.__super__.constructor.apply(this, arguments);
     }
 
-    ActionMessenger.prototype.ACTION_DEFAULTS = {
+    ActionMessenger.prototype.doDefaults = {
       progressMessage: null,
       successMessage: null,
       errorMessage: "Error connecting to the server.",
@@ -587,7 +588,7 @@
       if (opts == null) {
         opts = {};
       }
-      m_opts = $.extend(true, {}, this.ACTION_DEFAULTS, m_opts != null ? m_opts : {});
+      m_opts = $.extend(true, {}, this.messageDefaults, this.doDefaults, m_opts != null ? m_opts : {});
       events = this._parseEvents(m_opts.events);
       msg = (_ref = m_opts.messageInstance) != null ? _ref : this.newMessage(m_opts);
       if (m_opts.id != null) {
@@ -735,7 +736,7 @@
       if (!inst) {
         $el = $('<ul>');
         $parent.prepend($el);
-        inst = $el.messenger(opts);
+        inst = $el.messenger(opts.messageDefaults);
         inst._location = chosen_loc;
         $._messengerInstance = inst;
       } else if ($(inst._location) !== $(chosen_loc)) {

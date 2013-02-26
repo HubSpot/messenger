@@ -270,11 +270,13 @@ class Messenger extends Backbone.View
     tagName: 'ul'
     className: 'messenger'
 
-    OPT_DEFAULTS:
+    messageDefaults:
         type: 'info'
 
-    initialize: (@options) ->
+    initialize: (@options={}) ->
         @history = []
+
+        @messageDefaults = $.extend {}, @messageDefaults, @options.messageDefaults
 
     render: ->
         do @updateMessageSlotClasses
@@ -356,14 +358,14 @@ class Messenger extends Backbone.View
         if _.isString opts
             opts = {message: opts}
 
-        opts = $.extend(true, {}, @OPT_DEFAULTS, opts)
+        opts = $.extend(true, {}, @messageDefaults, opts)
 
         msg = @newMessage opts
         msg.update opts
         return msg
 
 class ActionMessenger extends Messenger
-    ACTION_DEFAULTS:
+    doDefaults:
         progressMessage: null
         successMessage: null
         errorMessage: "Error connecting to the server."
@@ -455,7 +457,7 @@ class ActionMessenger extends Messenger
         return [type, data, xhr]
 
     do: (m_opts, opts={}, args...) ->
-        m_opts = $.extend true, {}, @ACTION_DEFAULTS, m_opts ? {}
+        m_opts = $.extend true, {}, @messageDefaults, @doDefaults, m_opts ? {}
         events = @_parseEvents m_opts.events
 
         msg = m_opts.messageInstance ? @newMessage m_opts
@@ -601,7 +603,7 @@ $.globalMessenger = (opts) ->
     
             $parent.prepend $el
     
-            inst = $el.messenger(opts)
+            inst = $el.messenger(opts.messageDefaults)
             inst._location = chosen_loc
             $._messengerInstance = inst
     

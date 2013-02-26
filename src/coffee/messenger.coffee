@@ -365,7 +365,7 @@ class Messenger extends Backbone.View
         return msg
 
 class ActionMessenger extends Messenger
-    messageDefaults:
+    doDefaults:
         progressMessage: null
         successMessage: null
         errorMessage: "Error connecting to the server."
@@ -457,7 +457,7 @@ class ActionMessenger extends Messenger
         return [type, data, xhr]
 
     do: (m_opts, opts={}, args...) ->
-        m_opts = $.extend true, {}, @messageDefaults, m_opts ? {}
+        m_opts = $.extend true, {}, @messageDefaults, @doDefaults, m_opts ? {}
         events = @_parseEvents m_opts.events
 
         msg = m_opts.messageInstance ? @newMessage m_opts

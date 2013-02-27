@@ -15,14 +15,14 @@
 
 $spinnerSize: 24px
 
-ul.#{$prefix}messenger-theme-air
+ul.#{$prefix}-theme-air
   +unselectable
   font-family: "Raleway", sans-serif
 
-  &.#{$prefix}messenger-empty
+  &.#{$prefix}-empty
     display: none
 
-  .#{$prefix}messenger-message
+  .#{$prefix}-message
     +transition(background-color 0.4s)
     +border-radius(5px)
     +box-shadow(inset 0 0 0 1px #fff, inset 0 2px #fff, 0 0 0 1px rgba(0, 0, 0, 0.1), 0 1px rgba(0, 0, 0, 0.2))
@@ -38,7 +38,7 @@ ul.#{$prefix}messenger-theme-air
     &:hover
       background-color: rgba(255, 255, 255, 1)
 
-    .#{$prefix}close
+    .#{$prefix}-close
       position: absolute
       top: 0px
       right: 0px
@@ -60,7 +60,7 @@ ul.#{$prefix}messenger-theme-air
       &:active
         color: #222
 
-    .#{$prefix}messenger-actions
+    .#{$prefix}-actions
       float: none
       margin-top: 10px
 
@@ -84,10 +84,10 @@ ul.#{$prefix}messenger-theme-air
           background: rgba(0, 0, 0, 0.04)
           color: #444
 
-      .#{$prefix}messenger-phrase
+      .#{$prefix}-phrase
         display: none
 
-    .#{$prefix}messenger-message-inner:before
+    .#{$prefix}-message-inner:before
       +box-shadow(inset 0px 1px 3px rgba(0, 0, 0, 0.3))
       +border-radius(50%)
       position: absolute
@@ -100,25 +100,25 @@ ul.#{$prefix}messenger-theme-air
       width: 13px
       z-index: 20
 
-    &.#{$prefix}alert-success
-      .#{$prefix}messenger-message-inner:before
+    &.#{$prefix}-alert-success
+      .#{$prefix}-message-inner:before
         background-color: rgb(95, 202, 74)
 
-    &.#{$prefix}alert-error
-      &.#{$prefix}messenger-retry-soon
+    &.#{$prefix}-alert-error
+      &.#{$prefix}-retry-soon
         +ui-spinner(#fff, $spinnerSize, transparent, rgb(221, 106, 69), 1, 10s)
 
-      &.#{$prefix}messenger-retry-later
+      &.#{$prefix}-retry-later
         +ui-spinner(#fff, $spinnerSize, transparent, rgb(221, 106, 69), 1, 300s)
 
-      .#{$prefix}messenger-message-inner:before
+      .#{$prefix}-message-inner:before
         background-color: rgb(221, 106, 69)
 
-    &.#{$prefix}alert-info
-      .#{$prefix}messenger-message-inner:before
+    &.#{$prefix}-alert-info
+      .#{$prefix}-message-inner:before
         background-color: rgb(97, 196, 184)
 
-  .#{$prefix}messenger-spinner
+  .#{$prefix}-spinner
     display: block
     position: absolute
     left: 12px

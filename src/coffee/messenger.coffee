@@ -1,14 +1,14 @@
 $ = jQuery
-baseCSSPrefix = "hubspot-"
+baseCSSPrefix = "messenger"
 baseTheme = "future"
 
 spinner_template = "
-    <div class='#{baseCSSPrefix}messenger-spinner'>
-        <span class='#{baseCSSPrefix}messenger-spinner-side #{baseCSSPrefix}messenger-spinner-side-left'>
-            <span class='#{baseCSSPrefix}messenger-spinner-fill'></span>
+    <div class='#{baseCSSPrefix}-spinner'>
+        <span class='#{baseCSSPrefix}-spinner-side #{baseCSSPrefix}-spinner-side-left'>
+            <span class='#{baseCSSPrefix}-spinner-fill'></span>
         </span>
-        <span class='#{baseCSSPrefix}messenger-spinner-side #{baseCSSPrefix}messenger-spinner-side-right'>
-            <span class='#{baseCSSPrefix}messenger-spinner-fill'></span>
+        <span class='#{baseCSSPrefix}-spinner-side #{baseCSSPrefix}-spinner-side-right'>
+            <span class='#{baseCSSPrefix}-spinner-fill'></span>
         </span>
     </div>
 "
@@ -29,7 +29,7 @@ class Message extends Backbone.View
     show: ->
         do @render
 
-        @$message.removeClass("#{baseCSSPrefix}messenger-hidden")
+        @$message.removeClass("#{baseCSSPrefix}-hidden")
 
         wasShown = @shown
         @shown = true
@@ -39,7 +39,7 @@ class Message extends Backbone.View
     hide: ->
         return unless @rendered
 
-        @$message.addClass("#{baseCSSPrefix}messenger-hidden")
+        @$message.addClass("#{baseCSSPrefix}-hidden")
 
         wasShown = @shown
         @shown = false
@@ -66,7 +66,7 @@ class Message extends Backbone.View
         do @checkClickable
 
         if @options.hideAfter
-            @$message.addClass "#{baseCSSPrefix}messenger-will-hide-after"
+            @$message.addClass "#{baseCSSPrefix}-will-hide-after"
 
             if @_hideTimeout?
                 clearTimeout @_hideTimeout
@@ -75,15 +75,15 @@ class Message extends Backbone.View
                 do @hide
             , @options.hideAfter * 1000
         else
-            @$message.removeClass "#{baseCSSPrefix}messenger-will-hide-after"
+            @$message.removeClass "#{baseCSSPrefix}-will-hide-after"
 
         if @options.hideOnNavigate
-            @$message.addClass "#{baseCSSPrefix}messenger-will-hide-on-navigate"
+            @$message.addClass "#{baseCSSPrefix}-will-hide-on-navigate"
             if Backbone.history?
                 Backbone.history.on 'route', =>
                     do @hide
         else
-            @$message.removeClass "#{baseCSSPrefix}messenger-will-hide-on-navigate"
+            @$message.removeClass "#{baseCSSPrefix}-will-hide-on-navigate"
 
         @trigger 'update', @
 
@@ -112,12 +112,12 @@ class Message extends Backbone.View
     checkClickable: ->
         for name, evt of @events
             if name is 'click'
-                @$messenger.addClass "#{baseCSSPrefix}messenger-clickable"
+                @$messenger.addClass "#{baseCSSPrefix}-clickable"
 
     undelegateEvents: ->
         super
 
-        @$messenger?.removeClass "#{baseCSSPrefix}messenger-clickable"
+        @$messenger?.removeClass "#{baseCSSPrefix}-clickable"
 
     parseActions: ->
         actions = []
@@ -132,14 +132,14 @@ class Message extends Backbone.View
         return actions
 
     template: (opts) ->
-        cls = "#{baseCSSPrefix}messenger-message #{baseCSSPrefix}message #{baseCSSPrefix}alert"
-        cls += "#{ opts.type } #{baseCSSPrefix}message-#{ opts.type } #{baseCSSPrefix}alert-#{ opts.type } alert-#{ opts.type }" # Bootstrap dependency for block theme
+        cls = "#{baseCSSPrefix}-message #{baseCSSPrefix}-message #{baseCSSPrefix}-alert"
+        cls += "#{ opts.type } #{baseCSSPrefix}-message-#{ opts.type } #{baseCSSPrefix}-alert-#{ opts.type } alert-#{ opts.type }" # Bootstrap dependency for block theme
         html = "<div class='#{cls}'>"
 
         $message = $ html
 
         if opts.showCloseButton
-            $cancel = $ """<button type="button" class="#{baseCSSPrefix}close close" data-dismiss="alert">&times;</button>""" # Bootstrap dependency for block theme
+            $cancel = $ """<button type="button" class="#{baseCSSPrefix}-close close" data-dismiss="alert">&times;</button>""" # Bootstrap dependency for block theme
             $cancel.click =>
               do @cancel
 
@@ -147,14 +147,14 @@ class Message extends Backbone.View
 
             $message.append $cancel
 
-        html = """<div class="#{baseCSSPrefix}messenger-message-inner">#{ opts.message }</div>"""
+        html = """<div class="#{baseCSSPrefix}-message-inner">#{ opts.message }</div>"""
         $text = $ html
         $message.append $text
 
         $message.append $ $.trim(spinner_template)
 
         if opts.actions.length
-            $actions = $ "<div class='#{baseCSSPrefix}messenger-actions'>"
+            $actions = $ "<div class='#{baseCSSPrefix}-actions'>"
 
         for action in opts.actions
             $action = $ '<span>'
@@ -163,7 +163,7 @@ class Message extends Backbone.View
             $link = $ '<a>'
             $link.html action.label
 
-            $action.append $ "<span class='#{baseCSSPrefix}messenger-phrase'>"
+            $action.append $ "<span class='#{baseCSSPrefix}-phrase'>"
             $action.append $link
 
             $actions.append $action
@@ -209,7 +209,7 @@ class MagicMessage extends Message
         for name, timer of @_timers
             clearTimeout timer
 
-        @$message?.removeClass "#{baseCSSPrefix}messenger-retry-soon #{baseCSSPrefix}messenger-retry-later"
+        @$message?.removeClass "#{baseCSSPrefix}-retry-soon #{baseCSSPrefix}-retry-later"
 
     render: ->
         super
@@ -248,16 +248,16 @@ class MagicMessage extends Message
 
 
     startCountdown: (name, action) ->
-        $phrase = @$message.find("[data-action='#{ name }'] .#{baseCSSPrefix}messenger-phrase")
+        $phrase = @$message.find("[data-action='#{ name }'] .#{baseCSSPrefix}-phrase")
 
         remaining = action.delay ? 3
 
         if remaining <= 10
-          @$message.removeClass "#{baseCSSPrefix}messenger-retry-later"
-          @$message.addClass "#{baseCSSPrefix}messenger-retry-soon"
+          @$message.removeClass "#{baseCSSPrefix}-retry-later"
+          @$message.addClass "#{baseCSSPrefix}-retry-soon"
         else
-          @$message.removeClass "#{baseCSSPrefix}messenger-retry-soon"
-          @$message.addClass "#{baseCSSPrefix}messenger-retry-later"
+          @$message.removeClass "#{baseCSSPrefix}-retry-soon"
+          @$message.addClass "#{baseCSSPrefix}-retry-later"
 
         tick = =>
             remaining -= 1
@@ -267,7 +267,7 @@ class MagicMessage extends Message
             if remaining > 0
                 @_timers[name] = setTimeout tick, 1000
             else
-                @$message.removeClass "#{baseCSSPrefix}messenger-retry-soon #{baseCSSPrefix}messenger-retry-later"
+                @$message.removeClass "#{baseCSSPrefix}-retry-soon #{baseCSSPrefix}-retry-later"
                 delete @_timers[name]
                 do action.action
 
@@ -275,7 +275,7 @@ class MagicMessage extends Message
 
 class Messenger extends Backbone.View
     tagName: 'ul'
-    className: "#{baseCSSPrefix}messenger"
+    className: "#{baseCSSPrefix}"
 
     messageDefaults:
         type: 'info'
@@ -294,7 +294,7 @@ class Messenger extends Backbone.View
 
     _reserveMessageSlot: (msg) ->
         $slot = $('<li>')
-        $slot.addClass "#{baseCSSPrefix}messenger-message-slot"
+        $slot.addClass "#{baseCSSPrefix}-message-slot"
         @$el.prepend $slot
 
         @history.push {msg, $slot}
@@ -341,21 +341,21 @@ class Messenger extends Backbone.View
         anyShown = false
 
         for rec in @history
-            rec.$slot.removeClass "#{baseCSSPrefix}first #{baseCSSPrefix}last #{baseCSSPrefix}shown"
+            rec.$slot.removeClass "#{baseCSSPrefix}-first #{baseCSSPrefix}-last #{baseCSSPrefix}-shown"
 
             if rec.msg.shown and rec.msg.rendered
-                rec.$slot.addClass "#{baseCSSPrefix}shown"
+                rec.$slot.addClass "#{baseCSSPrefix}-shown"
                 anyShown = true
 
                 last = rec
                 if willBeFirst
                     willBeFirst = false
-                    rec.$slot.addClass "#{baseCSSPrefix}first"
+                    rec.$slot.addClass "#{baseCSSPrefix}-first"
 
         if last?
-            last.$slot.addClass "#{baseCSSPrefix}last"
+            last.$slot.addClass "#{baseCSSPrefix}-last"
 
-        @$el["#{if anyShown then 'remove' else 'add'}Class"]("#{baseCSSPrefix}messenger-empty")
+        @$el["#{if anyShown then 'remove' else 'add'}Class"]("#{baseCSSPrefix}-empty")
 
     hideAll: ->
         for rec in @history
@@ -589,7 +589,7 @@ $.fn.messenger = (func={}, args...) ->
 $.globalMessenger = (opts) ->
 
     defaultOpts =
-        extraClasses: "#{baseCSSPrefix}messenger-fixed #{baseCSSPrefix}messenger-on-bottom #{baseCSSPrefix}messenger-on-right #{baseCSSPrefix}messenger-theme-#{baseTheme}"
+        extraClasses: "#{baseCSSPrefix}-fixed #{baseCSSPrefix}-on-bottom #{baseCSSPrefix}-on-right #{baseCSSPrefix}-theme-#{baseTheme}"
 
         maxMessages: 9
         parentLocations: ['body']

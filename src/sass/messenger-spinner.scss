@@ -30,12 +30,12 @@ $default-duration: 3s;
     $opacity: $default-opacity,
     $duration: $default-duration
     ) {
-    .#{$prefix}messenger-spinner {
+    .#{$prefix}-spinner {
         width: $size;
         height: $size;
         background: $bkg-color-light;
 
-        .#{$prefix}messenger-spinner-side .#{$prefix}messenger-spinner-fill {
+        .#{$prefix}-spinner-side .#{$prefix}-spinner-fill {
             background: $bkg-color-dark;
             @include experimental(animation-duration, $duration * 2);
             opacity: $opacity;
@@ -114,21 +114,21 @@ $default-duration: 3s;
 // to reveal the left/right side filling or emptying.
 // The damn thing is so complicated I barely understand it anymore.
 
-.#{$prefix}messenger-spinner {
+.#{$prefix}-spinner {
     position: relative;
     border-radius: 100%;
 
-    ul.#{$prefix}messenger.#{$prefix}messenger-spinner-active .#{$prefix}messenger-spinner & {
+    ul.#{$prefix}.#{$prefix}-spinner-active .#{$prefix}-spinner & {
         display: block;
     }
 
-    .#{$prefix}messenger-spinner-side {
+    .#{$prefix}-spinner-side {
         width: 50%;
         height: 100%;
         overflow: hidden;
         position: absolute;
 
-       .#{$prefix}messenger-spinner-fill {
+       .#{$prefix}-spinner-fill {
             border-radius: 999px;
             position: absolute;
             width: 100%;
@@ -138,10 +138,10 @@ $default-duration: 3s;
         }
     }
 
-    .#{$prefix}messenger-spinner-side-left {
+    .#{$prefix}-spinner-side-left {
         left: 0;
 
-        .#{$prefix}messenger-spinner-fill {
+        .#{$prefix}-spinner-fill {
             left: 100%;
             border-top-left-radius: 0;
             border-bottom-left-radius: 0;
@@ -150,10 +150,10 @@ $default-duration: 3s;
         }
     }
 
-    .#{$prefix}messenger-spinner-side-right {
+    .#{$prefix}-spinner-side-right {
         left: 50%;
 
-        .#{$prefix}messenger-spinner-fill {
+        .#{$prefix}-spinner-fill {
             left: -100%;
             border-top-right-radius: 0;
             border-bottom-right-radius: 0;

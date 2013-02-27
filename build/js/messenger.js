@@ -8,11 +8,11 @@
 
   $ = jQuery;
 
-  baseCSSPrefix = "hubspot-";
+  baseCSSPrefix = "messenger";
 
-  baseTheme = "future";
+  baseTheme = "air";
 
-  spinner_template = "    <div class='" + baseCSSPrefix + "messenger-spinner'>        <span class='" + baseCSSPrefix + "messenger-spinner-side " + baseCSSPrefix + "messenger-spinner-side-left'>            <span class='" + baseCSSPrefix + "messenger-spinner-fill'></span>        </span>        <span class='" + baseCSSPrefix + "messenger-spinner-side " + baseCSSPrefix + "messenger-spinner-side-right'>            <span class='" + baseCSSPrefix + "messenger-spinner-fill'></span>        </span>    </div>";
+  spinner_template = "    <div class='" + baseCSSPrefix + "-spinner'>        <span class='" + baseCSSPrefix + "-spinner-side " + baseCSSPrefix + "-spinner-side-left'>            <span class='" + baseCSSPrefix + "-spinner-fill'></span>        </span>        <span class='" + baseCSSPrefix + "-spinner-side " + baseCSSPrefix + "-spinner-side-right'>            <span class='" + baseCSSPrefix + "-spinner-fill'></span>        </span>    </div>";
 
   Message = (function(_super) {
 
@@ -40,7 +40,7 @@
     Message.prototype.show = function() {
       var wasShown;
       this.render();
-      this.$message.removeClass("" + baseCSSPrefix + "messenger-hidden");
+      this.$message.removeClass("" + baseCSSPrefix + "-hidden");
       wasShown = this.shown;
       this.shown = true;
       if (!wasShown) {
@@ -53,7 +53,7 @@
       if (!this.rendered) {
         return;
       }
-      this.$message.addClass("" + baseCSSPrefix + "messenger-hidden");
+      this.$message.addClass("" + baseCSSPrefix + "-hidden");
       wasShown = this.shown;
       this.shown = false;
       if (wasShown) {
@@ -77,7 +77,7 @@
       this.delegateEvents();
       this.checkClickable();
       if (this.options.hideAfter) {
-        this.$message.addClass("" + baseCSSPrefix + "messenger-will-hide-after");
+        this.$message.addClass("" + baseCSSPrefix + "-will-hide-after");
         if (this._hideTimeout != null) {
           clearTimeout(this._hideTimeout);
         }
@@ -85,17 +85,17 @@
           return _this.hide();
         }, this.options.hideAfter * 1000);
       } else {
-        this.$message.removeClass("" + baseCSSPrefix + "messenger-will-hide-after");
+        this.$message.removeClass("" + baseCSSPrefix + "-will-hide-after");
       }
       if (this.options.hideOnNavigate) {
-        this.$message.addClass("" + baseCSSPrefix + "messenger-will-hide-on-navigate");
+        this.$message.addClass("" + baseCSSPrefix + "-will-hide-on-navigate");
         if (Backbone.history != null) {
           Backbone.history.on('route', function() {
             return _this.hide();
           });
         }
       } else {
-        this.$message.removeClass("" + baseCSSPrefix + "messenger-will-hide-on-navigate");
+        this.$message.removeClass("" + baseCSSPrefix + "-will-hide-on-navigate");
       }
       return this.trigger('update', this);
     };
@@ -146,7 +146,7 @@
       for (name in _ref) {
         evt = _ref[name];
         if (name === 'click') {
-          _results.push(this.$messenger.addClass("" + baseCSSPrefix + "messenger-clickable"));
+          _results.push(this.$messenger.addClass("" + baseCSSPrefix + "-clickable"));
         } else {
           _results.push(void 0);
         }
@@ -157,7 +157,7 @@
     Message.prototype.undelegateEvents = function() {
       var _ref;
       Message.__super__.undelegateEvents.apply(this, arguments);
-      return (_ref = this.$messenger) != null ? _ref.removeClass("" + baseCSSPrefix + "messenger-clickable") : void 0;
+      return (_ref = this.$messenger) != null ? _ref.removeClass("" + baseCSSPrefix + "-clickable") : void 0;
     };
 
     Message.prototype.parseActions = function() {
@@ -179,24 +179,24 @@
     Message.prototype.template = function(opts) {
       var $action, $actions, $cancel, $link, $message, $text, action, cls, html, _i, _len, _ref,
         _this = this;
-      cls = "" + baseCSSPrefix + "messenger-message " + baseCSSPrefix + "message " + baseCSSPrefix + "alert";
-      cls += "" + opts.type + " " + baseCSSPrefix + "message-" + opts.type + " " + baseCSSPrefix + "alert-" + opts.type + " alert-" + opts.type;
+      cls = "" + baseCSSPrefix + "-message " + baseCSSPrefix + "-message " + baseCSSPrefix + "-alert";
+      cls += "" + opts.type + " " + baseCSSPrefix + "-message-" + opts.type + " " + baseCSSPrefix + "-alert-" + opts.type + " alert-" + opts.type;
       html = "<div class='" + cls + "'>";
       $message = $(html);
       if (opts.showCloseButton) {
-        $cancel = $("<button type=\"button\" class=\"" + baseCSSPrefix + "close close\" data-dismiss=\"alert\">&times;</button>");
+        $cancel = $("<button type=\"button\" class=\"" + baseCSSPrefix + "-close close\" data-dismiss=\"alert\">&times;</button>");
         $cancel.click(function() {
           _this.cancel();
           return true;
         });
         $message.append($cancel);
       }
-      html = "<div class=\"" + baseCSSPrefix + "messenger-message-inner\">" + opts.message + "</div>";
+      html = "<div class=\"" + baseCSSPrefix + "-message-inner\">" + opts.message + "</div>";
       $text = $(html);
       $message.append($text);
       $message.append($($.trim(spinner_template)));
       if (opts.actions.length) {
-        $actions = $("<div class='" + baseCSSPrefix + "messenger-actions'>");
+        $actions = $("<div class='" + baseCSSPrefix + "-actions'>");
       }
       _ref = opts.actions;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
@@ -205,7 +205,7 @@
         $action.attr('data-action', "" + action.name);
         $link = $('<a>');
         $link.html(action.label);
-        $action.append($("<span class='" + baseCSSPrefix + "messenger-phrase'>"));
+        $action.append($("<span class='" + baseCSSPrefix + "-phrase'>"));
         $action.append($link);
         $actions.append($action);
       }
@@ -264,7 +264,7 @@
         timer = _ref[name];
         clearTimeout(timer);
       }
-      return (_ref1 = this.$message) != null ? _ref1.removeClass("" + baseCSSPrefix + "messenger-retry-soon " + baseCSSPrefix + "messenger-retry-later") : void 0;
+      return (_ref1 = this.$message) != null ? _ref1.removeClass("" + baseCSSPrefix + "-retry-soon " + baseCSSPrefix + "-retry-later") : void 0;
     };
 
     MagicMessage.prototype.render = function() {
@@ -316,14 +316,14 @@
     MagicMessage.prototype.startCountdown = function(name, action) {
       var $phrase, remaining, tick, _ref,
         _this = this;
-      $phrase = this.$message.find("[data-action='" + name + "'] ." + baseCSSPrefix + "messenger-phrase");
+      $phrase = this.$message.find("[data-action='" + name + "'] ." + baseCSSPrefix + "-phrase");
       remaining = (_ref = action.delay) != null ? _ref : 3;
       if (remaining <= 10) {
-        this.$message.removeClass("" + baseCSSPrefix + "messenger-retry-later");
-        this.$message.addClass("" + baseCSSPrefix + "messenger-retry-soon");
+        this.$message.removeClass("" + baseCSSPrefix + "-retry-later");
+        this.$message.addClass("" + baseCSSPrefix + "-retry-soon");
       } else {
-        this.$message.removeClass("" + baseCSSPrefix + "messenger-retry-soon");
-        this.$message.addClass("" + baseCSSPrefix + "messenger-retry-later");
+        this.$message.removeClass("" + baseCSSPrefix + "-retry-soon");
+        this.$message.addClass("" + baseCSSPrefix + "-retry-later");
       }
       tick = function() {
         remaining -= 1;
@@ -331,7 +331,7 @@
         if (remaining > 0) {
           return _this._timers[name] = setTimeout(tick, 1000);
         } else {
-          _this.$message.removeClass("" + baseCSSPrefix + "messenger-retry-soon " + baseCSSPrefix + "messenger-retry-later");
+          _this.$message.removeClass("" + baseCSSPrefix + "-retry-soon " + baseCSSPrefix + "-retry-later");
           delete _this._timers[name];
           return action.action();
         }
@@ -353,7 +353,7 @@
 
     Messenger.prototype.tagName = 'ul';
 
-    Messenger.prototype.className = "" + baseCSSPrefix + "messenger";
+    Messenger.prototype.className = "" + baseCSSPrefix;
 
     Messenger.prototype.messageDefaults = {
       type: 'info'
@@ -379,7 +379,7 @@
       var $slot, dmsg,
         _this = this;
       $slot = $('<li>');
-      $slot.addClass("" + baseCSSPrefix + "messenger-message-slot");
+      $slot.addClass("" + baseCSSPrefix + "-message-slot");
       this.$el.prepend($slot);
       this.history.push({
         msg: msg,
@@ -442,21 +442,21 @@
       _ref = this.history;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         rec = _ref[_i];
-        rec.$slot.removeClass("" + baseCSSPrefix + "first " + baseCSSPrefix + "last " + baseCSSPrefix + "shown");
+        rec.$slot.removeClass("" + baseCSSPrefix + "-first " + baseCSSPrefix + "-last " + baseCSSPrefix + "-shown");
         if (rec.msg.shown && rec.msg.rendered) {
-          rec.$slot.addClass("" + baseCSSPrefix + "shown");
+          rec.$slot.addClass("" + baseCSSPrefix + "-shown");
           anyShown = true;
           last = rec;
           if (willBeFirst) {
             willBeFirst = false;
-            rec.$slot.addClass("" + baseCSSPrefix + "first");
+            rec.$slot.addClass("" + baseCSSPrefix + "-first");
           }
         }
       }
       if (last != null) {
-        last.$slot.addClass("" + baseCSSPrefix + "last");
+        last.$slot.addClass("" + baseCSSPrefix + "-last");
       }
-      return this.$el["" + (anyShown ? 'remove' : 'add') + "Class"]("" + baseCSSPrefix + "messenger-empty");
+      return this.$el["" + (anyShown ? 'remove' : 'add') + "Class"]("" + baseCSSPrefix + "-empty");
     };
 
     Messenger.prototype.hideAll = function() {
@@ -728,7 +728,7 @@
   $.globalMessenger = function(opts) {
     var $el, $parent, choosen_loc, chosen_loc, classes, defaultOpts, inst, loc, locations, _i, _len;
     defaultOpts = {
-      extraClasses: "" + baseCSSPrefix + "messenger-fixed " + baseCSSPrefix + "messenger-on-bottom " + baseCSSPrefix + "messenger-on-right " + baseCSSPrefix + "messenger-theme-" + baseTheme,
+      extraClasses: "" + baseCSSPrefix + "-fixed " + baseCSSPrefix + "-on-bottom " + baseCSSPrefix + "-on-right " + baseCSSPrefix + "-theme-" + baseTheme,
       maxMessages: 9,
       parentLocations: ['body']
     };

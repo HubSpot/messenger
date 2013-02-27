@@ -161,23 +161,23 @@
 }
 
 /* line 117, ../../src/sass/messenger-spinner.scss */
-.hubspot-messenger-spinner {
+.messenger-spinner {
   position: relative;
   border-radius: 100%;
 }
 /* line 121, ../../src/sass/messenger-spinner.scss */
-ul.hubspot-messenger.hubspot-messenger-spinner-active .hubspot-messenger-spinner .hubspot-messenger-spinner {
+ul.messenger.messenger-spinner-active .messenger-spinner .messenger-spinner {
   display: block;
 }
 /* line 125, ../../src/sass/messenger-spinner.scss */
-.hubspot-messenger-spinner .hubspot-messenger-spinner-side {
+.messenger-spinner .messenger-spinner-side {
   width: 50%;
   height: 100%;
   overflow: hidden;
   position: absolute;
 }
 /* line 131, ../../src/sass/messenger-spinner.scss */
-.hubspot-messenger-spinner .hubspot-messenger-spinner-side .hubspot-messenger-spinner-fill {
+.messenger-spinner .messenger-spinner-side .messenger-spinner-fill {
   border-radius: 999px;
   position: absolute;
   width: 100%;
@@ -196,11 +196,11 @@ ul.hubspot-messenger.hubspot-messenger-spinner-active .hubspot-messenger-spinner
   animation-timing-function: linear;
 }
 /* line 141, ../../src/sass/messenger-spinner.scss */
-.hubspot-messenger-spinner .hubspot-messenger-spinner-side-left {
+.messenger-spinner .messenger-spinner-side-left {
   left: 0;
 }
 /* line 144, ../../src/sass/messenger-spinner.scss */
-.hubspot-messenger-spinner .hubspot-messenger-spinner-side-left .hubspot-messenger-spinner-fill {
+.messenger-spinner .messenger-spinner-side-left .messenger-spinner-fill {
   left: 100%;
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
@@ -218,11 +218,11 @@ ul.hubspot-messenger.hubspot-messenger-spinner-active .hubspot-messenger-spinner
   transform-origin: 0 50%;
 }
 /* line 153, ../../src/sass/messenger-spinner.scss */
-.hubspot-messenger-spinner .hubspot-messenger-spinner-side-right {
+.messenger-spinner .messenger-spinner-side-right {
   left: 50%;
 }
 /* line 156, ../../src/sass/messenger-spinner.scss */
-.hubspot-messenger-spinner .hubspot-messenger-spinner-side-right .hubspot-messenger-spinner-fill {
+.messenger-spinner .messenger-spinner-side-right .messenger-spinner-fill {
   left: -100%;
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;

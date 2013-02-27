@@ -1,43 +1,43 @@
 /* line 5, ../../src/sass/messenger.sass */
-ul.hubspot-messenger {
+ul.messenger {
   margin: 0;
   padding: 0;
 }
 /* line 9, ../../src/sass/messenger.sass */
-ul.hubspot-messenger li {
+ul.messenger li {
   list-style: none;
   margin: 0;
   padding: 0;
 }
 /* line 15, ../../src/sass/messenger.sass */
-ul.hubspot-messenger .hubspot-messenger-message {
+ul.messenger .messenger-message {
   overflow: hidden;
   *zoom: 1;
 }
 /* line 18, ../../src/sass/messenger.sass */
-ul.hubspot-messenger .hubspot-messenger-message.hubspot-messenger-hidden {
+ul.messenger .messenger-message.messenger-hidden {
   display: none;
 }
 /* line 21, ../../src/sass/messenger.sass */
-ul.hubspot-messenger .hubspot-messenger-message .hubspot-messenger-phrase, ul.hubspot-messenger .hubspot-messenger-message .hubspot-messenger-actions a {
+ul.messenger .messenger-message .messenger-phrase, ul.messenger .messenger-message .messenger-actions a {
   padding-right: 5px;
 }
 /* line 24, ../../src/sass/messenger.sass */
-ul.hubspot-messenger .hubspot-messenger-message .hubspot-messenger-actions {
+ul.messenger .messenger-message .messenger-actions {
   float: right;
 }
 /* line 27, ../../src/sass/messenger.sass */
-ul.hubspot-messenger .hubspot-messenger-message .hubspot-messenger-actions a {
+ul.messenger .messenger-message .messenger-actions a {
   cursor: pointer;
   text-decoration: underline;
 }
 /* line 31, ../../src/sass/messenger.sass */
-ul.hubspot-messenger.hubspot-messenger-fixed {
+ul.messenger.messenger-fixed {
   position: fixed;
   z-index: 10000;
 }
 /* line 35, ../../src/sass/messenger.sass */
-ul.hubspot-messenger.hubspot-messenger-fixed .hubspot-messenger-message {
+ul.messenger.messenger-fixed .messenger-message {
   min-width: 0;
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
@@ -45,50 +45,50 @@ ul.hubspot-messenger.hubspot-messenger-fixed .hubspot-messenger-message {
   box-sizing: border-box;
 }
 /* line 40, ../../src/sass/messenger.sass */
-ul.hubspot-messenger.hubspot-messenger-fixed .hubspot-message .hubspot-messenger-actions {
+ul.messenger.messenger-fixed .messenger-message .messenger-actions {
   float: left;
 }
 /* line 43, ../../src/sass/messenger.sass */
-ul.hubspot-messenger.hubspot-messenger-fixed.hubspot-messenger-on-top {
+ul.messenger.messenger-fixed.messenger-on-top {
   top: 20px;
 }
 /* line 46, ../../src/sass/messenger.sass */
-ul.hubspot-messenger.hubspot-messenger-fixed.hubspot-messenger-on-bottom {
+ul.messenger.messenger-fixed.messenger-on-bottom {
   bottom: 20px;
 }
 /* line 49, ../../src/sass/messenger.sass */
-ul.hubspot-messenger.hubspot-messenger-fixed.hubspot-messenger-on-top, ul.hubspot-messenger.hubspot-messenger-fixed.hubspot-messenger-on-bottom {
+ul.messenger.messenger-fixed.messenger-on-top, ul.messenger.messenger-fixed.messenger-on-bottom {
   left: 50%;
   width: 800px;
   margin-left: -400px;
 }
 @media (max-width: 960px) {
   /* line 49, ../../src/sass/messenger.sass */
-  ul.hubspot-messenger.hubspot-messenger-fixed.hubspot-messenger-on-top, ul.hubspot-messenger.hubspot-messenger-fixed.hubspot-messenger-on-bottom {
+  ul.messenger.messenger-fixed.messenger-on-top, ul.messenger.messenger-fixed.messenger-on-bottom {
     left: 10%;
     width: 80%;
     margin-left: 0px;
   }
 }
 /* line 59, ../../src/sass/messenger.sass */
-ul.hubspot-messenger.hubspot-messenger-fixed.hubspot-messenger-on-top.hubspot-messenger-on-right, ul.hubspot-messenger.hubspot-messenger-fixed.hubspot-messenger-on-bottom.hubspot-messenger-on-right {
+ul.messenger.messenger-fixed.messenger-on-top.messenger-on-right, ul.messenger.messenger-fixed.messenger-on-bottom.messenger-on-right {
   right: 20px;
   left: auto;
 }
 /* line 63, ../../src/sass/messenger.sass */
-ul.hubspot-messenger.hubspot-messenger-fixed.hubspot-messenger-on-top.hubspot-messenger-on-left, ul.hubspot-messenger.hubspot-messenger-fixed.hubspot-messenger-on-bottom.hubspot-messenger-on-left {
+ul.messenger.messenger-fixed.messenger-on-top.messenger-on-left, ul.messenger.messenger-fixed.messenger-on-bottom.messenger-on-left {
   left: 20px;
   margin-left: 0px;
 }
 /* line 67, ../../src/sass/messenger.sass */
-ul.hubspot-messenger.hubspot-messenger-fixed.hubspot-messenger-on-right, ul.hubspot-messenger.hubspot-messenger-fixed.hubspot-messenger-on-left {
+ul.messenger.messenger-fixed.messenger-on-right, ul.messenger.messenger-fixed.messenger-on-left {
   width: 350px;
 }
 /* line 70, ../../src/sass/messenger.sass */
-ul.hubspot-messenger.hubspot-messenger-fixed.hubspot-messenger-on-right .hubspot-messenger-actions, ul.hubspot-messenger.hubspot-messenger-fixed.hubspot-messenger-on-left .hubspot-messenger-actions {
+ul.messenger.messenger-fixed.messenger-on-right .messenger-actions, ul.messenger.messenger-fixed.messenger-on-left .messenger-actions {
   float: left;
 }
 /* line 73, ../../src/sass/messenger.sass */
-ul.hubspot-messenger .hubspot-messenger-spinner {
+ul.messenger .messenger-spinner {
   display: none;
 }

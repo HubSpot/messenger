@@ -2,7 +2,7 @@
 @import "compass/utilities/general/clearfix"
 @import "compass/css3"
 
-ul.#{$prefix}messenger
+ul.#{$prefix}
   margin: 0
   padding: 0
 
@@ -12,41 +12,41 @@ ul.#{$prefix}messenger
     margin: 0
     padding: 0
 
-  .#{$prefix}messenger-message
+  .#{$prefix}-message
     +clearfix
 
-    &.#{$prefix}messenger-hidden
+    &.#{$prefix}-hidden
       display: none
 
-    .#{$prefix}messenger-phrase, .#{$prefix}messenger-actions a
+    .#{$prefix}-phrase, .#{$prefix}-actions a
       padding-right: 5px
 
-    .#{$prefix}messenger-actions
+    .#{$prefix}-actions
       float: right
 
       a
         cursor: pointer
         text-decoration: underline
 
-  &.#{$prefix}messenger-fixed
+  &.#{$prefix}-fixed
     position: fixed
     z-index: 10000
 
-    .#{$prefix}messenger-message
+    .#{$prefix}-message
       min-width: 0
 
       +box-sizing(border-box)
 
-    .#{$prefix}message .#{$prefix}messenger-actions
+    .#{$prefix}-message .#{$prefix}-actions
       float: left
 
-    &.#{$prefix}messenger-on-top
+    &.#{$prefix}-on-top
       top: 20px
 
-    &.#{$prefix}messenger-on-bottom
+    &.#{$prefix}-on-bottom
       bottom: 20px
 
-    &.#{$prefix}messenger-on-top, &.#{$prefix}messenger-on-bottom
+    &.#{$prefix}-on-top, &.#{$prefix}-on-bottom
       left: 50%
       width: 800px
       margin-left: -400px
@@ -56,19 +56,19 @@ ul.#{$prefix}messenger
         width: 80%
         margin-left: 0px
 
-      &.#{$prefix}messenger-on-right
+      &.#{$prefix}-on-right
         right: 20px
         left: auto
 
-      &.#{$prefix}messenger-on-left
+      &.#{$prefix}-on-left
         left: 20px
         margin-left: 0px
 
-    &.#{$prefix}messenger-on-right, &.#{$prefix}messenger-on-left
+    &.#{$prefix}-on-right, &.#{$prefix}-on-left
       width: 350px
 
-      .#{$prefix}messenger-actions
+      .#{$prefix}-actions
         float: left
 
-  .#{$prefix}messenger-spinner
+  .#{$prefix}-spinner
     display: none // Default theme doesn't use the spinner

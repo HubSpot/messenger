@@ -12,7 +12,7 @@ spinner_template = '''
 '''
 
 # Polyfill for Backbone.Event
-Events = do () ->
+Events = (() ->
     if window.Backbone?.Events
         return Backbone.Events
 
@@ -144,11 +144,14 @@ Events = do () ->
         return Events;
     }`
     return eventsShim()
+)()
 
 # Emulates some Backbone-like eventing and element management for ease of use
 # while attempting to avoid a hard dependency on Backbone itself
 class BaseView
     constructor: (options) ->
+        $.extend(@, Events)
+
         if typeof options == 'object'
             if options.el
                 @setElement(options.el)
@@ -162,8 +165,6 @@ class BaseView
 
     delegateEvents: () ->
         console.log "delegateEvents: #{arguments}"
-
-$.extends(BaseView.prototype, Events.prototype)
 
 class Message extends BaseView
     defaults:

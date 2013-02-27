@@ -147,6 +147,7 @@
   BaseView = (function() {
 
     function BaseView(options) {
+      $.extend(this, Events);
       if (typeof options === 'object') {
         if (options.el) {
           this.setElement(options.el);
@@ -168,8 +169,6 @@
     return BaseView;
 
   })();
-
-  $["extends"](BaseView.prototype, Events.prototype);
 
   Message = (function(_super) {
 

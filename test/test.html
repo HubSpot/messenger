@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.0/css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" type="text/css" media="screen" href="../build/css/messenger.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="../build/css/messenger-spinner.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="../build/css/messenger-theme-air.css">
+
+    <link rel="stylesheet" type="text/css" media="screen" href="../build/css/messenger-theme-block.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="../build/css/messenger-theme-future.css">
+
+    <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+    <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.3/underscore-min.js"></script>
+    <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/backbone.js/0.9.10/backbone-min.js"></script>
+    <script type="text/javascript" src="../build/js/messenger.js"></script>
+  </head>
+  <script>
+    $(function() {
+      $.globalMessenger().post("Your request has succeded!");
+    });
+
+    $(function() {
+      $.globalMessenger()["do"]({
+        errorMessage: "This did not go well."
+      }, {
+        url: "/some-url",
+        success: function() {}
+      });
+    });
+
+    $(function() {
+      var i;
+
+      i = 0;
+
+      $.globalMessenger()["do"]({
+        errorMessage: 'Error destroying alien planet',
+        successMessage: 'Alien planet destroyed!',
+        action: function(opts) {
+          if (++i < 3) {
+            return opts.error({
+              status: 500,
+              readyState: 0,
+              responseText: 0
+            });
+          } else {
+            return opts.success();
+          }
+        }
+      });
+    })
+
+    $(function() {
+      $.globalMessenger().post({
+        message: 'There was an explosion while processing your request.',
+        type: 'error',
+        showCloseButton: true
+      });
+    })
+
+
+    $(function() {
+      var msg;
+
+      msg = $.globalMessenger().post({
+        message: 'Launching thermonuclear war...',
+        type: 'info',
+        actions: {
+          cancel: {
+            label: 'cancel launch',
+            action: function() {
+              return msg.update({
+                message: 'Thermonuclear war averted',
+                type: 'success',
+                actions: false
+              });
+            }
+          }
+        }
+      });
+
+    })
+  </script>
+  <body></body>
+</html>
+

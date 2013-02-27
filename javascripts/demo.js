@@ -29,11 +29,11 @@ $(function(){
       loc = pos;
 
       update();
-    });
-
+    })
+  ;
 
   $tsel.themeSelector({
-    themes: ['future', 'block', 'air']
+    themes: ['future', 'block', 'air', 'ice']
   }).on('update', function(theme){
     style = theme;
 

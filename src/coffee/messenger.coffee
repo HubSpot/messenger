@@ -11,7 +11,34 @@ spinner_template = '''
     </div>
 '''
 
-class Message extends Backbone.View
+# Emulates some Backbone-like eventing and element management for ease of use
+# while attempting to avoid a hard dependency on Backbone itself
+class BaseView
+    constructor: (options) ->
+        if typeof options == 'object'
+            if options.el
+                @setElement(options.el)
+            @model = options.model
+
+        @initialize.apply(@, arguments)
+
+    setElement: (el) ->
+        @$el = $(el)
+        @el = @$el[0]
+
+    on: () ->
+        console.log "on: #{arguments}"
+
+    off: () ->
+        console.log "off: #{arguments}"
+
+    trigger: () ->
+        console.log "trigger: #{arguments}"
+
+    delegateEvents: () ->
+        console.log "delegateEvents: #{arguments}"
+
+class Message extends BaseView
     defaults:
         hideAfter: 10
         scroll: true
@@ -266,7 +293,7 @@ class MagicMessage extends Message
 
         do tick
 
-class Messenger extends Backbone.View
+class Messenger extends BaseView
     tagName: 'ul'
     className: 'messenger'
 
@@ -379,6 +406,8 @@ class ActionMessenger extends Messenger
         action: $.ajax
 
     hookBackboneAjax: (msgr_opts={}) ->
+        if not window.Backbone?
+            throw 'Expected Backbone to be defined'
 
         msgr_opts = _.defaults msgr_opts,
             id: 'BACKBONE_ACTION'
@@ -395,7 +424,7 @@ class ActionMessenger extends Messenger
             @do msgr_opts, opts
 
         if Backbone.ajax?
-            Backbone.ajax = _ajax
+            window.Backbone.ajax = _ajax
         else
             _old_sync = Backbone.sync
             Backbone.sync = (method, model, options) ->

@@ -3,7 +3,8 @@
   var $, ActionMessenger, MagicMessage, Message, Messenger, baseCSSPrefix, baseTheme, spinner_template,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-    __slice = [].slice;
+    __slice = [].slice,
+    __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
   $ = jQuery;
 
@@ -354,13 +355,14 @@
 
     Messenger.prototype.className = "" + baseCSSPrefix + "messenger";
 
-    Messenger.prototype.OPT_DEFAULTS = {
+    Messenger.prototype.messageDefaults = {
       type: 'info'
     };
 
     Messenger.prototype.initialize = function(options) {
-      this.options = options;
-      return this.history = [];
+      this.options = options != null ? options : {};
+      this.history = [];
+      return this.messageDefaults = $.extend({}, this.messageDefaults, this.options.messageDefaults);
     };
 
     Messenger.prototype.render = function() {
@@ -475,7 +477,7 @@
           message: opts
         };
       }
-      opts = $.extend(true, {}, this.OPT_DEFAULTS, opts);
+      opts = $.extend(true, {}, this.messageDefaults, opts);
       msg = this.newMessage(opts);
       msg.update(opts);
       return msg;
@@ -493,7 +495,7 @@
       return ActionMessenger.__super__.constructor.apply(this, arguments);
     }
 
-    ActionMessenger.prototype.ACTION_DEFAULTS = {
+    ActionMessenger.prototype.doDefaults = {
       progressMessage: null,
       successMessage: null,
       errorMessage: "Error connecting to the server.",
@@ -595,7 +597,7 @@
       if (opts == null) {
         opts = {};
       }
-      m_opts = $.extend(true, {}, this.ACTION_DEFAULTS, m_opts != null ? m_opts : {});
+      m_opts = $.extend(true, {}, this.messageDefaults, this.doDefaults, m_opts != null ? m_opts : {});
       events = this._parseEvents(m_opts.events);
       msg = (_ref = m_opts.messageInstance) != null ? _ref : this.newMessage(m_opts);
       if (m_opts.id != null) {
@@ -611,7 +613,7 @@
         var old, _ref1;
         old = (_ref1 = opts[type]) != null ? _ref1 : function() {};
         return opts[type] = function() {
-          var data, msgOpts, msgText, r, reason, resp, xhr, _ref2, _ref3, _ref4, _ref5, _ref6;
+          var data, msgOpts, msgText, r, reason, resp, xhr, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7;
           resp = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
           _ref2 = _this._normalizeResponse.apply(_this, resp), reason = _ref2[0], data = _ref2[1], xhr = _ref2[2];
           if (type === 'success' && !(msg.errorCount != null) && m_opts.showSuccessWithoutError === false) {
@@ -628,15 +630,19 @@
             msg.hide();
             return;
           }
+          if (type === 'error' && ((m_opts.ignoredErrorCodes != null) && (_ref4 = xhr != null ? xhr.status : void 0, __indexOf.call(m_opts.ignoredErrorCodes, _ref4) >= 0))) {
+            msg.hide();
+            return;
+          }
           if (msgText) {
             msgOpts = $.extend({}, m_opts, {
               message: msgText,
               type: type,
-              events: (_ref4 = events[type]) != null ? _ref4 : {},
+              events: (_ref5 = events[type]) != null ? _ref5 : {},
               hideOnNavigate: type === 'success'
             });
             if (type === 'error' && (xhr != null ? xhr.status : void 0) >= 500) {
-              if ((_ref5 = msgOpts.retry) != null ? _ref5.allow : void 0) {
+              if ((_ref6 = msgOpts.retry) != null ? _ref6.allow : void 0) {
                 if (msgOpts.retry.delay == null) {
                   if (msgOpts.errorCount < 4) {
                     msgOpts.retry.delay = 10;
@@ -645,7 +651,7 @@
                   }
                 }
                 if (msgOpts.hideAfter) {
-                  if ((_ref6 = msgOpts._hideAfter) == null) {
+                  if ((_ref7 = msgOpts._hideAfter) == null) {
                     msgOpts._hideAfter = msgOpts.hideAfter;
                   }
                   msgOpts.hideAfter = msgOpts._hideAfter + msgOpts.retry.delay;
@@ -743,7 +749,7 @@
       if (!inst) {
         $el = $('<ul>');
         $parent.prepend($el);
-        inst = $el.messenger(opts);
+        inst = $el.messenger(opts.messageDefaults);
         inst._location = chosen_loc;
         $._messengerInstance = inst;
       } else if ($(inst._location) !== $(chosen_loc)) {

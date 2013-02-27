@@ -742,7 +742,7 @@
       if (!inst) {
         $el = $('<ul>');
         $parent.prepend($el);
-        inst = $el.messenger(opts.messageDefaults);
+        inst = $el.messenger(opts);
         inst._location = chosen_loc;
         $._messengerInstance = inst;
       } else if ($(inst._location) !== $(chosen_loc)) {

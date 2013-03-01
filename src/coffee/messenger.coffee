@@ -28,8 +28,28 @@ class BaseView
         @$el = $(el)
         @el = @$el[0]
 
-    delegateEvents: () ->
-        console.log "delegateEvents: #{arguments}"
+    delegateEvents: (events) ->
+        if (not (events or (events = _.result(@, 'events'))))
+            return
+        
+        @undelegateEvents()
+        for key, method of events
+            if not _.isFunction(method)
+                method = this[events[key]]
+            if not method
+                throw new Error("Method #{events[key]} does not exist")
+            match = key.match delegateEventSplitter
+            eventName = match[1]
+            selector = match[2]
+            method = _.bind method, @
+            eventName += ".delegateEvents#{@cid}"
+            if selector == ''
+                @$el.on eventName, method
+            else
+                @$el.on eventName, selector, method
+    
+    undelegateEvents: () ->
+        @$el.off ".delegateEvents#{this.cid}"
 
 class Message extends BaseView
     defaults:

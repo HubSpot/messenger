@@ -80,6 +80,13 @@ var _ = (function() {
         return keys;
     };
 
+    _.bind = function(func, context) {
+        if (func.bind === nativeBind && nativeBind) return nativeBind.apply(func, slice.call(arguments, 1));
+        var args = slice.call(arguments, 2);
+        return function() {
+            return func.apply(context, args.concat(slice.call(arguments)));
+        };
+    };
 
     return _;
 });

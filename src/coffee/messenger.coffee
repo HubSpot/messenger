@@ -65,7 +65,7 @@ class Message extends Backbone.View
 
         if @options.hideAfter
             @$message.addClass 'messenger-will-hide-after'
-            
+
             if @_hideTimeout?
                 clearTimeout @_hideTimeout
 
@@ -110,7 +110,7 @@ class Message extends Backbone.View
     checkClickable: ->
         for name, evt of @events
             if name is 'click'
-                @$messenger.addClass 'messenger-clickable'
+                @$messenger?.addClass 'messenger-clickable'
 
     undelegateEvents: ->
         super
@@ -590,7 +590,7 @@ $.globalMessenger = (opts) ->
     opts = $.extend defaultOpts, $._messengerDefaults, opts
 
     inst = opts.instance or $._messengerInstance
-    
+
     unless opts.instance?
         locations = opts.parentLocations
         $parent = null
@@ -605,16 +605,16 @@ $.globalMessenger = (opts) ->
 
         if not inst
             $el = $('<ul>')
-    
+
             $parent.prepend $el
-    
+
             inst = $el.messenger(opts)
             inst._location = chosen_loc
             $._messengerInstance = inst
-    
+
         else if $(inst._location) != $(chosen_loc)
             # A better location has since become avail on the page.
-    
+
             inst.$el.detach()
             $parent.prepend inst.$el
 

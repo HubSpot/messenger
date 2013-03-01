@@ -1,3 +1,5 @@
+// Version 1.0.9
+// Built On Fri Mar  1 01:29:00 EST 2013
 var _ = (function() {
     var ArrayProto = Array.prototype, ObjProto = Object.prototype, FuncProto = Function.prototype;
 

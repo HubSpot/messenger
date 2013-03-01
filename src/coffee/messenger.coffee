@@ -110,12 +110,12 @@ class Message extends Backbone.View
     checkClickable: ->
         for name, evt of @events
             if name is 'click'
-                @$messenger?.addClass 'messenger-clickable'
+                @$message.addClass 'messenger-clickable'
 
     undelegateEvents: ->
         super
 
-        @$messenger?.removeClass 'messenger-clickable'
+        @$message?.removeClass 'messenger-clickable'
 
     parseActions: ->
         actions = []

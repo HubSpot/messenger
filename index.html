@@ -31,6 +31,7 @@
 
     <script type="text/javascript" src="lib/executr/lib/CodeMirror/codemirror.js"></script>
     <script type="text/javascript" src="lib/executr/lib/CodeMirror/mode/coffeescript/coffeescript.js"></script>
+    <script type="text/javascript" src="lib/executr/lib/CodeMirror/mode/javascript/javascript.js"></script>
     <script type="text/javascript" src="lib/executr/build/js/executr.js"></script>
     <script type="text/javascript" src="lib/executr/lib/coffee-script.js"></script>
 
@@ -96,6 +97,10 @@
 </code></pre>
 
 <h2>Really Quick Usage</h2>
+<p>
+  <button class="executr-switch" data-code-type="javascript">To JavaScript</button>
+  <button class="executr-switch" data-code-type="coffeescript">To CoffeeScript</button>
+</p>
 <pre>
 <code executable>
 # Replace:
@@ -203,15 +208,15 @@ $.globalMessenger().post
     hideAfter: 10
     hideOnNavigate: true
 </code><code executable>
-# You can use the id property to ensure that only one 
-# instance of a message will appear on the page at a time 
+# You can use the id property to ensure that only one
+# instance of a message will appear on the page at a time
 # (the older message will be hidden).
 $.globalMessenger().post
   message: "Only one at a time!"
   id: "Only-one-message"
 </code><code executable>
-# When you add the singleton attribute, it ensures that no 
-# other messages with that id will ever be shown again 
+# When you add the singleton attribute, it ensures that no
+# other messages with that id will ever be shown again
 # (the newer message will be hidden).
 $.globalMessenger().post
   message: "It's just me!"
@@ -229,7 +234,7 @@ $.globalMessenger().post
 msg = $.globalMessenger().do()
 $.globalMessenger().do({messageInstance: msg})
 </code><code executable>
-# Don't want your message hidden on a long page? (Not necessary 
+# Don't want your message hidden on a long page? (Not necessary
 # if you're using the default fixed positioning)
 msg = $.globalMessenger().post
     message: "You'll see me!"
@@ -244,7 +249,7 @@ msg.scrollTo() # also works
 $.globalMessenger().do
     successMessage: 'Data saved.'
     errorMessage: 'Error saving data'
-    progressMessage: 'Saving data' # Don't include messages you 
+    progressMessage: 'Saving data' # Don't include messages you
                                    # don't want to appear.
 
     # Any standard message opts can go here
@@ -259,7 +264,7 @@ $.globalMessenger().do
 ,
     url: '/data'
     error: (xhr) ->
-        # Whatever you return from your handlers will replace 
+        # Whatever you return from your handlers will replace
         # the default messages
 
         if xhr?.status is 404
@@ -270,7 +275,7 @@ $.globalMessenger().do
 
         return true
 </code><code executable>
-# Sometimes you only want to show the success message when a 
+# Sometimes you only want to show the success message when a
 # retry succeeds, not if a retry wasen't required:
 $.globalMessenger().do
     successMessage: 'Successfully saved.'
@@ -280,7 +285,7 @@ $.globalMessenger().do
 ,
     url: '/data'
 </code><code executable>
-# You don't have to use $.ajax as your action, messenger works 
+# You don't have to use $.ajax as your action, messenger works
 # great for any async process:
 $.globalMessenger().do
     successMessage: 'Bomb defused successfully'
@@ -302,16 +307,16 @@ $.globalMessenger().do({}, {url: 'a'}).fail(-> alert "Uh oh")
 $.globalMessenger().hookBackboneAjax()
 
 # By default, there will be no error message (just background
-# retries), return an error message from your backbone error handler, 
+# retries), return an error message from your backbone error handler,
 # or add an errorMessage to the messenger opts to set one.
-# You can override these options by passing them into 
-# hookBackboneAjax, or adding a {'messenger': } hash to your 
+# You can override these options by passing them into
+# hookBackboneAjax, or adding a {'messenger': } hash to your
 # fetch call.
 </code><code executable>
 # You don't have to use the global messenger
 $('div#message-container').messenger().post "My message"
 </code><code executable>
-# By default, the global messenger will create an ActionMessenger 
+# By default, the global messenger will create an ActionMessenger
 # instance fixed to the bottom-right corner of the screen.
 </code><code executable>
 # You can pass an instance of messenger into globalMessenger
@@ -356,7 +361,7 @@ $._messengerDefaults = {'extraClasses': 'messenger-fixed messenger-on-left'}
         <p class="copyright">
           Messenger maintained by <a href="https://github.com/HubSpot">HubSpot</a>
           -
-          <a href="http://dev.hubspot.com/jobs?utm_campaign=os&utm_source=referral">We're Hiring</a> 
+          <a href="http://dev.hubspot.com/jobs?utm_campaign=os&utm_source=referral">We're Hiring</a>
         </p>
         <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
         <p>Documentation powered by <a href="https://github.com/Hubspot/executr">Executr</a></p>

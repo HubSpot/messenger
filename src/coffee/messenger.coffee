@@ -378,8 +378,10 @@ class ActionMessenger extends Messenger
 
         action: $.ajax
 
+    # When called, will override Backbone.sync to place globalMessenger in the chain.
     hookBackboneAjax: (msgr_opts={}) ->
 
+        # Set backbone ajax defaults. These do not override defaults set manually by the programmer
         msgr_opts = _.defaults msgr_opts,
             id: 'BACKBONE_ACTION'
 
@@ -388,26 +390,30 @@ class ActionMessenger extends Messenger
 
             showSuccessWithoutError: false
 
-        _ajax = (opts) =>
-            if $('html').hasClass('ie9-and-less')
-                opts.cache = false
+        # Override Backbone.sync to call $.globalMessenger().do() instead
+        _old_sync = Backbone.sync
+        Backbone.sync = (method, model, options) =>
 
-            @do msgr_opts, opts
+            # Create ajax override
+            _ajax = (opts) =>
+                if $('html').hasClass('ie9-and-less')
+                    opts.cache = false
 
-        if Backbone.ajax?
-            Backbone.ajax = _ajax
-        else
-            _old_sync = Backbone.sync
-            Backbone.sync = (method, model, options) ->
-                _old_ajax = $.ajax
-                $.ajax = _ajax
+                @do sync_msgr_opts, opts
 
-                if options.messenger?
-                    _.extend msgr_opts, options.messenger
+            # Switch ajax methods
+            _old_ajax = $.ajax
+            $.ajax = _ajax
 
-                _old_sync.call(Backbone, method, model, options)
+            # if options were provided to this individual call, use them
+            # don't clobber default options, use _.clone
+            sync_msgr_opts = _.clone msgr_opts
+            if options.messenger?
+                _.extend sync_msgr_opts, options.messenger
 
-                $.ajax = _old_ajax
+            _old_sync.call(Backbone, method, model, options)
+
+            $.ajax = _old_ajax
 
     _getMessage: (returnVal, def) ->
         if returnVal == false

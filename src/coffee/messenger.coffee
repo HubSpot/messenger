@@ -418,6 +418,7 @@ class ActionMessenger extends Messenger
         else
             Backbone.sync = _.wrap Backbone.sync, (_old_sync, args...) ->
                 # Switch ajax methods
+                _old_ajax = $.ajax
                 $.ajax = _ajax
 
                 # Call old Backbone.sync (with it's original context)

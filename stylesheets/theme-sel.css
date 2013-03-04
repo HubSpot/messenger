@@ -1,6 +1,6 @@
-.theme-selector {
+.theme-selector, .selector {
   margin: 0; }
-  .theme-selector li {
+  .theme-selector li, .selector li {
     list-style-type: none;
     color: #43adff;
     text-decoration: underline;

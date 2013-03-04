@@ -4,12 +4,12 @@ module.exports = (grunt) ->
     clean: ["build/js", "build/css"]
 
     concat:
-        options:
-            banner: "/*! <%= pkg.name %> <%= pkg.version %> <%= grunt.template.today(\"yyyy-mm-dd\") %> */\n"
+      options:
+        banner: "/*! <%= pkg.name %> <%= pkg.version %> <%= grunt.template.today(\"yyyy-mm-dd\") %> */\n"
 
-        dist:
-            src: ["build/js/<%= pkg.name %>.js"]
-            dest: "build/js/<%= pkg.name %>.js"
+      dist:
+        src: ["build/js/<%= pkg.name %>.js"]
+        dest: "build/js/<%= pkg.name %>.js"
 
     uglify:
       options:

@@ -1,4 +1,4 @@
-/*! messenger 1.1.0 2013-03-04 */
+/*! messenger 1.1.1 2013-03-04 */
 (function() {
   var $, ActionMessenger, MagicMessage, Message, Messenger, spinner_template,
     __hasProp = {}.hasOwnProperty,
@@ -514,12 +514,12 @@
       _ajax = function(options) {
         var sync_msgr_opts;
         sync_msgr_opts = _.extend({}, msgr_opts, options.messenger);
-        if ($('html').hasClass('ie9-and-less')) {
-          options.cache = false;
-        }
         return _this["do"](sync_msgr_opts, options);
       };
       if (Backbone.ajax != null) {
+        if (Backbone.ajax._withoutMessenger) {
+          Backbone.ajax = Backbone.ajax._withoutMessenger;
+        }
         if (!(msgr_opts.action != null) || msgr_opts.action === this.doDefaults.action) {
           msgr_opts.action = Backbone.ajax;
         }

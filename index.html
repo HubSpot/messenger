@@ -97,10 +97,6 @@
 </code></pre>
 
 <h2>Really Quick Usage</h2>
-<p>
-  <button class="executr-switch" data-code-type="javascript">To JavaScript</button>
-  <button class="executr-switch" data-code-type="coffeescript">To CoffeeScript</button>
-</p>
 <pre>
 <code executable>
 # Replace:
@@ -125,6 +121,13 @@ $.globalMessenger().do
   <div>
     <h4>Change Theme</h4>
     <ul class='theme-selector'></ul>
+  </div>
+  <div>
+    <h4>Change Language</h4>
+    <ul class='selector'>
+      <li class="executr-switch" data-code-type="javascript"/>JavaScript</li>
+      <li class="executr-switch" data-code-type="coffeescript"/>CoffeeScript</li>
+    </ul>
   </div>
   <hr class="clear"></hr>
   <pre><code><output></output></code></pre>
@@ -291,7 +294,6 @@ $.globalMessenger().do
     successMessage: 'Bomb defused successfully'
 
     action: defuseBomb
-,
     # You can put options for defuseBomb here
     # It will be passed success and error callbacks
 </code><code executable>

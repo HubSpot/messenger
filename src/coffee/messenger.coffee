@@ -407,7 +407,7 @@ class ActionMessenger extends Messenger
 
             # if options were provided to this individual call, use them
             # don't clobber default options, use _.clone
-            sync_msgr_opts = _.clone msgr_opts
+            sync_msgr_opts = if options.messenger? then _.clone msgr_opts else msgr_opts
             if options.messenger?
                 _.extend sync_msgr_opts, options.messenger
 

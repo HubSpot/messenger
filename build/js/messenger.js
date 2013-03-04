@@ -1,4 +1,4 @@
-/*! messenger 1.1.2 2013-03-04 */
+/*! messenger 1.1.3 2013-03-04 */
 (function() {
   var $, ActionMessenger, MagicMessage, Message, Messenger, spinner_template,
     __hasProp = {}.hasOwnProperty,
@@ -527,8 +527,9 @@
         return Backbone.ajax = _ajax;
       } else {
         return Backbone.sync = _.wrap(Backbone.sync, function() {
-          var args, _old_sync;
+          var args, _old_ajax, _old_sync;
           _old_sync = arguments[0], args = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
+          _old_ajax = $.ajax;
           $.ajax = _ajax;
           _old_sync.call.apply(_old_sync, [this].concat(__slice.call(args)));
           return $.ajax = _old_ajax;

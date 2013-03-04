@@ -513,25 +513,26 @@
       });
       _ajax = function(options) {
         var sync_msgr_opts;
-        sync_msgr_opts = options.messenger != null ? _.clone(msgr_opts) : msgr_opts;
-        _.extend(sync_msgr_opts, options.messenger);
+        sync_msgr_opts = _.extend({}, msgr_opts, options.messenger);
         if ($('html').hasClass('ie9-and-less')) {
           options.cache = false;
         }
         return _this["do"](sync_msgr_opts, options);
       };
       if (Backbone.ajax != null) {
-        msgr_opts.action = Backbone.ajax;
+        if (!(msgr_opts.action != null) || msgr_opts.action === this.doDefaults.action) {
+          msgr_opts.action = Backbone.ajax;
+        }
+        _ajax._withoutMessenger = Backbone.ajax;
         return Backbone.ajax = _ajax;
       } else {
-        return Backbone.sync = _.wrap(Backbone.sync(function() {
-          var args, _old_ajax, _old_sync;
+        return Backbone.sync = _.wrap(Backbone.sync, function() {
+          var args, _old_sync;
           _old_sync = arguments[0], args = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
-          _old_ajax = $.ajax;
           $.ajax = _ajax;
-          _old_sync.call(Backbone, args);
+          _old_sync.call.apply(_old_sync, [this].concat(__slice.call(args)));
           return $.ajax = _old_ajax;
-        }));
+        });
       }
     };
 

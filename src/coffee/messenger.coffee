@@ -395,23 +395,26 @@ class ActionMessenger extends Messenger
 
         # Create ajax override
         _ajax = (options) =>
-            
             # if options were provided to this individual call, use them
             sync_msgr_opts = _.extend {}, msgr_opts, options.messenger
-
-            if $('html').hasClass('ie9-and-less')
-                options.cache = false
 
             @do sync_msgr_opts, options
 
         # If Backbone.ajax exists (Backbone >= 0.9.9), override it
         if Backbone.ajax?
+            # We've already wrapped Backbone at some point.
+            # Lets reverse that, so we don't end up making every request multiple times.
+            if Backbone.ajax._withoutMessenger
+                Backbone.ajax = Backbone.ajax._withoutMessenger
+
             # We set the action to Backbone.ajax so any previous overrides in Backbone.ajax are not clobbered
             # But we are careful not to override it if a different .action was passed in.
             if not msgr_opts.action? or msgr_opts.action is @doDefaults.action
-              msgr_opts.action = Backbone.ajax
+                msgr_opts.action = Backbone.ajax
 
+            # Keep a reference to the previous ajax
             _ajax._withoutMessenger = Backbone.ajax
+
             Backbone.ajax = _ajax
         # Override Backbone.sync if Backbone < 0.9.9
         else

@@ -1,4 +1,4 @@
-/*! messenger 1.0.10 2013-03-04 */
+/*! messenger 1.1.0 2013-03-04 */
 (function() {
   var $, ActionMessenger, MagicMessage, Message, Messenger, spinner_template,
     __hasProp = {}.hasOwnProperty,
@@ -501,7 +501,7 @@
     };
 
     ActionMessenger.prototype.hookBackboneAjax = function(msgr_opts) {
-      var _ajax, _old_sync,
+      var _ajax,
         _this = this;
       if (msgr_opts == null) {
         msgr_opts = {};
@@ -512,26 +512,28 @@
         successMessage: "Request completed successfully.",
         showSuccessWithoutError: false
       });
-      _ajax = function(opts) {
+      _ajax = function(options) {
+        var sync_msgr_opts;
+        sync_msgr_opts = _.extend({}, msgr_opts, options.messenger);
         if ($('html').hasClass('ie9-and-less')) {
-          opts.cache = false;
+          options.cache = false;
         }
-        return _this["do"](msgr_opts, opts);
+        return _this["do"](sync_msgr_opts, options);
       };
       if (Backbone.ajax != null) {
+        if (!(msgr_opts.action != null) || msgr_opts.action === this.doDefaults.action) {
+          msgr_opts.action = Backbone.ajax;
+        }
+        _ajax._withoutMessenger = Backbone.ajax;
         return Backbone.ajax = _ajax;
       } else {
-        _old_sync = Backbone.sync;
-        return Backbone.sync = function(method, model, options) {
-          var _old_ajax;
-          _old_ajax = $.ajax;
+        return Backbone.sync = _.wrap(Backbone.sync, function() {
+          var args, _old_sync;
+          _old_sync = arguments[0], args = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
           $.ajax = _ajax;
-          if (options.messenger != null) {
-            _.extend(msgr_opts, options.messenger);
-          }
-          _old_sync.call(Backbone, method, model, options);
+          _old_sync.call.apply(_old_sync, [this].concat(__slice.call(args)));
           return $.ajax = _old_ajax;
-        };
+        });
       }
     };
 

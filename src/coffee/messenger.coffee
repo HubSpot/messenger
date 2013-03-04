@@ -380,8 +380,11 @@ class ActionMessenger extends Messenger
 
         action: $.ajax
 
+    # When called, will override Backbone.sync to place globalMessenger in the chain.
+    # If using Backbone >= 0.9.9, will instead override Backbone.ajax
     hookBackboneAjax: (msgr_opts={}) ->
 
+        # Set backbone ajax defaults.
         msgr_opts = _.defaults msgr_opts,
             id: 'BACKBONE_ACTION'
 
@@ -390,25 +393,36 @@ class ActionMessenger extends Messenger
 
             showSuccessWithoutError: false
 
-        _ajax = (opts) =>
+        # Create ajax override
+        _ajax = (options) =>
+            
+            # if options were provided to this individual call, use them
+            sync_msgr_opts = _.extend {}, msgr_opts, options.messenger
+
             if $('html').hasClass('ie9-and-less')
-                opts.cache = false
+                options.cache = false
 
-            @do msgr_opts, opts
+            @do sync_msgr_opts, options
 
+        # If Backbone.ajax exists (Backbone >= 0.9.9), override it
         if Backbone.ajax?
+            # We set the action to Backbone.ajax so any previous overrides in Backbone.ajax are not clobbered
+            # But we are careful not to override it if a different .action was passed in.
+            if not msgr_opts.action? or msgr_opts.action is @doDefaults.action
+              msgr_opts.action = Backbone.ajax
+
+            _ajax._withoutMessenger = Backbone.ajax
             Backbone.ajax = _ajax
+        # Override Backbone.sync if Backbone < 0.9.9
         else
-            _old_sync = Backbone.sync
-            Backbone.sync = (method, model, options) ->
-                _old_ajax = $.ajax
+            Backbone.sync = _.wrap Backbone.sync, (_old_sync, args...) ->
+                # Switch ajax methods
                 $.ajax = _ajax
 
-                if options.messenger?
-                    _.extend msgr_opts, options.messenger
+                # Call old Backbone.sync (with it's original context)
+                _old_sync.call(this, args...)
 
-                _old_sync.call(Backbone, method, model, options)
-
+                # Restore ajax
                 $.ajax = _old_ajax
 
     _getMessage: (returnVal, def) ->

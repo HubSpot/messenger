@@ -401,7 +401,7 @@ class ActionMessenger extends Messenger
         # If Backbone.ajax exists (Backbone >= 0.9.9), override it
         if Backbone.ajax?
             # We've already wrapped Backbone at some point.
-            # Let's reverse that, so we don't end up making every request multiple times.
+            # Lets reverse that, so we don't end up making every request multiple times.
             if Backbone.ajax._withoutMessenger
                 Backbone.ajax = Backbone.ajax._withoutMessenger
 

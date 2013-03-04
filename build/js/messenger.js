@@ -1,4 +1,4 @@
-/*! messenger 1.1.1 2013-03-04 */
+/*! messenger 1.1.2 2013-03-04 */
 (function() {
   var $, ActionMessenger, MagicMessage, Message, Messenger, spinner_template,
     __hasProp = {}.hasOwnProperty,

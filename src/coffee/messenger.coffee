@@ -31,7 +31,7 @@ class BaseView
     delegateEvents: (events) ->
         if (not (events or (events = _.result(@, 'events'))))
             return
-        
+
         @undelegateEvents()
         for key, method of events
             if not _.isFunction(method)
@@ -47,7 +47,7 @@ class BaseView
                 @$el.on eventName, method
             else
                 @$el.on eventName, selector, method
-    
+
     undelegateEvents: () ->
         @$el.off ".delegateEvents#{this.cid}"
 
@@ -105,7 +105,7 @@ class Message extends BaseView
 
         if @options.hideAfter
             @$message.addClass 'messenger-will-hide-after'
-            
+
             if @_hideTimeout?
                 clearTimeout @_hideTimeout
 
@@ -114,14 +114,6 @@ class Message extends BaseView
             , @options.hideAfter * 1000
         else
             @$message.removeClass 'messenger-will-hide-after'
-
-        if @options.hideOnNavigate
-            @$message.addClass 'messenger-will-hide-on-navigate'
-            if Backbone.history?
-                Backbone.history.on 'route', =>
-                    do @hide
-        else
-            @$message.removeClass 'messenger-will-hide-on-navigate'
 
         @trigger 'update', @
 
@@ -553,8 +545,6 @@ class ActionMessenger extends Messenger
                         type: type
                         events: events[type] ? {}
 
-                        hideOnNavigate: type == 'success'
-
 
                     if type is 'error' and xhr?.status >= 500
                         if msgOpts.retry?.allow
@@ -632,7 +622,7 @@ $.globalMessenger = (opts) ->
     opts = $.extend defaultOpts, $._messengerDefaults, opts
 
     inst = opts.instance or $._messengerInstance
-    
+
     unless opts.instance?
         locations = opts.parentLocations
         $parent = null
@@ -647,16 +637,16 @@ $.globalMessenger = (opts) ->
 
         if not inst
             $el = $('<ul>')
-    
+
             $parent.prepend $el
-    
+
             inst = $el.messenger(opts)
             inst._location = chosen_loc
             $._messengerInstance = inst
-    
+
         else if $(inst._location) != $(chosen_loc)
             # A better location has since become avail on the page.
-    
+
             inst.$el.detach()
             $parent.prepend inst.$el
 

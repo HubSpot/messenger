@@ -1,5 +1,4 @@
-// Version 1.0.9
-// Built On Fri Mar  1 01:29:00 EST 2013
+// Version ?\n// Built On Tue Mar  5 11:25:51 GMT 2013
 var _ = (function() {
     var ArrayProto = Array.prototype, ObjProto = Object.prototype, FuncProto = Function.prototype;
 
@@ -68,7 +67,7 @@ var _ = (function() {
         var id = ++idCounter + '';
         return prefix ? prefix + id : id;
     };
-        
+
     _.filter = _.select = function(obj, iterator, context) {
         var results = [];
         if (obj == null) return results;
@@ -165,7 +164,7 @@ var Events = (function() {
             }
         };
 
-        var Events = Backbone.Events = {
+        var Events = {
 
             on: function(name, callback, context) {
                 if (!(eventsApi(this, 'on', name, [callback, context]) && callback)) return this;
@@ -219,7 +218,7 @@ var Events = (function() {
 
             trigger: function(name) {
                 if (!this._events) return this;
-                var args = slice.call(arguments, 1);
+                var args = Array.prototype.slice.call(arguments, 1);
                 if (!eventsApi(this, 'trigger', name, args)) return this;
                 var events = this._events[name];
                 var allEvents = this._events.all;

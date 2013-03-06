@@ -1,4 +1,4 @@
-/*! messenger 1.1.3 2013-03-05 */
+/*! messenger 1.2.0 2013-03-05 */
 (function() {
   var $, ActionMessenger, RetryingMessage, _Message, _Messenger, _prevMessenger,
     __hasProp = {}.hasOwnProperty,

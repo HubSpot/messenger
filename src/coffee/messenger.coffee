@@ -601,12 +601,12 @@ window.Messenger = (opts) ->
         maxMessages: 9
         parentLocations: ['body']
 
-    opts = $.extend defaultOpts, $._messengerDefaults, opts
+    opts = $.extend defaultOpts, $._messengerDefaults, window.Messenger.options, opts
 
     if opts.theme?
         opts.extraClasses += " messenger-theme-#{ opts.theme }"
 
-    inst = opts.instance or $._messengerInstance
+    inst = opts.instance or window.Messenger.instance
 
     unless opts.instance?
         locations = opts.parentLocations
@@ -627,7 +627,7 @@ window.Messenger = (opts) ->
 
             inst = $el.messenger(opts)
             inst._location = chosen_loc
-            $._messengerInstance = inst
+            window.Messenger.instance = inst
 
         else if $(inst._location) != $(chosen_loc)
             # A better location has since become avail on the page.

@@ -5,7 +5,13 @@ Added global Messenger object which can be removed with `Messenger.noConflict()`
 Messenger object will provide a container other than the jQuery object for messenger
 externals.
 
-Messenger may also be called to provide the same functionality as $.globalMessenger.
+Messenger may also be called to provide the same functionality as `$.globalMessenger`.
+
+Messenger default options may now be set on `window.Messenger.options` as well as
+`$._messengerDefaults`.
+
+The current instance of ActionMessenger which will be used by Messenger()/$.globalMessenger
+calls is now accessable as `window.Messenger.instance`, not `$._messengerInstance`.
 
 Added `run` alias for `go`.  This change makes it easier for developers writing js. 
 In JavaScript, go, being a reserved word, always had to be referenced using array

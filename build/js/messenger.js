@@ -732,11 +732,11 @@
       maxMessages: 9,
       parentLocations: ['body']
     };
-    opts = $.extend(defaultOpts, $._messengerDefaults, opts);
+    opts = $.extend(defaultOpts, $._messengerDefaults, window.Messenger.options, opts);
     if (opts.theme != null) {
       opts.extraClasses += " messenger-theme-" + opts.theme;
     }
-    inst = opts.instance || $._messengerInstance;
+    inst = opts.instance || window.Messenger.instance;
     if (opts.instance == null) {
       locations = opts.parentLocations;
       $parent = null;
@@ -754,7 +754,7 @@
         $parent.prepend($el);
         inst = $el.messenger(opts);
         inst._location = chosen_loc;
-        $._messengerInstance = inst;
+        window.Messenger.instance = inst;
       } else if ($(inst._location) !== $(chosen_loc)) {
         inst.$el.detach();
         $parent.prepend(inst.$el);

@@ -105,7 +105,7 @@ class Message extends BaseView
 
         if @options.hideAfter
             @$message.addClass 'messenger-will-hide-after'
-            
+
             if @_hideTimeout?
                 clearTimeout @_hideTimeout
 
@@ -150,12 +150,12 @@ class Message extends BaseView
     checkClickable: ->
         for name, evt of @events
             if name is 'click'
-                @$messenger.addClass 'messenger-clickable'
+                @$message.addClass 'messenger-clickable'
 
     undelegateEvents: ->
         super
 
-        @$messenger?.removeClass 'messenger-clickable'
+        @$message?.removeClass 'messenger-clickable'
 
     parseActions: ->
         actions = []
@@ -418,10 +418,13 @@ class ActionMessenger extends Messenger
 
         action: $.ajax
 
+    # When called, will override Backbone.sync to place globalMessenger in the chain.
+    # If using Backbone >= 0.9.9, will instead override Backbone.ajax
     hookBackboneAjax: (msgr_opts={}) ->
         if not window.Backbone?
             throw 'Expected Backbone to be defined'
 
+        # Set backbone ajax defaults.
         msgr_opts = _.defaults msgr_opts,
             id: 'BACKBONE_ACTION'
 
@@ -430,25 +433,40 @@ class ActionMessenger extends Messenger
 
             showSuccessWithoutError: false
 
-        _ajax = (opts) =>
-            if $('html').hasClass('ie9-and-less')
-                opts.cache = false
+        # Create ajax override
+        _ajax = (options) =>
+            # if options were provided to this individual call, use them
+            sync_msgr_opts = _.extend {}, msgr_opts, options.messenger
 
-            @do msgr_opts, opts
+            @do sync_msgr_opts, options
 
+        # If Backbone.ajax exists (Backbone >= 0.9.9), override it
         if Backbone.ajax?
-            window.Backbone.ajax = _ajax
+            # We've already wrapped Backbone at some point.
+            # Lets reverse that, so we don't end up making every request multiple times.
+            if Backbone.ajax._withoutMessenger
+                Backbone.ajax = Backbone.ajax._withoutMessenger
+
+            # We set the action to Backbone.ajax so any previous overrides in Backbone.ajax are not clobbered
+            # But we are careful not to override it if a different .action was passed in.
+            if not msgr_opts.action? or msgr_opts.action is @doDefaults.action
+                msgr_opts.action = Backbone.ajax
+
+            # Keep a reference to the previous ajax
+            _ajax._withoutMessenger = Backbone.ajax
+
+            Backbone.ajax = _ajax
+        # Override Backbone.sync if Backbone < 0.9.9
         else
-            _old_sync = Backbone.sync
-            Backbone.sync = (method, model, options) ->
+            Backbone.sync = _.wrap Backbone.sync, (_old_sync, args...) ->
+                # Switch ajax methods
                 _old_ajax = $.ajax
                 $.ajax = _ajax
 
-                if options.messenger?
-                    _.extend msgr_opts, options.messenger
+                # Call old Backbone.sync (with it's original context)
+                _old_sync.call(this, args...)
 
-                _old_sync.call(Backbone, method, model, options)
-
+                # Restore ajax
                 $.ajax = _old_ajax
 
     _getMessage: (returnVal, def) ->
@@ -632,7 +650,7 @@ $.globalMessenger = (opts) ->
     opts = $.extend defaultOpts, $._messengerDefaults, opts
 
     inst = opts.instance or $._messengerInstance
-    
+
     unless opts.instance?
         locations = opts.parentLocations
         $parent = null
@@ -647,16 +665,16 @@ $.globalMessenger = (opts) ->
 
         if not inst
             $el = $('<ul>')
-    
+
             $parent.prepend $el
-    
+
             inst = $el.messenger(opts)
             inst._location = chosen_loc
             $._messengerInstance = inst
-    
+
         else if $(inst._location) != $(chosen_loc)
             # A better location has since become avail on the page.
-    
+
             inst.$el.detach()
             $parent.prepend inst.$el
 

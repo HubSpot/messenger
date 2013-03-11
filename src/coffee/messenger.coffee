@@ -1,17 +1,6 @@
 $ = jQuery
 
-spinner_template = '''
-    <div class="messenger-spinner">
-        <span class="messenger-spinner-side messenger-spinner-side-left">
-            <span class="messenger-spinner-fill"></span>
-        </span>
-        <span class="messenger-spinner-side messenger-spinner-side-right">
-            <span class="messenger-spinner-fill"></span>
-        </span>
-    </div>
-'''
-
-class Message extends Backbone.View
+class _Message extends Backbone.View
     defaults:
         hideAfter: 10
         scroll: true
@@ -144,8 +133,6 @@ class Message extends Backbone.View
         $text = $ """<div class="messenger-message-inner">#{ opts.message }</div>"""
         $message.append $text
 
-        $message.append $ spinner_template
-
         if opts.actions.length
             $actions = $ '<div class="messenger-actions">'
 
@@ -185,7 +172,7 @@ class Message extends Backbone.View
 
         @trigger 'render'
 
-class MagicMessage extends Message
+class RetryingMessage extends _Message
     initialize: ->
         super
 
@@ -266,7 +253,7 @@ class MagicMessage extends Message
 
         do tick
 
-class Messenger extends Backbone.View
+class _Messenger extends Backbone.View
     tagName: 'ul'
     className: 'messenger'
 
@@ -317,7 +304,10 @@ class Messenger extends Backbone.View
 
     newMessage: (opts={}) ->
         opts.messenger = @
-        msg = new MagicMessage(opts)
+        
+        _Message = window.Messenger.themes[opts.theme]?.Message ? RetryingMessage
+
+        msg = new _Message(opts)
 
         msg.on 'show', =>
             if opts.scrollTo and @$el.css('position') isnt 'fixed'
@@ -364,7 +354,7 @@ class Messenger extends Backbone.View
         msg.update opts
         return msg
 
-class ActionMessenger extends Messenger
+class ActionMessenger extends _Messenger
     doDefaults:
         progressMessage: null
         successMessage: null
@@ -474,7 +464,7 @@ class ActionMessenger extends Messenger
 
         return [type, data, xhr]
 
-    do: (m_opts, opts={}, args...) ->
+    run: (m_opts, opts={}, args...) ->
         m_opts = $.extend true, {}, @messageDefaults, @doDefaults, m_opts ? {}
         events = @_parseEvents m_opts.events
 
@@ -574,6 +564,9 @@ class ActionMessenger extends Messenger
                 else
                     do msg.hide
 
+            # Alias
+            do: @run
+
         msg._actionInstance = m_opts.action opts, args...
 
         promiseAttrs = ['done', 'progress', 'fail', 'state', 'then']
@@ -590,24 +583,30 @@ $.fn.messenger = (func={}, args...) ->
         opts = func
 
         if not $el.data('messenger')?
-            $el.data('messenger', instance = new ActionMessenger($.extend({el: $el}, opts)))
+            _Messenger = window.Messenger.themes[opts.theme]?.Messenger ? ActionMessenger
+            $el.data('messenger', instance = new _Messenger($.extend({el: $el}, opts)))
             instance.render()
 
         return $el.data('messenger')
     else
         return $el.data('messenger')[func](args...)
 
-$.globalMessenger = (opts) ->
+_prevMessenger = window.Messenger
+window.Messenger = (opts) ->
 
     defaultOpts =
-        extraClasses: 'messenger-fixed messenger-on-bottom messenger-on-right messenger-theme-future'
+        extraClasses: 'messenger-fixed messenger-on-bottom messenger-on-right'
 
+        theme: 'future'
         maxMessages: 9
         parentLocations: ['body']
 
-    opts = $.extend defaultOpts, $._messengerDefaults, opts
+    opts = $.extend defaultOpts, $._messengerDefaults, window.Messenger.options, opts
 
-    inst = opts.instance or $._messengerInstance
+    if opts.theme?
+        opts.extraClasses += " messenger-theme-#{ opts.theme }"
+
+    inst = opts.instance or window.Messenger.instance
 
     unless opts.instance?
         locations = opts.parentLocations
@@ -628,7 +627,7 @@ $.globalMessenger = (opts) ->
 
             inst = $el.messenger(opts)
             inst._location = chosen_loc
-            $._messengerInstance = inst
+            window.Messenger.instance = inst
 
         else if $(inst._location) != $(chosen_loc)
             # A better location has since become avail on the page.
@@ -643,3 +642,13 @@ $.globalMessenger = (opts) ->
     inst._addedClasses = classes
 
     return inst
+
+$.extend window.Messenger,
+    Message: RetryingMessage,
+    Messenger: ActionMessenger,
+    
+    themes: {}
+    noConflict: ->
+        window.Messenger = _prevMessenger
+ 
+$.globalMessenger = window.Messenger

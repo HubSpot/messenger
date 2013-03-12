@@ -523,54 +523,55 @@ class ActionMessenger extends Messenger
                     do msg.hide
                     return
 
-                if msgText
-                    msgOpts = $.extend {}, m_opts,
-                        message: msgText
-                        type: type
-                        events: events[type] ? {}
+                msgOpts = $.extend {}, m_opts,
+                    message: msgText
+                    type: type
+                    events: events[type] ? {}
 
-                        hideOnNavigate: type == 'success'
+                    hideOnNavigate: type == 'success'
 
+                if type is 'error' and xhr?.status >= 500
+                    if msgOpts.retry?.allow
+                        if typeof msgOpts.retry?.allow is 'number'
+                            msgOpts.retry.allow--
 
-                    if type is 'error' and xhr?.status >= 500
-                        if msgOpts.retry?.allow
-
-                            unless msgOpts.retry.delay?
-                              if msgOpts.errorCount < 4
+                        unless msgOpts.retry.delay?
+                            if msgOpts.errorCount < 4
                                 msgOpts.retry.delay = 10
-                              else
+                            else
                                 msgOpts.retry.delay = 5 * 60
 
-                            if msgOpts.hideAfter
-                              msgOpts._hideAfter ?= msgOpts.hideAfter
-                              msgOpts.hideAfter = msgOpts._hideAfter + msgOpts.retry.delay
+                        if msgOpts.hideAfter
+                            msgOpts._hideAfter ?= msgOpts.hideAfter
+                            msgOpts.hideAfter = msgOpts._hideAfter + msgOpts.retry.delay
 
-                            msgOpts._retryActions = true
-                            msgOpts.actions =
-                                retry:
-                                    label: 'retry now'
-                                    phrase: 'Retrying TIME'
-                                    auto: msgOpts.retry.auto
-                                    delay: msgOpts.retry.delay
-                                    action: =>
-                                        msgOpts.messageInstance = msg
+                        msgOpts._retryActions = true
+                        msgOpts.actions =
+                            retry:
+                                label: 'retry now'
+                                phrase: 'Retrying TIME'
+                                auto: msgOpts.retry.auto
+                                delay: msgOpts.retry.delay
+                                action: =>
+                                    msgOpts.messageInstance = msg
 
+                                    setTimeout =>
                                         @do msgOpts, opts, args...
-                                cancel:
-                                    action: =>
-                                        do msg.cancel
+                                    , 0
+                            cancel:
+                                action: =>
+                                    do msg.cancel
 
-                    else if msgOpts._retryActions
-                        delete m_opts.actions.retry
-                        delete m_opts.actions.cancel
-                        delete m_opts._retryActions
+                else if msgOpts._retryActions
+                    delete m_opts._retryActions
 
+                msg.update msgOpts
+
+                if msgText
                     # Force the msg box to be rerendered if the page changed:
                     $.globalMessenger()
 
-                    msg.update msgOpts
                     do msg.show
-
                 else
                     do msg.hide
 

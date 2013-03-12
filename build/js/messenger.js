@@ -1,4 +1,4 @@
-/*! messenger 1.1.3 2013-03-04 */
+/*! messenger 1.1.4 2013-03-12 */
 (function() {
   var $, ActionMessenger, MagicMessage, Message, Messenger, spinner_template,
     __hasProp = {}.hasOwnProperty,
@@ -608,7 +608,7 @@
         var old, _ref1;
         old = (_ref1 = opts[type]) != null ? _ref1 : function() {};
         return opts[type] = function() {
-          var data, msgOpts, msgText, r, reason, resp, xhr, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7;
+          var data, msgOpts, msgText, r, reason, resp, xhr, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8;
           resp = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
           _ref2 = _this._normalizeResponse.apply(_this, resp), reason = _ref2[0], data = _ref2[1], xhr = _ref2[2];
           if (type === 'success' && !(msg.errorCount != null) && m_opts.showSuccessWithoutError === false) {
@@ -629,54 +629,57 @@
             msg.hide();
             return;
           }
-          if (msgText) {
-            msgOpts = $.extend({}, m_opts, {
-              message: msgText,
-              type: type,
-              events: (_ref5 = events[type]) != null ? _ref5 : {},
-              hideOnNavigate: type === 'success'
-            });
-            if (type === 'error' && (xhr != null ? xhr.status : void 0) >= 500) {
-              if ((_ref6 = msgOpts.retry) != null ? _ref6.allow : void 0) {
-                if (msgOpts.retry.delay == null) {
-                  if (msgOpts.errorCount < 4) {
-                    msgOpts.retry.delay = 10;
-                  } else {
-                    msgOpts.retry.delay = 5 * 60;
-                  }
-                }
-                if (msgOpts.hideAfter) {
-                  if ((_ref7 = msgOpts._hideAfter) == null) {
-                    msgOpts._hideAfter = msgOpts.hideAfter;
-                  }
-                  msgOpts.hideAfter = msgOpts._hideAfter + msgOpts.retry.delay;
-                }
-                msgOpts._retryActions = true;
-                msgOpts.actions = {
-                  retry: {
-                    label: 'retry now',
-                    phrase: 'Retrying TIME',
-                    auto: msgOpts.retry.auto,
-                    delay: msgOpts.retry.delay,
-                    action: function() {
-                      msgOpts.messageInstance = msg;
-                      return _this["do"].apply(_this, [msgOpts, opts].concat(__slice.call(args)));
-                    }
-                  },
-                  cancel: {
-                    action: function() {
-                      return msg.cancel();
-                    }
-                  }
-                };
+          msgOpts = $.extend({}, m_opts, {
+            message: msgText,
+            type: type,
+            events: (_ref5 = events[type]) != null ? _ref5 : {},
+            hideOnNavigate: type === 'success'
+          });
+          if (type === 'error' && (xhr != null ? xhr.status : void 0) >= 500) {
+            if ((_ref6 = msgOpts.retry) != null ? _ref6.allow : void 0) {
+              if (typeof ((_ref7 = msgOpts.retry) != null ? _ref7.allow : void 0) === 'number') {
+                msgOpts.retry.allow--;
               }
-            } else if (msgOpts._retryActions) {
-              delete m_opts.actions.retry;
-              delete m_opts.actions.cancel;
-              delete m_opts._retryActions;
+              if (msgOpts.retry.delay == null) {
+                if (msgOpts.errorCount < 4) {
+                  msgOpts.retry.delay = 10;
+                } else {
+                  msgOpts.retry.delay = 5 * 60;
+                }
+              }
+              if (msgOpts.hideAfter) {
+                if ((_ref8 = msgOpts._hideAfter) == null) {
+                  msgOpts._hideAfter = msgOpts.hideAfter;
+                }
+                msgOpts.hideAfter = msgOpts._hideAfter + msgOpts.retry.delay;
+              }
+              msgOpts._retryActions = true;
+              msgOpts.actions = {
+                retry: {
+                  label: 'retry now',
+                  phrase: 'Retrying TIME',
+                  auto: msgOpts.retry.auto,
+                  delay: msgOpts.retry.delay,
+                  action: function() {
+                    msgOpts.messageInstance = msg;
+                    return setTimeout(function() {
+                      return _this["do"].apply(_this, [msgOpts, opts].concat(__slice.call(args)));
+                    }, 0);
+                  }
+                },
+                cancel: {
+                  action: function() {
+                    return msg.cancel();
+                  }
+                }
+              };
             }
+          } else if (msgOpts._retryActions) {
+            delete m_opts._retryActions;
+          }
+          msg.update(msgOpts);
+          if (msgText) {
             $.globalMessenger();
-            msg.update(msgOpts);
             return msg.show();
           } else {
             return msg.hide();

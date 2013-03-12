@@ -187,7 +187,7 @@ describe 'do ajax', ->
 
     it 'should call error once when the request 500s', ->
         runs ->
-            gm.do {}, {url: '/500', success, error}
+            gm.do {retry: {allow: false}}, {url: '/500', success, error}
 
             server.respond()
 
@@ -212,8 +212,10 @@ describe 'do ajax', ->
         runs ->
             expect(server.requests.length).toBe(1)
 
-    it 'should retry thrice when the request 500s', ->
-        resp = sinon.spy (req) ->
+    it 'should retry the specified number of times when the request 500s', ->
+        server.autoRespond = true
+
+        resp = (req) ->
             req.respond 500, {}, '{}'
 
         server.respondWith "GET", "/x", resp
@@ -226,10 +228,36 @@ describe 'do ajax', ->
             ,
                 {url: '/x', success, error}
 
-            server.respond()
-
-        waits 50
+        waits 100
 
         runs ->
             expect(server.requests.length).toBe(3)
     
+
+    it 'should stop retrying on success', ->
+        server.autoRespond = true
+
+        i = 0
+        resp = (req) ->
+            console.log req
+            if ++i >= 3
+                req.respond 200, {}, '{}'
+            else
+                req.respond 504, {}, '{}'
+
+        server.respondWith "GET", "/x", resp
+
+        runs ->
+            gm.do
+                retry:
+                    delay: .01
+            ,
+                {url: '/x', success, error}
+
+
+        waits 100
+
+        runs ->
+            expect(i).toBe(3)
+            expect(success.calledOnce).toBe(true)
+

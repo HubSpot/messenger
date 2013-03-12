@@ -223,7 +223,11 @@
     });
     it('should call error once when the request 500s', function() {
       runs(function() {
-        gm["do"]({}, {
+        gm["do"]({
+          retry: {
+            allow: false
+          }
+        }, {
           url: '/500',
           success: success,
           error: error
@@ -255,14 +259,15 @@
         return expect(server.requests.length).toBe(1);
       });
     });
-    return it('should retry thrice when the request 500s', function() {
+    it('should retry the specified number of times when the request 500s', function() {
       var resp;
-      resp = sinon.spy(function(req) {
+      server.autoRespond = true;
+      resp = function(req) {
         return req.respond(500, {}, '{}');
-      });
+      };
       server.respondWith("GET", "/x", resp);
       runs(function() {
-        gm["do"]({
+        return gm["do"]({
           retry: {
             allow: 3,
             delay: .01
@@ -272,11 +277,40 @@
           success: success,
           error: error
         });
-        return server.respond();
       });
-      waits(50);
+      waits(100);
       return runs(function() {
         return expect(server.requests.length).toBe(3);
+      });
+    });
+    return it('should stop retrying on success', function() {
+      var i, resp;
+      server.autoRespond = true;
+      i = 0;
+      resp = function(req) {
+        console.log(req);
+        if (++i >= 3) {
+          return req.respond(200, {}, '{}');
+        } else {
+          return req.respond(504, {}, '{}');
+        }
+      };
+      server.respondWith("GET", "/x", resp);
+      runs(function() {
+        return gm["do"]({
+          retry: {
+            delay: .01
+          }
+        }, {
+          url: '/x',
+          success: success,
+          error: error
+        });
+      });
+      waits(100);
+      return runs(function() {
+        expect(i).toBe(3);
+        return expect(success.calledOnce).toBe(true);
       });
     });
   });

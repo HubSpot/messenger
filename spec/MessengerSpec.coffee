@@ -94,3 +94,142 @@ describe 'a message', () ->
         spies.push spy
         msg.scrollTo()
         expect(spy.called).toBeTruthy()
+
+
+describe 'do', ->
+    beforeEach beforeEachFunc
+
+    it 'should do the action once', ->
+        spy = sinon.spy()
+        gm.do
+            action: spy
+
+        expect(spy.calledOnce).toBeTruthy()
+
+    it 'should pass in success and error callbacks', ->
+        spy = sinon.spy()
+        gm.do
+            action: spy
+
+        opts = spy.args[0][0]
+        expect(typeof opts.success).toBe('function')
+        expect(typeof opts.error).toBe('function')
+
+    it 'should pass the args into the action', ->
+        spy = sinon.spy()
+        gm.do
+            action: spy
+        ,
+            arg: 5
+
+        expect(spy.calledWithMatch({arg: 5})).toBeTruthy()
+
+    it 'should return the message', ->
+        message = gm.do()
+
+        expect(typeof message).toBe('object')
+        expect(message.messenger).toBeDefined()
+
+describe 'do ajax', ->
+    server = success = error = null
+
+    defer = (func) ->
+        setTimeout func, 1
+
+    shouldBe = (result) ->
+        waits 10
+
+        runs ->
+            expect(success.callCount).toBe(+(result is 'success'))
+            expect(error.callCount).toBe(+(result is 'error'))
+
+    beforeEach ->
+        gm = $.globalMessenger()
+        server = sinon.fakeServer.create()
+
+        server.respondWith "GET", "/200", [200, {}, '{}']
+        server.respondWith "GET", "/404", [404, {}, '{}']
+        server.respondWith "GET", "/500", [500, {}, '{}']
+
+        success = sinon.spy()
+        error = sinon.spy()
+
+    afterEach ->
+        do server.restore
+
+    it 'should make ajax requests by default', ->
+        runs ->
+            gm.do {}, {url: '/200'}
+
+            server.respond()
+
+        waits 10
+
+        runs ->
+            console.log server
+            expect(server.requests.length).toBe(1)
+
+    it 'should call success once when the request succeeds', ->
+        runs ->
+            gm.do {}, {url: '/200', success, error}
+
+            server.respond()
+    
+        shouldBe 'success'
+        
+    it 'should call error once when the request 404s', ->
+        runs ->
+            gm.do {}, {url: '/404', success, error}
+
+            server.respond()
+
+        shouldBe 'error'
+
+    it 'should call error once when the request 500s', ->
+        runs ->
+            gm.do {}, {url: '/500', success, error}
+
+            server.respond()
+
+        shouldBe 'error'
+
+    it 'should not retry 400s', ->
+        resp = sinon.spy (req) ->
+            req.respond 400, {}, '{}'
+        
+        server.respondWith "GET", "/x", resp
+
+        runs ->
+            gm.do
+                retry:
+                    allow: 3
+                    delay: .01
+            ,
+                {url: '/x', success, error}
+
+        waits 50
+
+        runs ->
+            expect(server.requests.length).toBe(1)
+
+    it 'should retry thrice when the request 500s', ->
+        resp = sinon.spy (req) ->
+            req.respond 500, {}, '{}'
+
+        server.respondWith "GET", "/x", resp
+
+        runs ->
+            gm.do
+                retry:
+                    allow: 3
+                    delay: .01
+            ,
+                {url: '/x', success, error}
+
+            server.respond()
+
+        waits 50
+
+        runs ->
+            expect(server.requests.length).toBe(3)
+    

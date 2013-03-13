@@ -107,7 +107,7 @@ $.ajax
     success: ->
 
 # With:
-$.globalMessenger().do
+Messenger().run
     errorMessage: "This did not go well."
 ,
     url: "/some-url"
@@ -136,19 +136,19 @@ $.globalMessenger().do
 </div>
 <pre>
 <code executable>
-$.globalMessenger().post "Your request has succeded!"
+Messenger().post "Your request has succeded!"
 </code><code executable>
-$.globalMessenger().post
+Messenger().post
     message: 'There was an explosion while processing your request.'
     type: 'error'
     showCloseButton: true
 </code><code executable>
-msg = $.globalMessenger().post "My Message"
+msg = Messenger().post "My Message"
 msg.update "I changed my mind, this is my message"
 msg.hide()
 </code><code executable>
 # Want to put actions at the end of your messages?
-msg = $.globalMessenger().post
+msg = Messenger().post
     message: 'Launching thermonuclear war...'
     type: 'info'
     actions:
@@ -162,7 +162,7 @@ msg = $.globalMessenger().post
 </code><code executable>
 # This guy will 500 a few times, then succeed
 i = 0
-$.globalMessenger().do
+Messenger().run
   errorMessage: 'Error destroying alien planet'
   successMessage: 'Alien planet destroyed!'
 
@@ -175,7 +175,7 @@ $.globalMessenger().do
 </code><code executable>
 # Have an error? How about auto retrys with a Gmail-style countdown
 # (hidden in the future theme)?:
-msg = $.globalMessenger().post
+msg = Messenger().post
     message: "I'm sorry Hal, I just can't do that."
     actions:
         retry:
@@ -207,7 +207,7 @@ msg.update
 </code><code executable>
 # Need your message to hide after a while, or when the Backbone
 # router changes the page?
-$.globalMessenger().post
+Messenger().post
     message: "Weeeeee"
 
     hideAfter: 10
@@ -216,19 +216,19 @@ $.globalMessenger().post
 # You can use the id property to ensure that only one
 # instance of a message will appear on the page at a time
 # (the older message will be hidden).
-$.globalMessenger().post
+Messenger().post
   message: "Only one at a time!"
   id: "Only-one-message"
 </code><code executable>
 # When you add the singleton attribute, it ensures that no
 # other messages with that id will ever be shown again
 # (the newer message will be hidden).
-$.globalMessenger().post
+Messenger().post
   message: "It's just me!"
   id: '4'
   singleton: true
 
-$.globalMessenger().post
+Messenger().post
   message: "You'll never see me"
   id: '4'
   singleton: true
@@ -236,12 +236,12 @@ $.globalMessenger().post
 # Rather than hiding and showing multiple messages
 # you can also maintain a single message between
 # requests.
-msg = $.globalMessenger().do()
-$.globalMessenger().do({messageInstance: msg})
+msg = Messenger().run()
+Messenger().run({messageInstance: msg})
 </code><code executable>
 # Don't want your message hidden on a long page? (Not necessary
 # if you're using the default fixed positioning)
-msg = $.globalMessenger().post
+msg = Messenger().post
     message: "You'll see me!"
 
     scrollTo: true
@@ -251,7 +251,7 @@ msg.scrollTo() # also works
 </code><code executable>
 # Lazy/smart? How about messenger does it all for you?  All the
 # retry magic comes with.
-$.globalMessenger().do
+Messenger().run
     successMessage: 'Data saved.'
     errorMessage: 'Error saving data'
     progressMessage: 'Saving data' # Don't include messages you
@@ -264,7 +264,7 @@ $.globalMessenger().do
     url: '/data'
 </code><code executable>
 # Need to override the messages based on the response?
-$.globalMessenger().do
+Messenger().run
     errorMessage: 'Oops'
 ,
     url: '/data'
@@ -282,7 +282,7 @@ $.globalMessenger().do
 </code><code executable>
 # Sometimes you only want to show the success message when a
 # retry succeeds, not if a retry wasen't required:
-$.globalMessenger().do
+Messenger().run
     successMessage: 'Successfully saved.'
     errorMessage: 'Error saving'
 
@@ -292,7 +292,7 @@ $.globalMessenger().do
 </code><code executable>
 # You don't have to use $.ajax as your action, messenger works
 # great for any async process:
-$.globalMessenger().do
+Messenger().run
     successMessage: 'Bomb defused successfully'
 
     action: defuseBomb
@@ -300,15 +300,15 @@ $.globalMessenger().do
     # It will be passed success and error callbacks
 </code><code executable>
 # Need to hide all messages?
-$.globalMessenger().hideAll()
+Messenger().hideAll()
 </code><code executable>
 # If your action responds with a promise-like thing, its
 # methods will be copied onto the message:
 
-$.globalMessenger().do({}, {url: 'a'}).fail(-> alert "Uh oh")
+Messenger().run({}, {url: 'a'}).fail(-> alert "Uh oh")
 </code><code executable>
 # Do you use Backbone? Hook all backbone calls:
-$.globalMessenger().hookBackboneAjax()
+Messenger().hookBackboneAjax()
 
 # By default, there will be no error message (just background
 # retries), return an error message from your backbone error handler,
@@ -326,11 +326,11 @@ $('div#message-container').messenger().post "My message"
 # You can pass an instance of messenger into globalMessenger
 # to override the default position.
 myAwesomeMessenger = $('.mess').messenger()
-$.globalMessenger({instance: myAwesomeMessenger});
+Messenger({instance: myAwesomeMessenger});
 
-$.globalMessenger() # <-- Will return your messenger
+Messenger() # <-- Will return your messenger
 </code><code executable>
-$.globalMessenger({'parentLocations': ['.page', 'body']});
+Messenger({'parentLocations': ['.page', 'body']});
 # Will try to insert the messenger into the el matching
 # .page before inserting it into the page.
 
@@ -348,8 +348,8 @@ $.globalMessenger({'parentLocations': ['.page', 'body']});
   }
 }
 </code><code executable>
-# You can also set default options on the $._messengerDefaults object.
-$._messengerDefaults = {'extraClasses': 'messenger-fixed messenger-on-left'}
+# You can also set default options on the Messenger.options object.
+Messenger.options = {'extraClasses': 'messenger-fixed messenger-on-left'}
 </code>
 </pre>
 

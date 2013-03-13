@@ -1,5 +1,5 @@
 $(function(){
-  $.globalMessenger().post("Thanks for checking out Messenger!");
+  Messenger().post("Thanks for checking out Messenger!");
 
   var loc = ['bottom', 'right'];
   var style = 'future';
@@ -11,15 +11,13 @@ $(function(){
   var update = function(){
     var classes = 'messenger-fixed';
 
-    classes += ' messenger-theme-' + style;
-
     for (var i=0; i < loc.length; i++)
       classes += ' messenger-on-' + loc[i];
 
-    $.globalMessenger({ extraClasses: classes });
-    $._messengerDefaults = { extraClasses: classes };
+    $.globalMessenger({ extraClasses: classes, theme: style });
+    Messenger.options = { extraClasses: classes, theme: style };
 
-    $output.text("$._messengerDefaults = {\n\textraClasses: '" + classes + "'\n}");
+    $output.text("Messenger.options = {\n\textraClasses: '" + classes + "',\n\ttheme: '" + style + "'\n}");
   };
 
   update();

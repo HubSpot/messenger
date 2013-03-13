@@ -556,6 +556,7 @@ describe 'do ajax', ->
     # - formatTime
     # - findById
     # - message ids / singleton
+    # - specifying defaults
     # - globalMessenger
     #   - injection locations
     #   - moving of messages when a better location shows up

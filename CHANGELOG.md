@@ -16,7 +16,7 @@
 - Messenger default options may now be set on `window.Messenger.options` as well as
   `$._messengerDefaults`.
 
-- The current instance of ActionMessenger which will be used by Messenger()/$.globalMessenger
+- The current instance of ActionMessenger which will be used by `Messenger()`/`$.globalMessenger`
   calls is now accessable as `window.Messenger.instance`, not `$._messengerInstance`.
 
 - Added `run` alias for `go`.  This change makes it easier for developers writing js. 

@@ -38,6 +38,9 @@ class _Message extends Backbone.View
         do @hide
 
     update: (opts) ->
+        if _.isString opts
+            opts = {message: opts}
+
         $.extend(@options, opts)
 
         @lastUpdate = new Date()

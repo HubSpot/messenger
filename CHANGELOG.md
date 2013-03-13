@@ -1,3 +1,8 @@
+1.2.2
+-----
+
+- Message strings (as opposed to full objects) can now be passed into message.update.
+
 1.2.1
 -----
 

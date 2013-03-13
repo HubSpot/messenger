@@ -1,4 +1,4 @@
-/*! messenger 1.2.1 2013-03-12 */
+/*! messenger 1.2.2 2013-03-12 */
 (function() {
   var $, ActionMessenger, RetryingMessage, _Message, _Messenger, _prevMessenger,
     __hasProp = {}.hasOwnProperty,
@@ -64,6 +64,11 @@
     _Message.prototype.update = function(opts) {
       var _ref,
         _this = this;
+      if (_.isString(opts)) {
+        opts = {
+          message: opts
+        };
+      }
       $.extend(this.options, opts);
       this.lastUpdate = new Date();
       this.rendered = false;

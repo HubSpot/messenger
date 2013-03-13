@@ -1,5 +1,5 @@
 (function() {
-  var afterEachFunc, beforeEachFunc, gm, spies, test_msg;
+  var afterEachFunc, beforeEachFunc, error, gm, server, serverAfterEach, serverBeforeEach, spies, success, test_msg;
 
   gm = null;
 
@@ -31,6 +31,23 @@
       }
       return _results;
     }
+  };
+
+  server = success = error = null;
+
+  serverBeforeEach = function() {
+    gm = $.globalMessenger();
+    server = sinon.fakeServer.create();
+    server.respondWith("GET", "/200", [200, {}, '{}']);
+    server.respondWith("GET", "/404", [404, {}, '{}']);
+    server.respondWith("GET", "/500", [500, {}, '{}']);
+    server.autoRespond = true;
+    success = sinon.spy();
+    return error = sinon.spy();
+  };
+
+  serverAfterEach = function() {
+    return server.restore();
   };
 
   describe('the global messenger', function() {
@@ -110,6 +127,32 @@
       msg.hide();
       return expect(spy.calledWith('hide')).toBeTruthy();
     });
+    it('should hide in the time specified', function() {
+      var end, spy, start;
+      spy = start = end = null;
+      runs(function() {
+        var msg;
+        start = +(new Date);
+        msg = gm.post({
+          message: 'test',
+          hideAfter: 0.05
+        });
+        msg.on('hide', function() {
+          return end = +(new Date);
+        });
+        spies.push(spy = sinon.spy(msg, 'hide'));
+        return expect(spy.called).toBe(false);
+      });
+      waitsFor(function() {
+        return end;
+      }, 100);
+      return runs(function() {
+        var time;
+        expect(spy.calledOnce).toBe(true);
+        time = end - start;
+        return expect(Math.round(time / 10)).toBe(5);
+      });
+    });
     return it('should be able to be scrolled to', function() {
       var msg, spy;
       msg = gm.post(test_msg);
@@ -153,20 +196,141 @@
         arg: 5
       })).toBeTruthy();
     });
-    return it('should return the message', function() {
+    it('should return the message', function() {
       var message;
       message = gm["do"]();
       expect(typeof message).toBe('object');
       return expect(message.messenger).toBeDefined();
     });
+    return it('should pass promise attrs through', function() {
+      var message, promise;
+      promise = $.Deferred();
+      message = gm["do"]({
+        action: function() {
+          return promise;
+        }
+      });
+      expect(message.then).toBe(promise.then);
+      expect(message.done).toBe(promise.done);
+      expect(message.fail).toBe(promise.fail);
+      expect(message.state).toBe(promise.state);
+      return expect(message.progress).toBe(promise.progress);
+    });
+  });
+
+  describe('actions', function() {
+    var getAction, getActions;
+    beforeEach(beforeEachFunc);
+    getActions = function(msg) {
+      return $(msg.el).find('.messenger-actions');
+    };
+    getAction = function(msg, key) {
+      var $actions;
+      $actions = getActions(msg);
+      return $actions.find("[data-action='" + key + "']");
+    };
+    it('should show buttons for defined actions', function() {
+      var msg;
+      msg = gm.post({
+        message: 'test',
+        actions: {
+          x: {
+            label: 'y'
+          }
+        }
+      });
+      expect(getAction(msg, 'x').length).toBe(1);
+      return expect(getAction(msg, 'x').find("a").text()).toBe('y');
+    });
+    it('should call callback when action is clicked', function() {
+      var msg, spy;
+      spy = sinon.spy();
+      msg = gm.post({
+        message: 'test',
+        actions: {
+          x: {
+            action: spy
+          }
+        }
+      });
+      expect(spy.called).toBe(false);
+      getAction(msg, 'x').find("a").click();
+      return expect(spy.calledOnce).toBe(true);
+    });
+    return it('should fire event when action is clicked', function() {
+      var msg, spy;
+      spy = sinon.spy();
+      msg = gm.post({
+        message: 'test',
+        actions: {
+          x: {
+            action: function() {}
+          }
+        }
+      });
+      msg.on('action:x', spy);
+      expect(spy.called).toBe(false);
+      getAction(msg, 'x').find("a").click();
+      return expect(spy.calledOnce).toBe(true);
+    });
+  });
+
+  describe('do event bindings', function() {
+    beforeEach(serverBeforeEach);
+    afterEach(serverAfterEach);
+    it('should allow events to be bound based on the state of the message', function() {
+      var msg, spy;
+      spy = sinon.spy();
+      msg = null;
+      runs(function() {
+        return msg = gm["do"]({
+          events: {
+            'success click': spy
+          }
+        }, {
+          url: '/200',
+          success: success,
+          error: error
+        });
+      });
+      waits(10);
+      return runs(function() {
+        expect($(msg.el).find('.messenger-message').hasClass('messenger-clickable')).toBe(true);
+        expect(spy.called).toBe(false);
+        $(msg.el).click();
+        return expect(spy.calledOnce).toBe(true);
+      });
+    });
+    return it('should allow events to be bound on elements in the message', function() {
+      var msg, spy;
+      spy = sinon.spy();
+      msg = null;
+      runs(function() {
+        return msg = gm["do"]({
+          successMessage: 'Test <span data-name="bob">Bla</span>',
+          events: {
+            'success click span[data-name="bob"]': spy
+          }
+        }, {
+          url: '/200',
+          success: success,
+          error: error
+        });
+      });
+      waits(10);
+      return runs(function() {
+        expect($(msg.el).find('.messenger-message').hasClass('messenger-clickable')).toBe(false);
+        expect(spy.called).toBe(false);
+        $(msg.el).click();
+        expect(spy.called).toBe(false);
+        $(msg.el).find('span[data-name="bob"]').click();
+        return expect(spy.calledOnce).toBe(true);
+      });
+    });
   });
 
   describe('do ajax', function() {
-    var defer, error, server, shouldBe, success;
-    server = success = error = null;
-    defer = function(func) {
-      return setTimeout(func, 1);
-    };
+    var shouldBe;
     shouldBe = function(result) {
       waits(10);
       return runs(function() {
@@ -174,56 +338,42 @@
         return expect(error.callCount).toBe(+(result === 'error'));
       });
     };
-    beforeEach(function() {
-      gm = $.globalMessenger();
-      server = sinon.fakeServer.create();
-      server.respondWith("GET", "/200", [200, {}, '{}']);
-      server.respondWith("GET", "/404", [404, {}, '{}']);
-      server.respondWith("GET", "/500", [500, {}, '{}']);
-      success = sinon.spy();
-      return error = sinon.spy();
-    });
-    afterEach(function() {
-      return server.restore();
-    });
+    beforeEach(serverBeforeEach);
+    afterEach(serverAfterEach);
     it('should make ajax requests by default', function() {
       runs(function() {
-        gm["do"]({}, {
+        return gm["do"]({}, {
           url: '/200'
         });
-        return server.respond();
       });
       waits(10);
       return runs(function() {
-        console.log(server);
         return expect(server.requests.length).toBe(1);
       });
     });
     it('should call success once when the request succeeds', function() {
       runs(function() {
-        gm["do"]({}, {
+        return gm["do"]({}, {
           url: '/200',
           success: success,
           error: error
         });
-        return server.respond();
       });
       return shouldBe('success');
     });
     it('should call error once when the request 404s', function() {
       runs(function() {
-        gm["do"]({}, {
+        return gm["do"]({}, {
           url: '/404',
           success: success,
           error: error
         });
-        return server.respond();
       });
       return shouldBe('error');
     });
     it('should call error once when the request 500s', function() {
       runs(function() {
-        gm["do"]({
+        return gm["do"]({
           retry: {
             allow: false
           }
@@ -232,16 +382,10 @@
           success: success,
           error: error
         });
-        return server.respond();
       });
       return shouldBe('error');
     });
     it('should not retry 400s', function() {
-      var resp;
-      resp = sinon.spy(function(req) {
-        return req.respond(400, {}, '{}');
-      });
-      server.respondWith("GET", "/x", resp);
       runs(function() {
         return gm["do"]({
           retry: {
@@ -249,7 +393,26 @@
             delay: .01
           }
         }, {
-          url: '/x',
+          url: '/404',
+          success: success,
+          error: error
+        });
+      });
+      waits(50);
+      return runs(function() {
+        return expect(server.requests.length).toBe(1);
+      });
+    });
+    it('should not retry if auto is false', function() {
+      runs(function() {
+        return gm["do"]({
+          retry: {
+            auto: false,
+            allow: 3,
+            delay: 0.01
+          }
+        }, {
+          url: '/500',
           success: success,
           error: error
         });
@@ -260,12 +423,6 @@
       });
     });
     it('should retry the specified number of times when the request 500s', function() {
-      var resp;
-      server.autoRespond = true;
-      resp = function(req) {
-        return req.respond(500, {}, '{}');
-      };
-      server.respondWith("GET", "/x", resp);
       runs(function() {
         return gm["do"]({
           retry: {
@@ -273,7 +430,7 @@
             delay: .01
           }
         }, {
-          url: '/x',
+          url: '/500',
           success: success,
           error: error
         });
@@ -283,12 +440,10 @@
         return expect(server.requests.length).toBe(3);
       });
     });
-    return it('should stop retrying on success', function() {
+    it('should stop retrying on success', function() {
       var i, resp;
-      server.autoRespond = true;
       i = 0;
       resp = function(req) {
-        console.log(req);
         if (++i >= 3) {
           return req.respond(200, {}, '{}');
         } else {
@@ -310,7 +465,167 @@
       waits(100);
       return runs(function() {
         expect(i).toBe(3);
+        expect(server.requests.length).toBe(3);
         return expect(success.calledOnce).toBe(true);
+      });
+    });
+    it('should show error message on errors', function() {
+      var msg;
+      msg = null;
+      runs(function() {
+        return msg = gm["do"]({
+          errorMessage: 'OH',
+          successMessage: 'X',
+          progressMessage: 'X'
+        }, {
+          url: '/404',
+          success: success,
+          error: error
+        });
+      });
+      waits(10);
+      return runs(function() {
+        expect(msg.options.message).toBe('OH');
+        expect(msg.options.type).toBe('error');
+        return expect(msg.shown).toBe(true);
+      });
+    });
+    it('should show success message on success', function() {
+      var msg;
+      msg = null;
+      runs(function() {
+        return msg = gm["do"]({
+          successMessage: 'WEEE',
+          errorMessage: 'X',
+          progressMessage: 'X'
+        }, {
+          url: '/200',
+          success: success,
+          error: error
+        });
+      });
+      waits(10);
+      return runs(function() {
+        expect(msg.options.message).toBe('WEEE');
+        expect(msg.options.type).toBe('success');
+        return expect(msg.shown).toBe(true);
+      });
+    });
+    it('should show progress message', function() {
+      var msg;
+      msg = null;
+      server.autoRespond = false;
+      runs(function() {
+        return msg = gm["do"]({
+          errorMessage: 'X',
+          successMessage: 'Y',
+          progressMessage: '...'
+        }, {
+          'url': '/200',
+          success: success,
+          error: error
+        });
+      });
+      setTimeout(function() {
+        return server.respond();
+      }, 50);
+      waits(10);
+      runs(function() {
+        expect(msg.options.message).toBe('...');
+        expect(msg.options.type).toBe('info');
+        return expect(msg.shown).toBe(true);
+      });
+      waits(50);
+      return runs(function() {
+        expect(msg.options.message).toBe('Y');
+        expect(msg.options.type).toBe('success');
+        return expect(msg.shown).toBe(true);
+      });
+    });
+    it('shouldn\'t show a success message if there is no message defined', function() {
+      var msg;
+      msg = null;
+      runs(function() {
+        return msg = gm["do"]({}, {
+          'url': '/200',
+          success: success,
+          error: error
+        });
+      });
+      waits(10);
+      return runs(function() {
+        return expect(msg.shown).toBe(false);
+      });
+    });
+    it('should let message contents be overridden', function() {
+      var msg;
+      msg = null;
+      runs(function() {
+        return msg = gm["do"]({
+          successMessage: 'X'
+        }, {
+          url: '/200',
+          error: error,
+          success: function() {
+            return 'YAA';
+          }
+        });
+      });
+      waits(10);
+      return runs(function() {
+        expect(msg.options.message).toBe('YAA');
+        return expect(msg.shown).toBe(true);
+      });
+    });
+    it('should let message contents be defined', function() {
+      var msg;
+      msg = null;
+      runs(function() {
+        return msg = gm["do"]({}, {
+          url: '/200',
+          error: error,
+          success: function() {
+            return 'MHUM';
+          }
+        });
+      });
+      waits(10);
+      return runs(function() {
+        expect(msg.options.message).toBe('MHUM');
+        return expect(msg.shown).toBe(true);
+      });
+    });
+    it('should let messages be hidden by handlers', function() {
+      var msg;
+      msg = null;
+      runs(function() {
+        return msg = gm["do"]({}, {
+          url: '/200',
+          error: error,
+          success: function() {
+            return false;
+          }
+        });
+      });
+      waits(10);
+      return runs(function() {
+        return expect(msg.shown).toBe(false);
+      });
+    });
+    return it('should pass ajax promise attrs through to the message', function() {
+      var msg;
+      msg = null;
+      runs(function() {
+        return msg = gm["do"]({}, {
+          url: '/200'
+        });
+      });
+      waits(10);
+      return runs(function() {
+        expect(msg.then).toBeDefined();
+        expect(msg.fail).toBeDefined();
+        expect(msg.done).toBeDefined();
+        return expect(msg.state).toBeDefined();
       });
     });
   });

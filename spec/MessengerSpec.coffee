@@ -60,6 +60,19 @@ describe 'the global messenger', () ->
         expect(spy1.called).toBeTruthy()
         expect(spy2.called).toBeTruthy()
 
+    it 'should respect maxMessages', ->
+        Messenger.instance?.hideAll()
+
+        Messenger.instance = null
+
+        m = Messenger({'maxMessages': 2})
+        m.post "a"
+        m.post "b"
+        m.post "c"
+        m.post "d"
+
+        expect($('.messenger-message-slot.shown').length).toBe(2)
+
 describe 'a message', () ->
     beforeEach beforeEachFunc
     afterEach afterEachFunc

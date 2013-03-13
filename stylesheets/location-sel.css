@@ -1,0 +1,28 @@
+.location-selector {
+  width: 140px;
+  height: 100px;
+  background-color: #eeeeee;
+  position: relative; }
+  .location-selector .bit {
+    background-color: #dddddd;
+    cursor: pointer;
+    position: absolute; }
+    .location-selector .bit:hover {
+      background-color: #cccccc; }
+    .location-selector .bit.top, .location-selector .bit.bottom {
+      height: 25%;
+      width: 40%;
+      margin: 0 30%; }
+    .location-selector .bit.top {
+      top: 0; }
+    .location-selector .bit.bottom {
+      bottom: 0; }
+    .location-selector .bit.right, .location-selector .bit.left {
+      height: 20%;
+      width: 20%;
+      margin-left: 0;
+      margin-right: 0; }
+    .location-selector .bit.right {
+      right: 0; }
+    .location-selector .bit.left {
+      left: 0; }

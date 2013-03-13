@@ -85,6 +85,8 @@ class Message extends Backbone.View
 
         @trigger 'update', @
 
+        @trigger 'update', @
+
     scrollTo: ->
         return unless @options.scroll
 
@@ -581,7 +583,7 @@ class ActionMessenger extends Messenger
           delete msg[attr] if msg[attr]?
           msg[attr] = msg._actionInstance?[attr]
 
-        return msg
+        msg
 
 $.fn.messenger = (func={}, args...) ->
     $el = this

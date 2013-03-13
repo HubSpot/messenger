@@ -709,7 +709,7 @@
       return msg;
     };
 
-    ActionMessenger.prototype["do"] = ActionMessenger.run;
+    ActionMessenger.prototype["do"] = ActionMessenger.prototype.run;
 
     return ActionMessenger;
 

@@ -590,7 +590,7 @@ class ActionMessenger extends _Messenger
         return msg
     
     # Alias
-    do: ActionMessenger.run
+    do: ActionMessenger::run
 
 $.fn.messenger = (func={}, args...) ->
     $el = this

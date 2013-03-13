@@ -100,11 +100,12 @@ class Message extends Backbone.View
 
     actionsToEvents: ->
         for name, act of @options.actions
-            @events["click [data-action=\"#{ name }\"] a"] = ((act) ->
+            @events["click [data-action=\"#{ name }\"] a"] = ((act) =>
                 return (e) =>
                     do e.preventDefault
                     do e.stopPropagation
 
+                    @trigger "action:#{ name }", act, e
                     act.action(e)
             )(act)
 

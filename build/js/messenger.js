@@ -120,16 +120,17 @@
     };
 
     Message.prototype.actionsToEvents = function() {
-      var act, name, _ref, _results;
+      var act, name, _ref, _results,
+        _this = this;
       _ref = this.options.actions;
       _results = [];
       for (name in _ref) {
         act = _ref[name];
         _results.push(this.events["click [data-action=\"" + name + "\"] a"] = (function(act) {
-          var _this = this;
           return function(e) {
             e.preventDefault();
             e.stopPropagation();
+            _this.trigger("action:" + name, act, e);
             return act.action(e);
           };
         })(act));

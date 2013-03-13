@@ -1,4 +1,4 @@
-/*! messenger 1.2.0 2013-03-12 */
+/*! messenger 1.2.1 2013-03-12 */
 (function() {
   var $, ActionMessenger, RetryingMessage, _Message, _Messenger, _prevMessenger,
     __hasProp = {}.hasOwnProperty,
@@ -416,13 +416,13 @@
     };
 
     _Messenger.prototype.newMessage = function(opts) {
-      var msg, _ref, _ref1,
+      var msg, _ref, _ref1, _ref2,
         _this = this;
       if (opts == null) {
         opts = {};
       }
       opts.messenger = this;
-      _Message = (_ref = (_ref1 = window.Messenger.themes[opts.theme]) != null ? _ref1.Message : void 0) != null ? _ref : RetryingMessage;
+      _Message = (_ref = (_ref1 = window.Messenger.themes[(_ref2 = opts.theme) != null ? _ref2 : this.options.theme]) != null ? _ref1.Message : void 0) != null ? _ref : RetryingMessage;
       msg = new _Message(opts);
       msg.on('show', function() {
         if (opts.scrollTo && _this.$el.css('position') !== 'fixed') {

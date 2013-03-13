@@ -11,7 +11,7 @@ spinner_template = '''
     </div>
 '''
 
-class FutureMessage extends window.Messenger.RetryingMessage
+class FutureMessage extends window.Messenger.Message
     template: (opts) ->
         $message = super
 

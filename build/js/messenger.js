@@ -1,6 +1,6 @@
-/*! messenger 1.1.5 2013-03-12 */
+/*! messenger 1.2.0 2013-03-12 */
 (function() {
-  var $, ActionMessenger, MagicMessage, Message, Messenger, spinner_template,
+  var $, ActionMessenger, RetryingMessage, _Message, _Messenger, _prevMessenger,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
     __slice = [].slice,
@@ -8,22 +8,20 @@
 
   $ = jQuery;
 
-  spinner_template = '<div class="messenger-spinner">\n    <span class="messenger-spinner-side messenger-spinner-side-left">\n        <span class="messenger-spinner-fill"></span>\n    </span>\n    <span class="messenger-spinner-side messenger-spinner-side-right">\n        <span class="messenger-spinner-fill"></span>\n    </span>\n</div>';
+  _Message = (function(_super) {
 
-  Message = (function(_super) {
+    __extends(_Message, _super);
 
-    __extends(Message, _super);
-
-    function Message() {
-      return Message.__super__.constructor.apply(this, arguments);
+    function _Message() {
+      return _Message.__super__.constructor.apply(this, arguments);
     }
 
-    Message.prototype.defaults = {
+    _Message.prototype.defaults = {
       hideAfter: 10,
       scroll: true
     };
 
-    Message.prototype.initialize = function(opts) {
+    _Message.prototype.initialize = function(opts) {
       if (opts == null) {
         opts = {};
       }
@@ -33,7 +31,7 @@
       return this.options = $.extend({}, this.options, opts, this.defaults);
     };
 
-    Message.prototype.show = function() {
+    _Message.prototype.show = function() {
       var wasShown;
       if (!this.rendered) {
         this.render();
@@ -46,7 +44,7 @@
       }
     };
 
-    Message.prototype.hide = function() {
+    _Message.prototype.hide = function() {
       var wasShown;
       if (!this.rendered) {
         return;
@@ -59,11 +57,11 @@
       }
     };
 
-    Message.prototype.cancel = function() {
+    _Message.prototype.cancel = function() {
       return this.hide();
     };
 
-    Message.prototype.update = function(opts) {
+    _Message.prototype.update = function(opts) {
       var _ref,
         _this = this;
       $.extend(this.options, opts);
@@ -99,7 +97,7 @@
       return this.trigger('update', this);
     };
 
-    Message.prototype.scrollTo = function() {
+    _Message.prototype.scrollTo = function() {
       if (!this.options.scroll) {
         return;
       }
@@ -112,7 +110,7 @@
       });
     };
 
-    Message.prototype.timeSinceUpdate = function() {
+    _Message.prototype.timeSinceUpdate = function() {
       if (this.lastUpdate) {
         return (new Date) - this.lastUpdate;
       } else {
@@ -120,7 +118,7 @@
       }
     };
 
-    Message.prototype.actionsToEvents = function() {
+    _Message.prototype.actionsToEvents = function() {
       var act, name, _ref, _results,
         _this = this;
       _ref = this.options.actions;
@@ -139,7 +137,7 @@
       return _results;
     };
 
-    Message.prototype.checkClickable = function() {
+    _Message.prototype.checkClickable = function() {
       var evt, name, _ref, _results;
       _ref = this.events;
       _results = [];
@@ -154,13 +152,13 @@
       return _results;
     };
 
-    Message.prototype.undelegateEvents = function() {
+    _Message.prototype.undelegateEvents = function() {
       var _ref;
-      Message.__super__.undelegateEvents.apply(this, arguments);
+      _Message.__super__.undelegateEvents.apply(this, arguments);
       return (_ref = this.$message) != null ? _ref.removeClass('messenger-clickable') : void 0;
     };
 
-    Message.prototype.parseActions = function() {
+    _Message.prototype.parseActions = function() {
       var act, actions, n_act, name, _ref, _ref1;
       actions = [];
       _ref = this.options.actions;
@@ -176,7 +174,7 @@
       return actions;
     };
 
-    Message.prototype.template = function(opts) {
+    _Message.prototype.template = function(opts) {
       var $action, $actions, $cancel, $link, $message, $text, action, _i, _len, _ref,
         _this = this;
       $message = $("<div class='messenger-message message alert " + opts.type + " message-" + opts.type + " alert-" + opts.type + "'>");
@@ -190,7 +188,6 @@
       }
       $text = $("<div class=\"messenger-message-inner\">" + opts.message + "</div>");
       $message.append($text);
-      $message.append($(spinner_template));
       if (opts.actions.length) {
         $actions = $('<div class="messenger-actions">');
       }
@@ -209,7 +206,7 @@
       return $message;
     };
 
-    Message.prototype.render = function() {
+    _Message.prototype.render = function() {
       var opts;
       if (this.rendered) {
         return;
@@ -228,24 +225,24 @@
       return this.trigger('render');
     };
 
-    return Message;
+    return _Message;
 
   })(Backbone.View);
 
-  MagicMessage = (function(_super) {
+  RetryingMessage = (function(_super) {
 
-    __extends(MagicMessage, _super);
+    __extends(RetryingMessage, _super);
 
-    function MagicMessage() {
-      return MagicMessage.__super__.constructor.apply(this, arguments);
+    function RetryingMessage() {
+      return RetryingMessage.__super__.constructor.apply(this, arguments);
     }
 
-    MagicMessage.prototype.initialize = function() {
-      MagicMessage.__super__.initialize.apply(this, arguments);
+    RetryingMessage.prototype.initialize = function() {
+      RetryingMessage.__super__.initialize.apply(this, arguments);
       return this._timers = {};
     };
 
-    MagicMessage.prototype.cancel = function() {
+    RetryingMessage.prototype.cancel = function() {
       this.clearTimers();
       this.hide();
       if ((this._actionInstance != null) && (this._actionInstance.abort != null)) {
@@ -253,7 +250,7 @@
       }
     };
 
-    MagicMessage.prototype.clearTimers = function() {
+    RetryingMessage.prototype.clearTimers = function() {
       var name, timer, _ref, _ref1;
       _ref = this._timers;
       for (name in _ref) {
@@ -264,9 +261,9 @@
       return (_ref1 = this.$message) != null ? _ref1.removeClass('messenger-retry-soon messenger-retry-later') : void 0;
     };
 
-    MagicMessage.prototype.render = function() {
+    RetryingMessage.prototype.render = function() {
       var action, name, _ref, _results;
-      MagicMessage.__super__.render.apply(this, arguments);
+      RetryingMessage.__super__.render.apply(this, arguments);
       this.clearTimers();
       _ref = this.options.actions;
       _results = [];
@@ -281,13 +278,13 @@
       return _results;
     };
 
-    MagicMessage.prototype.renderPhrase = function(action, time) {
+    RetryingMessage.prototype.renderPhrase = function(action, time) {
       var phrase;
       phrase = action.phrase.replace('TIME', this.formatTime(time));
       return phrase;
     };
 
-    MagicMessage.prototype.formatTime = function(time) {
+    RetryingMessage.prototype.formatTime = function(time) {
       var pluralize;
       pluralize = function(num, str) {
         num = Math.floor(num);
@@ -310,7 +307,7 @@
       return pluralize(time, 'hour');
     };
 
-    MagicMessage.prototype.startCountdown = function(name, action) {
+    RetryingMessage.prototype.startCountdown = function(name, action) {
       var $phrase, remaining, tick, _ref,
         _this = this;
       if (this._timers[name] != null) {
@@ -341,43 +338,43 @@
       return tick();
     };
 
-    return MagicMessage;
+    return RetryingMessage;
 
-  })(Message);
+  })(_Message);
 
-  Messenger = (function(_super) {
+  _Messenger = (function(_super) {
 
-    __extends(Messenger, _super);
+    __extends(_Messenger, _super);
 
-    function Messenger() {
-      return Messenger.__super__.constructor.apply(this, arguments);
+    function _Messenger() {
+      return _Messenger.__super__.constructor.apply(this, arguments);
     }
 
-    Messenger.prototype.tagName = 'ul';
+    _Messenger.prototype.tagName = 'ul';
 
-    Messenger.prototype.className = 'messenger';
+    _Messenger.prototype.className = 'messenger';
 
-    Messenger.prototype.messageDefaults = {
+    _Messenger.prototype.messageDefaults = {
       type: 'info'
     };
 
-    Messenger.prototype.initialize = function(options) {
+    _Messenger.prototype.initialize = function(options) {
       this.options = options != null ? options : {};
       this.history = [];
       return this.messageDefaults = $.extend({}, this.messageDefaults, this.options.messageDefaults);
     };
 
-    Messenger.prototype.render = function() {
+    _Messenger.prototype.render = function() {
       return this.updateMessageSlotClasses();
     };
 
-    Messenger.prototype.findById = function(id) {
+    _Messenger.prototype.findById = function(id) {
       return _.filter(this.history, function(rec) {
         return rec.msg.options.id === id;
       });
     };
 
-    Messenger.prototype._reserveMessageSlot = function(msg) {
+    _Messenger.prototype._reserveMessageSlot = function(msg) {
       var $slot, dmsg,
         _this = this;
       $slot = $('<li>');
@@ -399,7 +396,7 @@
       return $slot;
     };
 
-    Messenger.prototype._enforceIdConstraint = function(msg) {
+    _Messenger.prototype._enforceIdConstraint = function(msg) {
       var entry, _i, _len, _msg, _ref;
       if (msg.options.id == null) {
         return;
@@ -419,14 +416,15 @@
       }
     };
 
-    Messenger.prototype.newMessage = function(opts) {
-      var msg,
+    _Messenger.prototype.newMessage = function(opts) {
+      var msg, _ref, _ref1,
         _this = this;
       if (opts == null) {
         opts = {};
       }
       opts.messenger = this;
-      msg = new MagicMessage(opts);
+      _Message = (_ref = (_ref1 = window.Messenger.themes[opts.theme]) != null ? _ref1.Message : void 0) != null ? _ref : RetryingMessage;
+      msg = new _Message(opts);
       msg.on('show', function() {
         if (opts.scrollTo && _this.$el.css('position') !== 'fixed') {
           return msg.scrollTo();
@@ -436,7 +434,7 @@
       return msg;
     };
 
-    Messenger.prototype.updateMessageSlotClasses = function() {
+    _Messenger.prototype.updateMessageSlotClasses = function() {
       var anyShown, last, rec, willBeFirst, _i, _len, _ref;
       willBeFirst = true;
       last = null;
@@ -461,7 +459,7 @@
       return this.$el["" + (anyShown ? 'remove' : 'add') + "Class"]('messenger-empty');
     };
 
-    Messenger.prototype.hideAll = function() {
+    _Messenger.prototype.hideAll = function() {
       var rec, _i, _len, _ref, _results;
       _ref = this.history;
       _results = [];
@@ -472,7 +470,7 @@
       return _results;
     };
 
-    Messenger.prototype.post = function(opts) {
+    _Messenger.prototype.post = function(opts) {
       var msg;
       if (_.isString(opts)) {
         opts = {
@@ -485,7 +483,7 @@
       return msg;
     };
 
-    return Messenger;
+    return _Messenger;
 
   })(Backbone.View);
 
@@ -595,7 +593,7 @@
       return [type, data, xhr];
     };
 
-    ActionMessenger.prototype["do"] = function() {
+    ActionMessenger.prototype.run = function() {
       var args, attr, events, m_opts, msg, opts, promiseAttrs, _i, _len, _ref, _ref1,
         _this = this;
       m_opts = arguments[0], opts = arguments[1], args = 3 <= arguments.length ? __slice.call(arguments, 2) : [];
@@ -712,12 +710,14 @@
       return msg;
     };
 
+    ActionMessenger.prototype["do"] = ActionMessenger.prototype.run;
+
     return ActionMessenger;
 
-  })(Messenger);
+  })(_Messenger);
 
   $.fn.messenger = function() {
-    var $el, args, func, instance, opts, _ref;
+    var $el, args, func, instance, opts, _ref, _ref1, _ref2;
     func = arguments[0], args = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
     if (func == null) {
       func = {};
@@ -726,26 +726,33 @@
     if (!(func != null) || !_.isString(func)) {
       opts = func;
       if (!($el.data('messenger') != null)) {
-        $el.data('messenger', instance = new ActionMessenger($.extend({
+        _Messenger = (_ref = (_ref1 = window.Messenger.themes[opts.theme]) != null ? _ref1.Messenger : void 0) != null ? _ref : ActionMessenger;
+        $el.data('messenger', instance = new _Messenger($.extend({
           el: $el
         }, opts)));
         instance.render();
       }
       return $el.data('messenger');
     } else {
-      return (_ref = $el.data('messenger'))[func].apply(_ref, args);
+      return (_ref2 = $el.data('messenger'))[func].apply(_ref2, args);
     }
   };
 
-  $.globalMessenger = function(opts) {
+  _prevMessenger = window.Messenger;
+
+  window.Messenger = function(opts) {
     var $el, $parent, choosen_loc, chosen_loc, classes, defaultOpts, inst, loc, locations, _i, _len;
     defaultOpts = {
-      extraClasses: 'messenger-fixed messenger-on-bottom messenger-on-right messenger-theme-future',
+      extraClasses: 'messenger-fixed messenger-on-bottom messenger-on-right',
+      theme: 'future',
       maxMessages: 9,
       parentLocations: ['body']
     };
-    opts = $.extend(defaultOpts, $._messengerDefaults, opts);
-    inst = opts.instance || $._messengerInstance;
+    opts = $.extend(defaultOpts, $._messengerDefaults, window.Messenger.options, opts);
+    if (opts.theme != null) {
+      opts.extraClasses += " messenger-theme-" + opts.theme;
+    }
+    inst = opts.instance || window.Messenger.instance;
     if (opts.instance == null) {
       locations = opts.parentLocations;
       $parent = null;
@@ -763,7 +770,7 @@
         $parent.prepend($el);
         inst = $el.messenger(opts);
         inst._location = chosen_loc;
-        $._messengerInstance = inst;
+        window.Messenger.instance = inst;
       } else if ($(inst._location) !== $(chosen_loc)) {
         inst.$el.detach();
         $parent.prepend(inst.$el);
@@ -776,5 +783,16 @@
     inst._addedClasses = classes;
     return inst;
   };
+
+  $.extend(window.Messenger, {
+    Message: RetryingMessage,
+    Messenger: ActionMessenger,
+    themes: {},
+    noConflict: function() {
+      return window.Messenger = _prevMessenger;
+    }
+  });
+
+  $.globalMessenger = window.Messenger;
 
 }).call(this);

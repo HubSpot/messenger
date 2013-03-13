@@ -65,7 +65,7 @@
       msg = gm.post(test_msg);
       return expect(newMessageSpy.called).toBeTruthy();
     });
-    return it('should be able to hide all messages', function() {
+    it('should be able to hide all messages', function() {
       var msg1, msg2, spy1, spy2, yeahBuddy;
       yeahBuddy = 'cabs are ';
       msg1 = gm.post(yeahBuddy + ' here');
@@ -75,6 +75,21 @@
       gm.hideAll();
       expect(spy1.called).toBeTruthy();
       return expect(spy2.called).toBeTruthy();
+    });
+    return it('should respect maxMessages', function() {
+      var m, _ref;
+      if ((_ref = Messenger.instance) != null) {
+        _ref.hideAll();
+      }
+      Messenger.instance = null;
+      m = Messenger({
+        'maxMessages': 2
+      });
+      m.post("a");
+      m.post("b");
+      m.post("c");
+      m.post("d");
+      return expect($('.messenger-message-slot.shown').length).toBe(2);
     });
   });
 

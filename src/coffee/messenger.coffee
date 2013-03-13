@@ -38,6 +38,9 @@ class _Message extends Backbone.View
         do @hide
 
     update: (opts) ->
+        if _.isString opts
+            opts = {message: opts}
+
         $.extend(@options, opts)
 
         @lastUpdate = new Date()
@@ -591,8 +594,12 @@ class ActionMessenger extends _Messenger
 
         return msg
     
-    # Alias
+    # Aliases
     do: ActionMessenger::run
+    ajax: (m_opts, args...) ->
+      m_opts.action = $.ajax
+  
+      @run(m_opts, args...)
 
 $.fn.messenger = (func={}, args...) ->
     $el = this

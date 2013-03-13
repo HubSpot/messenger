@@ -316,7 +316,7 @@ class _Messenger extends Backbone.View
     newMessage: (opts={}) ->
         opts.messenger = @
         
-        _Message = window.Messenger.themes[opts.theme]?.Message ? RetryingMessage
+        _Message = window.Messenger.themes[opts.theme ? @options.theme]?.Message ? RetryingMessage
 
         msg = new _Message(opts)
 

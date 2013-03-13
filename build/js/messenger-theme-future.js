@@ -24,7 +24,7 @@
 
     return FutureMessage;
 
-  })(window.Messenger.RetryingMessage);
+  })(window.Messenger.Message);
 
   window.Messenger.themes.future = {
     Message: FutureMessage

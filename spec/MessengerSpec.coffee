@@ -17,6 +17,25 @@ afterEachFunc = () ->
                     spy.restore()
                 catch error
 
+server = success = error = null
+
+serverBeforeEach = ->
+    gm = $.globalMessenger()
+    server = sinon.fakeServer.create()
+
+    server.respondWith "GET", "/200", [200, {}, '{}']
+    server.respondWith "GET", "/404", [404, {}, '{}']
+    server.respondWith "GET", "/500", [500, {}, '{}']
+
+    server.autoRespond = true
+
+    success = sinon.spy()
+    error = sinon.spy()
+
+
+serverAfterEach = ->
+    do server.restore
+
 describe 'the global messenger', () ->
     beforeEach beforeEachFunc
     afterEach afterEachFunc
@@ -41,9 +60,18 @@ describe 'the global messenger', () ->
         expect(spy1.called).toBeTruthy()
         expect(spy2.called).toBeTruthy()
 
-    # it 'should be able to hook into Backbone sync/ajax'
+    it 'should respect maxMessages', ->
+        Messenger.instance?.hideAll()
 
-    
+        Messenger.instance = null
+
+        m = Messenger({'maxMessages': 2})
+        m.post "a"
+        m.post "b"
+        m.post "c"
+        m.post "d"
+
+        expect($('.messenger-message-slot.shown').length).toBe(2)
 
 describe 'a message', () ->
     beforeEach beforeEachFunc
@@ -86,6 +114,31 @@ describe 'a message', () ->
         msg.hide()
         expect(spy.calledWith('hide')).toBeTruthy()
 
+    it 'should hide in the time specified', ->
+        spy = start = end = null
+        runs ->
+            start = +(new Date)
+            msg = gm.post
+                message: 'test'
+                hideAfter: 0.05
+
+            msg.on 'hide', ->
+                end = +(new Date)
+
+            spies.push spy = sinon.spy(msg, 'hide')
+            
+            expect(spy.called).toBe(false)
+
+        waitsFor ->
+            end
+        , 100
+
+        runs ->
+            expect(spy.calledOnce).toBe(true)
+
+            time = end - start
+            expect(Math.round(time / 10)).toBe(5)
+
     it 'should be able to be scrolled to', () ->
         msg = gm.post test_msg
         # stub this out this here to avoid including the dependency
@@ -94,3 +147,417 @@ describe 'a message', () ->
         spies.push spy
         msg.scrollTo()
         expect(spy.called).toBeTruthy()
+
+describe 'do', ->
+    beforeEach beforeEachFunc
+
+    it 'should do the action once', ->
+        spy = sinon.spy()
+        gm.do
+            action: spy
+
+        expect(spy.calledOnce).toBeTruthy()
+
+    it 'should pass in success and error callbacks', ->
+        spy = sinon.spy()
+        gm.do
+            action: spy
+
+        opts = spy.args[0][0]
+        expect(typeof opts.success).toBe('function')
+        expect(typeof opts.error).toBe('function')
+
+    it 'should pass the args into the action', ->
+        spy = sinon.spy()
+        gm.do
+            action: spy
+        ,
+            arg: 5
+
+        expect(spy.calledWithMatch({arg: 5})).toBeTruthy()
+
+    it 'should return the message', ->
+        message = gm.do()
+
+        expect(typeof message).toBe('object')
+        expect(message.messenger).toBeDefined()
+
+    it 'should pass promise attrs through', ->
+        promise = $.Deferred()
+
+        message = gm.do
+            action: -> promise
+
+        expect(message.then).toBe(promise.then)
+        expect(message.done).toBe(promise.done)
+        expect(message.fail).toBe(promise.fail)
+        expect(message.state).toBe(promise.state)
+        expect(message.progress).toBe(promise.progress)
+
+describe 'actions', ->
+    beforeEach beforeEachFunc
+
+    getActions = (msg) ->
+        $(msg.el).find('.messenger-actions')
+
+    getAction = (msg, key) ->
+        $actions = getActions(msg)
+
+        $actions.find("[data-action='#{ key }']")
+
+    it 'should show buttons for defined actions', ->
+        msg = gm.post
+            message: 'test'
+            actions:
+                x:
+                    label: 'y'
+
+        expect(getAction(msg, 'x').length).toBe(1)
+        expect(getAction(msg, 'x').find("a").text()).toBe('y')
+
+    it 'should call callback when action is clicked', ->
+        spy = sinon.spy()
+
+        msg = gm.post
+            message: 'test'
+            actions:
+                x:
+                    action: spy
+
+        expect(spy.called).toBe(false)
+
+        getAction(msg, 'x').find("a").click()
+
+        expect(spy.calledOnce).toBe(true)
+
+    it 'should fire event when action is clicked', ->
+        spy = sinon.spy()
+
+        msg = gm.post
+            message: 'test'
+            actions:
+                x:
+                    action: ->
+
+        msg.on 'action:x', spy
+
+        expect(spy.called).toBe(false)
+
+        getAction(msg, 'x').find("a").click()
+
+        expect(spy.calledOnce).toBe(true)
+
+describe 'do event bindings', ->
+    beforeEach serverBeforeEach
+    afterEach serverAfterEach
+
+    it 'should allow events to be bound based on the state of the message', ->
+        spy = sinon.spy()
+        msg = null
+
+        runs ->
+            msg = gm.do
+                events:
+                    'success click': spy
+            ,
+                {url: '/200', success, error}
+
+        waits 10
+
+        runs ->
+            # We want this class added when the entire message is clickable
+            expect($(msg.el).find('.messenger-message').hasClass('messenger-clickable')).toBe(true)
+
+            expect(spy.called).toBe(false)
+
+            $(msg.el).click()
+            expect(spy.calledOnce).toBe(true)
+
+    it 'should allow events to be bound on elements in the message', ->
+        spy = sinon.spy()
+        msg = null
+
+        runs ->
+            msg = gm.do
+                successMessage: 'Test <span data-name="bob">Bla</span>'
+                events:
+                    'success click span[data-name="bob"]': spy
+
+            ,
+                {url: '/200', success, error}
+
+        waits 10
+
+        runs ->
+            expect($(msg.el).find('.messenger-message').hasClass('messenger-clickable')).toBe(false)
+
+            expect(spy.called).toBe(false)
+
+            $(msg.el).click()
+            expect(spy.called).toBe(false)
+
+            $(msg.el).find('span[data-name="bob"]').click()
+            expect(spy.calledOnce).toBe(true)
+    
+describe 'do ajax', ->
+
+    shouldBe = (result) ->
+        waits 10
+
+        runs ->
+            expect(success.callCount).toBe(+(result is 'success'))
+            expect(error.callCount).toBe(+(result is 'error'))
+
+    beforeEach serverBeforeEach
+    afterEach serverAfterEach
+
+    it 'should make ajax requests by default', ->
+        runs ->
+            gm.do {}, {url: '/200'}
+
+        waits 10
+
+        runs ->
+            expect(server.requests.length).toBe(1)
+
+    it 'should call success once when the request succeeds', ->
+        runs ->
+            gm.do {}, {url: '/200', success, error}
+    
+        shouldBe 'success'
+        
+    it 'should call error once when the request 404s', ->
+        runs ->
+            gm.do {}, {url: '/404', success, error}
+
+        shouldBe 'error'
+
+    it 'should call error once when the request 500s', ->
+        runs ->
+            gm.do {retry: {allow: false}}, {url: '/500', success, error}
+
+        shouldBe 'error'
+
+    it 'should not retry 400s', ->
+        runs ->
+            gm.do
+                retry:
+                    allow: 3
+                    delay: .01
+            ,
+                {url: '/404', success, error}
+
+        waits 50
+
+        runs ->
+            expect(server.requests.length).toBe(1)
+
+    it 'should not retry if auto is false', ->
+        runs ->
+            gm.do
+                retry:
+                    auto: false
+                    allow: 3
+                    delay: 0.01
+            ,
+                {url: '/500', success, error}
+
+        waits 50
+
+        runs ->
+            expect(server.requests.length).toBe(1)
+
+    it 'should retry the specified number of times when the request 500s', ->
+        runs ->
+            gm.do
+                retry:
+                    allow: 3
+                    delay: .01
+            ,
+                {url: '/500', success, error}
+
+        waits 100
+
+        runs ->
+            expect(server.requests.length).toBe(3)
+    
+
+    it 'should stop retrying on success', ->
+        i = 0
+        resp = (req) ->
+            if ++i >= 3
+                req.respond 200, {}, '{}'
+            else
+                req.respond 504, {}, '{}'
+
+        server.respondWith "GET", "/x", resp
+
+        runs ->
+            gm.do
+                retry:
+                    delay: .01
+            ,
+                {url: '/x', success, error}
+
+
+        waits 100
+
+        runs ->
+            expect(i).toBe(3)
+            expect(server.requests.length).toBe(3)
+            expect(success.calledOnce).toBe(true)
+
+    it 'should show error message on errors', ->
+        msg = null
+        runs ->
+            msg = gm.do
+                errorMessage: 'OH'
+                successMessage: 'X'
+                progressMessage: 'X'
+            ,
+                {url: '/404', success, error}
+
+        waits 10
+
+        runs ->
+            expect(msg.options.message).toBe('OH')
+            expect(msg.options.type).toBe('error')
+            expect(msg.shown).toBe(true)
+
+    it 'should show success message on success', ->
+        msg = null
+        runs ->
+            msg = gm.do
+                successMessage: 'WEEE'
+                errorMessage: 'X'
+                progressMessage: 'X'
+            ,
+                {url: '/200', success, error}
+
+        waits 10
+
+        runs ->
+            expect(msg.options.message).toBe('WEEE')
+            expect(msg.options.type).toBe('success')
+            expect(msg.shown).toBe(true)
+
+    it 'should show progress message', ->
+        msg = null
+
+        server.autoRespond = false
+
+        runs ->
+            msg = gm.do
+                errorMessage: 'X'
+                successMessage: 'Y'
+                progressMessage: '...'
+            ,
+                {'url': '/200', success, error}
+
+        setTimeout ->
+            server.respond()
+        , 50
+
+        waits 10
+
+        runs ->
+            expect(msg.options.message).toBe('...')
+            expect(msg.options.type).toBe('info')
+            expect(msg.shown).toBe(true)
+
+        waits 50
+
+        runs ->
+            expect(msg.options.message).toBe('Y')
+            expect(msg.options.type).toBe('success')
+            expect(msg.shown).toBe(true)
+
+    it 'shouldn\'t show a success message if there is no message defined', ->
+        msg = null
+
+        runs ->
+            msg = gm.do {}, {'url': '/200', success, error}
+
+        waits 10
+
+        runs ->
+            expect(msg.shown).toBe(false)
+
+    it 'should let message contents be overridden', ->
+        msg = null
+
+        runs ->
+            msg = gm.do
+                successMessage: 'X'
+            ,
+                url: '/200',
+                error: error,
+                success: -> 'YAA'
+
+        waits 10
+
+        runs ->
+            expect(msg.options.message).toBe('YAA')
+            expect(msg.shown).toBe(true)
+
+    it 'should let message contents be defined', ->
+        msg = null
+
+        runs ->
+            msg = gm.do {},
+                url: '/200',
+                error: error,
+                success: -> 'MHUM'
+
+        waits 10
+
+        runs ->
+            expect(msg.options.message).toBe('MHUM')
+            expect(msg.shown).toBe(true)
+
+    it 'should let messages be hidden by handlers', ->
+        msg = null
+
+        runs ->
+            msg = gm.do {},
+                url: '/200',
+                error: error,
+                success: -> false
+
+        waits 10
+
+        runs ->
+            expect(msg.shown).toBe(false)
+
+    it 'should pass ajax promise attrs through to the message', ->
+        msg = null
+
+        runs ->
+            msg = gm.do {}, {url: '/200'}
+
+        waits 10
+
+        runs ->
+            expect(msg.then).toBeDefined()
+            expect(msg.fail).toBeDefined()
+            expect(msg.done).toBeDefined()
+            expect(msg.state).toBeDefined()
+
+
+    # To Be Tested:
+    #
+    # - classes
+    # - the updating of the countdown / phrase
+    # - Backbone hook / hideAfterNavigate (both pre and post Backbone 0.9.9)
+    # - aborted requests not showing error message
+    # - ignoreErrorCodes
+    # - $.fn.messenger
+    # - cancel
+    # - formatTime
+    # - findById
+    # - message ids / singleton
+    # - globalMessenger
+    #   - injection locations
+    #   - moving of messages when a better location shows up
+    #   - adding / removing classes
+    #   - passing in instance

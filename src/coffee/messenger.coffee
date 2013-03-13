@@ -1,17 +1,6 @@
 $ = jQuery
 
-spinner_template = '''
-    <div class="messenger-spinner">
-        <span class="messenger-spinner-side messenger-spinner-side-left">
-            <span class="messenger-spinner-fill"></span>
-        </span>
-        <span class="messenger-spinner-side messenger-spinner-side-right">
-            <span class="messenger-spinner-fill"></span>
-        </span>
-    </div>
-'''
-
-class Message extends Backbone.View
+class _Message extends Backbone.View
     defaults:
         hideAfter: 10
         scroll: true
@@ -25,7 +14,8 @@ class Message extends Backbone.View
         @options = $.extend {}, @options, opts, @defaults
 
     show: ->
-        do @render
+        unless @rendered
+            do @render
 
         @$message.removeClass('messenger-hidden')
 
@@ -99,11 +89,12 @@ class Message extends Backbone.View
 
     actionsToEvents: ->
         for name, act of @options.actions
-            @events["click [data-action=\"#{ name }\"] a"] = ((act) ->
+            @events["click [data-action=\"#{ name }\"] a"] = ((act) =>
                 return (e) =>
                     do e.preventDefault
                     do e.stopPropagation
 
+                    @trigger "action:#{ name }", act, e
                     act.action(e)
             )(act)
 
@@ -144,8 +135,6 @@ class Message extends Backbone.View
         $text = $ """<div class="messenger-message-inner">#{ opts.message }</div>"""
         $message.append $text
 
-        $message.append $ spinner_template
-
         if opts.actions.length
             $actions = $ '<div class="messenger-actions">'
 
@@ -185,7 +174,7 @@ class Message extends Backbone.View
 
         @trigger 'render'
 
-class MagicMessage extends Message
+class RetryingMessage extends _Message
     initialize: ->
         super
 
@@ -201,6 +190,8 @@ class MagicMessage extends Message
     clearTimers: ->
         for name, timer of @_timers
             clearTimeout timer
+
+        @_timers = {}
 
         @$message?.removeClass 'messenger-retry-soon messenger-retry-later'
 
@@ -241,6 +232,9 @@ class MagicMessage extends Message
 
 
     startCountdown: (name, action) ->
+        if @_timers[name]?
+            return
+
         $phrase = @$message.find("[data-action='#{ name }'] .messenger-phrase")
 
         remaining = action.delay ? 3
@@ -253,12 +247,14 @@ class MagicMessage extends Message
           @$message.addClass 'messenger-retry-later'
 
         tick = =>
-            remaining -= 1
-
             $phrase.text @renderPhrase(action, remaining)
 
             if remaining > 0
-                @_timers[name] = setTimeout tick, 1000
+                delta = Math.min(remaining, 1)
+                remaining -= delta
+
+                @_timers[name] = setTimeout tick, delta * 1000
+
             else
                 @$message.removeClass 'messenger-retry-soon messenger-retry-later'
                 delete @_timers[name]
@@ -266,7 +262,7 @@ class MagicMessage extends Message
 
         do tick
 
-class Messenger extends Backbone.View
+class _Messenger extends Backbone.View
     tagName: 'ul'
     className: 'messenger'
 
@@ -317,7 +313,10 @@ class Messenger extends Backbone.View
 
     newMessage: (opts={}) ->
         opts.messenger = @
-        msg = new MagicMessage(opts)
+        
+        _Message = window.Messenger.themes[opts.theme ? @options.theme]?.Message ? RetryingMessage
+
+        msg = new _Message(opts)
 
         msg.on 'show', =>
             if opts.scrollTo and @$el.css('position') isnt 'fixed'
@@ -364,7 +363,7 @@ class Messenger extends Backbone.View
         msg.update opts
         return msg
 
-class ActionMessenger extends Messenger
+class ActionMessenger extends _Messenger
     doDefaults:
         progressMessage: null
         successMessage: null
@@ -474,7 +473,7 @@ class ActionMessenger extends Messenger
 
         return [type, data, xhr]
 
-    do: (m_opts, opts={}, args...) ->
+    run: (m_opts, opts={}, args...) ->
         m_opts = $.extend true, {}, @messageDefaults, @doDefaults, m_opts ? {}
         events = @_parseEvents m_opts.events
 
@@ -498,6 +497,9 @@ class ActionMessenger extends Messenger
             #  - If it returns a string, we show that as the message
             #
 
+            if opts[type]?._originalHandler
+                opts[type] = opts[type]._originalHandler
+                
             old = opts[type] ? ->
 
             opts[type] = (resp...) =>
@@ -523,56 +525,60 @@ class ActionMessenger extends Messenger
                     do msg.hide
                     return
 
+                msgOpts = $.extend {}, m_opts,
+                    message: msgText
+                    type: type
+                    events: events[type] ? {}
+
+                    hideOnNavigate: type == 'success'
+
+                if typeof msgOpts.retry?.allow is 'number'
+                    msgOpts.retry.allow--
+
+                if type is 'error' and xhr?.status >= 500 and msgOpts.retry?.allow
+                    unless msgOpts.retry.delay?
+                        if msgOpts.errorCount < 4
+                            msgOpts.retry.delay = 10
+                        else
+                            msgOpts.retry.delay = 5 * 60
+
+                    if msgOpts.hideAfter
+                        msgOpts._hideAfter ?= msgOpts.hideAfter
+                        msgOpts.hideAfter = msgOpts._hideAfter + msgOpts.retry.delay
+
+                    msgOpts._retryActions = true
+                    msgOpts.actions =
+                        retry:
+                            label: 'retry now'
+                            phrase: 'Retrying TIME'
+                            auto: msgOpts.retry.auto
+                            delay: msgOpts.retry.delay
+                            action: =>
+                                msgOpts.messageInstance = msg
+
+                                setTimeout =>
+                                    @do msgOpts, opts, args...
+                                , 0
+                        cancel:
+                            action: =>
+                                do msg.cancel
+
+                else if msgOpts._retryActions
+                    delete msgOpts.actions.retry
+                    delete msgOpts.actions.cancel
+                    delete m_opts._retryActions
+
+                msg.update msgOpts
+
                 if msgText
-                    msgOpts = $.extend {}, m_opts,
-                        message: msgText
-                        type: type
-                        events: events[type] ? {}
-
-                        hideOnNavigate: type == 'success'
-
-
-                    if type is 'error' and xhr?.status >= 500
-                        if msgOpts.retry?.allow
-
-                            unless msgOpts.retry.delay?
-                              if msgOpts.errorCount < 4
-                                msgOpts.retry.delay = 10
-                              else
-                                msgOpts.retry.delay = 5 * 60
-
-                            if msgOpts.hideAfter
-                              msgOpts._hideAfter ?= msgOpts.hideAfter
-                              msgOpts.hideAfter = msgOpts._hideAfter + msgOpts.retry.delay
-
-                            msgOpts._retryActions = true
-                            msgOpts.actions =
-                                retry:
-                                    label: 'retry now'
-                                    phrase: 'Retrying TIME'
-                                    auto: msgOpts.retry.auto
-                                    delay: msgOpts.retry.delay
-                                    action: =>
-                                        msgOpts.messageInstance = msg
-
-                                        @do msgOpts, opts, args...
-                                cancel:
-                                    action: =>
-                                        do msg.cancel
-
-                    else if msgOpts._retryActions
-                        delete m_opts.actions.retry
-                        delete m_opts.actions.cancel
-                        delete m_opts._retryActions
-
                     # Force the msg box to be rerendered if the page changed:
                     $.globalMessenger()
 
-                    msg.update msgOpts
                     do msg.show
-
                 else
                     do msg.hide
+
+            opts[type]._originalHandler = old
 
         msg._actionInstance = m_opts.action opts, args...
 
@@ -582,6 +588,13 @@ class ActionMessenger extends Messenger
           msg[attr] = msg._actionInstance?[attr]
 
         return msg
+    
+    # Aliases
+    do: ActionMessenger::run
+    ajax: (m_opts, args...) ->
+      m_opts.action = $.ajax
+  
+      @run(m_opts, args...)
 
 $.fn.messenger = (func={}, args...) ->
     $el = this
@@ -590,24 +603,30 @@ $.fn.messenger = (func={}, args...) ->
         opts = func
 
         if not $el.data('messenger')?
-            $el.data('messenger', instance = new ActionMessenger($.extend({el: $el}, opts)))
+            _Messenger = window.Messenger.themes[opts.theme]?.Messenger ? ActionMessenger
+            $el.data('messenger', instance = new _Messenger($.extend({el: $el}, opts)))
             instance.render()
 
         return $el.data('messenger')
     else
         return $el.data('messenger')[func](args...)
 
-$.globalMessenger = (opts) ->
+_prevMessenger = window.Messenger
+window.Messenger = (opts) ->
 
     defaultOpts =
-        extraClasses: 'messenger-fixed messenger-on-bottom messenger-on-right messenger-theme-future'
+        extraClasses: 'messenger-fixed messenger-on-bottom messenger-on-right'
 
+        theme: 'future'
         maxMessages: 9
         parentLocations: ['body']
 
-    opts = $.extend defaultOpts, $._messengerDefaults, opts
+    opts = $.extend defaultOpts, $._messengerDefaults, window.Messenger.options, opts
 
-    inst = opts.instance or $._messengerInstance
+    if opts.theme?
+        opts.extraClasses += " messenger-theme-#{ opts.theme }"
+
+    inst = opts.instance or window.Messenger.instance
 
     unless opts.instance?
         locations = opts.parentLocations
@@ -628,7 +647,7 @@ $.globalMessenger = (opts) ->
 
             inst = $el.messenger(opts)
             inst._location = chosen_loc
-            $._messengerInstance = inst
+            window.Messenger.instance = inst
 
         else if $(inst._location) != $(chosen_loc)
             # A better location has since become avail on the page.
@@ -643,3 +662,13 @@ $.globalMessenger = (opts) ->
     inst._addedClasses = classes
 
     return inst
+
+$.extend window.Messenger,
+    Message: RetryingMessage,
+    Messenger: ActionMessenger,
+    
+    themes: {}
+    noConflict: ->
+        window.Messenger = _prevMessenger
+ 
+$.globalMessenger = window.Messenger

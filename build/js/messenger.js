@@ -711,6 +711,13 @@
 
     ActionMessenger.prototype["do"] = ActionMessenger.prototype.run;
 
+    ActionMessenger.prototype.ajax = function() {
+      var args, m_opts;
+      m_opts = arguments[0], args = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
+      m_opts.action = $.ajax;
+      return this.run.apply(this, [m_opts].concat(__slice.call(args)));
+    };
+
     return ActionMessenger;
 
   })(_Messenger);

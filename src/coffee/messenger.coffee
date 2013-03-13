@@ -589,8 +589,12 @@ class ActionMessenger extends _Messenger
 
         return msg
     
-    # Alias
+    # Aliases
     do: ActionMessenger::run
+    ajax: (m_opts, args...) ->
+      m_opts.action = $.ajax
+  
+      @run(m_opts, args...)
 
 $.fn.messenger = (func={}, args...) ->
     $el = this

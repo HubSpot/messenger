@@ -25,7 +25,8 @@ class Message extends Backbone.View
         @options = $.extend {}, @options, opts, @defaults
 
     show: ->
-        do @render
+        unless @rendered
+            do @render
 
         @$message.removeClass('messenger-hidden')
 
@@ -99,11 +100,12 @@ class Message extends Backbone.View
 
     actionsToEvents: ->
         for name, act of @options.actions
-            @events["click [data-action=\"#{ name }\"] a"] = ((act) ->
+            @events["click [data-action=\"#{ name }\"] a"] = ((act) =>
                 return (e) =>
                     do e.preventDefault
                     do e.stopPropagation
 
+                    @trigger "action:#{ name }", act, e
                     act.action(e)
             )(act)
 
@@ -202,6 +204,8 @@ class MagicMessage extends Message
         for name, timer of @_timers
             clearTimeout timer
 
+        @_timers = {}
+
         @$message?.removeClass 'messenger-retry-soon messenger-retry-later'
 
     render: ->
@@ -241,6 +245,9 @@ class MagicMessage extends Message
 
 
     startCountdown: (name, action) ->
+        if @_timers[name]?
+            return
+
         $phrase = @$message.find("[data-action='#{ name }'] .messenger-phrase")
 
         remaining = action.delay ? 3
@@ -253,12 +260,14 @@ class MagicMessage extends Message
           @$message.addClass 'messenger-retry-later'
 
         tick = =>
-            remaining -= 1
-
             $phrase.text @renderPhrase(action, remaining)
 
             if remaining > 0
-                @_timers[name] = setTimeout tick, 1000
+                delta = Math.min(remaining, 1)
+                remaining -= delta
+
+                @_timers[name] = setTimeout tick, delta * 1000
+
             else
                 @$message.removeClass 'messenger-retry-soon messenger-retry-later'
                 delete @_timers[name]
@@ -498,6 +507,9 @@ class ActionMessenger extends Messenger
             #  - If it returns a string, we show that as the message
             #
 
+            if opts[type]?._originalHandler
+                opts[type] = opts[type]._originalHandler
+                
             old = opts[type] ? ->
 
             opts[type] = (resp...) =>
@@ -523,56 +535,60 @@ class ActionMessenger extends Messenger
                     do msg.hide
                     return
 
+                msgOpts = $.extend {}, m_opts,
+                    message: msgText
+                    type: type
+                    events: events[type] ? {}
+
+                    hideOnNavigate: type == 'success'
+
+                if typeof msgOpts.retry?.allow is 'number'
+                    msgOpts.retry.allow--
+
+                if type is 'error' and xhr?.status >= 500 and msgOpts.retry?.allow
+                    unless msgOpts.retry.delay?
+                        if msgOpts.errorCount < 4
+                            msgOpts.retry.delay = 10
+                        else
+                            msgOpts.retry.delay = 5 * 60
+
+                    if msgOpts.hideAfter
+                        msgOpts._hideAfter ?= msgOpts.hideAfter
+                        msgOpts.hideAfter = msgOpts._hideAfter + msgOpts.retry.delay
+
+                    msgOpts._retryActions = true
+                    msgOpts.actions =
+                        retry:
+                            label: 'retry now'
+                            phrase: 'Retrying TIME'
+                            auto: msgOpts.retry.auto
+                            delay: msgOpts.retry.delay
+                            action: =>
+                                msgOpts.messageInstance = msg
+
+                                setTimeout =>
+                                    @do msgOpts, opts, args...
+                                , 0
+                        cancel:
+                            action: =>
+                                do msg.cancel
+
+                else if msgOpts._retryActions
+                    delete msgOpts.actions.retry
+                    delete msgOpts.actions.cancel
+                    delete m_opts._retryActions
+
+                msg.update msgOpts
+
                 if msgText
-                    msgOpts = $.extend {}, m_opts,
-                        message: msgText
-                        type: type
-                        events: events[type] ? {}
-
-                        hideOnNavigate: type == 'success'
-
-
-                    if type is 'error' and xhr?.status >= 500
-                        if msgOpts.retry?.allow
-
-                            unless msgOpts.retry.delay?
-                              if msgOpts.errorCount < 4
-                                msgOpts.retry.delay = 10
-                              else
-                                msgOpts.retry.delay = 5 * 60
-
-                            if msgOpts.hideAfter
-                              msgOpts._hideAfter ?= msgOpts.hideAfter
-                              msgOpts.hideAfter = msgOpts._hideAfter + msgOpts.retry.delay
-
-                            msgOpts._retryActions = true
-                            msgOpts.actions =
-                                retry:
-                                    label: 'retry now'
-                                    phrase: 'Retrying TIME'
-                                    auto: msgOpts.retry.auto
-                                    delay: msgOpts.retry.delay
-                                    action: =>
-                                        msgOpts.messageInstance = msg
-
-                                        @do msgOpts, opts, args...
-                                cancel:
-                                    action: =>
-                                        do msg.cancel
-
-                    else if msgOpts._retryActions
-                        delete m_opts.actions.retry
-                        delete m_opts.actions.cancel
-                        delete m_opts._retryActions
-
                     # Force the msg box to be rerendered if the page changed:
                     $.globalMessenger()
 
-                    msg.update msgOpts
                     do msg.show
-
                 else
                     do msg.hide
+
+            opts[type]._originalHandler = old
 
         msg._actionInstance = m_opts.action opts, args...
 

@@ -27,10 +27,11 @@
     };
 
     BaseView.prototype.delegateEvents = function(events) {
-      var eventName, key, match, method, selector, _results;
+      var delegateEventSplitter, eventName, key, match, method, selector, _results;
       if (!(events || (events = _.result(this, 'events')))) {
         return;
       }
+      delegateEventSplitter = /^(\S+)\s*(.*)$/;
       this.undelegateEvents();
       _results = [];
       for (key in events) {
@@ -57,6 +58,11 @@
 
     BaseView.prototype.undelegateEvents = function() {
       return this.$el.off(".delegateEvents" + this.cid);
+    };
+
+    BaseView.prototype.remove = function() {
+      this.undelegateEvents();
+      return this.$el.remove();
     };
 
     return BaseView;

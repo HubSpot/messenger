@@ -21,6 +21,8 @@ class BaseView
         if (not (events or (events = _.result(@, 'events'))))
             return
         
+        delegateEventSplitter = /^(\S+)\s*(.*)$/
+
         @undelegateEvents()
         for key, method of events
             if not _.isFunction(method)
@@ -39,6 +41,10 @@ class BaseView
     
     undelegateEvents: () ->
         @$el.off ".delegateEvents#{this.cid}"
+
+    remove: () ->
+        @undelegateEvents()
+        @$el.remove()
 
 class _Message extends BaseView
     defaults:

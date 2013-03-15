@@ -28,13 +28,13 @@
 - The current instance of ActionMessenger which will be used by `Messenger()`/`$.globalMessenger`
   calls is now accessable as `window.Messenger.instance`, not `$._messengerInstance`.
 
-- Added `run` alias for `go`.  This change makes it easier for developers writing js. 
-  In JavaScript, go, being a reserved word, always had to be referenced using array
+- Added `run` alias for `do`.  This change makes it easier for developers writing js.
+  In JavaScript, `do`, being a reserved word, always had to be referenced using array
   notation, this provides a way around that limitation.
 
 - Created common way for themes to define extra JavaScript.  Themes can now define their
   own Messenger and/or Message objects in the `window.Messenger.themes.<theme_name>` object.
-  If the theme name is provided in the options to globalMessenger as `options.theme`, the 
+  If the theme name is provided in the options to globalMessenger as `options.theme`, the
   defined classes will be used.  As the theme now has to be passed in as a seperate option, the
   `messenger-theme-x` class will now be automatically added, and does not need to be
   provided in extraClasses.

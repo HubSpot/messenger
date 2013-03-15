@@ -44,6 +44,17 @@ describe 'the global messenger', () ->
         itTotallyIs = true
         expect(itTotallyIs).toBe(true)
     
+    it 'should be the same as $.globalMessenger', () ->
+        expect($.globalMessenger).toBe(Messenger)
+
+    it 'should be removed when noConflict is called', () ->
+        _prevMessenger = Messenger
+
+        Messenger.noConflict()
+        expect(Messenger).toBe(undefined)
+
+        window.Messenger = _prevMessenger
+
     it 'should create a new message on post', () ->
         newMessageSpy = sinon.spy(gm, 'newMessage')
         spies.push newMessageSpy
@@ -542,7 +553,6 @@ describe 'do ajax', ->
             expect(msg.fail).toBeDefined()
             expect(msg.done).toBeDefined()
             expect(msg.state).toBeDefined()
-
 
     # To Be Tested:
     #

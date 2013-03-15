@@ -319,7 +319,7 @@ class _Messenger extends Backbone.View
     newMessage: (opts={}) ->
         opts.messenger = @
         
-        _Message = window.Messenger.themes[opts.theme ? @options.theme]?.Message ? RetryingMessage
+        _Message = Messenger.themes[opts.theme ? @options.theme]?.Message ? RetryingMessage
 
         msg = new _Message(opts)
 
@@ -608,7 +608,7 @@ $.fn.messenger = (func={}, args...) ->
         opts = func
 
         if not $el.data('messenger')?
-            _Messenger = window.Messenger.themes[opts.theme]?.Messenger ? ActionMessenger
+            _Messenger = Messenger.themes[opts.theme]?.Messenger ? ActionMessenger
             $el.data('messenger', instance = new _Messenger($.extend({el: $el}, opts)))
             instance.render()
 
@@ -617,7 +617,7 @@ $.fn.messenger = (func={}, args...) ->
         return $el.data('messenger')[func](args...)
 
 _prevMessenger = window.Messenger
-window.Messenger = (opts) ->
+Messenger = (opts) ->
 
     defaultOpts =
         extraClasses: 'messenger-fixed messenger-on-bottom messenger-on-right'
@@ -626,12 +626,12 @@ window.Messenger = (opts) ->
         maxMessages: 9
         parentLocations: ['body']
 
-    opts = $.extend defaultOpts, $._messengerDefaults, window.Messenger.options, opts
+    opts = $.extend defaultOpts, $._messengerDefaults, Messenger.options, opts
 
     if opts.theme?
         opts.extraClasses += " messenger-theme-#{ opts.theme }"
 
-    inst = opts.instance or window.Messenger.instance
+    inst = opts.instance or Messenger.instance
 
     unless opts.instance?
         locations = opts.parentLocations
@@ -652,7 +652,7 @@ window.Messenger = (opts) ->
 
             inst = $el.messenger(opts)
             inst._location = chosen_loc
-            window.Messenger.instance = inst
+            Messenger.instance = inst
 
         else if $(inst._location) != $(chosen_loc)
             # A better location has since become avail on the page.
@@ -668,7 +668,7 @@ window.Messenger = (opts) ->
 
     return inst
 
-$.extend window.Messenger,
+$.extend Messenger,
     Message: RetryingMessage,
     Messenger: ActionMessenger,
     
@@ -676,4 +676,4 @@ $.extend window.Messenger,
     noConflict: ->
         window.Messenger = _prevMessenger
  
-$.globalMessenger = window.Messenger
+$.globalMessenger = window.Messenger = Messenger

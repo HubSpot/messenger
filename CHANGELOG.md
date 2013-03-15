@@ -1,3 +1,9 @@
+1.2.3
+-----
+
+- Internal references to Messenger will now function correctly when the Messenger object has
+  been noConflicted.
+
 1.2.2
 -----
 

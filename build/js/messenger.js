@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-/*! messenger 1.2.2 2013-03-12 */
-=======
 /*! messenger 1.2.3 2013-03-14 */
->>>>>>> develop-pages
 (function() {
   var $, ActionMessenger, Messenger, RetryingMessage, _Message, _Messenger, _prevMessenger,
     __hasProp = {}.hasOwnProperty,

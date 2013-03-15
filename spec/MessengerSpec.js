@@ -58,6 +58,16 @@
       itTotallyIs = true;
       return expect(itTotallyIs).toBe(true);
     });
+    it('should be the same as $.globalMessenger', function() {
+      return expect($.globalMessenger).toBe(Messenger);
+    });
+    it('should be removed when noConflict is called', function() {
+      var _prevMessenger;
+      _prevMessenger = Messenger;
+      Messenger.noConflict();
+      expect(Messenger).toBe(void 0);
+      return window.Messenger = _prevMessenger;
+    });
     it('should create a new message on post', function() {
       var msg, newMessageSpy;
       newMessageSpy = sinon.spy(gm, 'newMessage');

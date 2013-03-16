@@ -1,6 +1,6 @@
-/*! messenger 1.2.1 2013-03-12 */
+/*! messenger 1.2.3 2013-03-16 */
 (function() {
-  var $, ActionMessenger, BaseView, RetryingMessage, _Message, _Messenger, _prevMessenger,
+  var $, ActionMessenger, BaseView, Messenger, RetryingMessage, _Message, _Messenger, _prevMessenger,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
     __slice = [].slice,
@@ -125,6 +125,11 @@
     _Message.prototype.update = function(opts) {
       var _ref,
         _this = this;
+      if (_.isString(opts)) {
+        opts = {
+          message: opts
+        };
+      }
       $.extend(this.options, opts);
       this.lastUpdate = new Date();
       this.rendered = false;
@@ -483,7 +488,7 @@
         opts = {};
       }
       opts.messenger = this;
-      _Message = (_ref = (_ref1 = window.Messenger.themes[(_ref2 = opts.theme) != null ? _ref2 : this.options.theme]) != null ? _ref1.Message : void 0) != null ? _ref : RetryingMessage;
+      _Message = (_ref = (_ref1 = Messenger.themes[(_ref2 = opts.theme) != null ? _ref2 : this.options.theme]) != null ? _ref1.Message : void 0) != null ? _ref : RetryingMessage;
       msg = new _Message(opts);
       msg.on('show', function() {
         if (opts.scrollTo && _this.$el.css('position') !== 'fixed') {
@@ -796,7 +801,7 @@
     if (!(func != null) || !_.isString(func)) {
       opts = func;
       if (!($el.data('messenger') != null)) {
-        _Messenger = (_ref = (_ref1 = window.Messenger.themes[opts.theme]) != null ? _ref1.Messenger : void 0) != null ? _ref : ActionMessenger;
+        _Messenger = (_ref = (_ref1 = Messenger.themes[opts.theme]) != null ? _ref1.Messenger : void 0) != null ? _ref : ActionMessenger;
         $el.data('messenger', instance = new _Messenger($.extend({
           el: $el
         }, opts)));
@@ -810,7 +815,7 @@
 
   _prevMessenger = window.Messenger;
 
-  window.Messenger = function(opts) {
+  Messenger = function(opts) {
     var $el, $parent, choosen_loc, chosen_loc, classes, defaultOpts, inst, loc, locations, _i, _len;
     defaultOpts = {
       extraClasses: 'messenger-fixed messenger-on-bottom messenger-on-right',
@@ -818,11 +823,11 @@
       maxMessages: 9,
       parentLocations: ['body']
     };
-    opts = $.extend(defaultOpts, $._messengerDefaults, window.Messenger.options, opts);
+    opts = $.extend(defaultOpts, $._messengerDefaults, Messenger.options, opts);
     if (opts.theme != null) {
       opts.extraClasses += " messenger-theme-" + opts.theme;
     }
-    inst = opts.instance || window.Messenger.instance;
+    inst = opts.instance || Messenger.instance;
     if (opts.instance == null) {
       locations = opts.parentLocations;
       $parent = null;
@@ -840,7 +845,7 @@
         $parent.prepend($el);
         inst = $el.messenger(opts);
         inst._location = chosen_loc;
-        window.Messenger.instance = inst;
+        Messenger.instance = inst;
       } else if ($(inst._location) !== $(chosen_loc)) {
         inst.$el.detach();
         $parent.prepend(inst.$el);
@@ -854,7 +859,7 @@
     return inst;
   };
 
-  $.extend(window.Messenger, {
+  $.extend(Messenger, {
     Message: RetryingMessage,
     Messenger: ActionMessenger,
     themes: {},
@@ -863,6 +868,6 @@
     }
   });
 
-  $.globalMessenger = window.Messenger;
+  $.globalMessenger = window.Messenger = Messenger;
 
 }).call(this);

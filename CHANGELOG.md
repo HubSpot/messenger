@@ -26,7 +26,7 @@
   Messenger object will provide a container other than the jQuery object for messenger
   externals.
 
-- Messenger may also be called to provide the same functionality as `$.globalMessenger`.
+- `Messenger` may also be called to provide the same functionality as `$.globalMessenger`.
 
 - Messenger default options may now be set on `window.Messenger.options` as well as
   `$._messengerDefaults`.

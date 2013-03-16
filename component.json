@@ -21,5 +21,9 @@
     "build/css/messenger-theme-block.css",
     "build/css/messenger-theme-air.css",
     "build/css/messenger-theme-ice.css"
-  ]
+  ],
+  "dependencies": {
+    "solutionio/backbone": "*",
+    "component/jquery": "*"
+  }
 }

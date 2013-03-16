@@ -121,6 +121,10 @@ var _ = (function() {
         };
     };
 
+    _.isObject = function(obj) {
+        return obj === Object(obj);
+    };
+
     return _;
 })();
 

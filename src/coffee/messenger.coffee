@@ -116,7 +116,7 @@ class _Message extends BaseView
 
         if @options.hideOnNavigate
             @$message.addClass 'messenger-will-hide-on-navigate'
-            if Backbone.history?
+            if Backbone?.history?
                 Backbone.history.on 'route', =>
                     do @hide
         else

@@ -151,7 +151,7 @@
       }
       if (this.options.hideOnNavigate) {
         this.$message.addClass('messenger-will-hide-on-navigate');
-        if (Backbone.history != null) {
+        if ((typeof Backbone !== "undefined" && Backbone !== null ? Backbone.history : void 0) != null) {
           Backbone.history.on('route', function() {
             return _this.hide();
           });

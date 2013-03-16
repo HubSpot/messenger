@@ -1,6 +1,54 @@
 $ = jQuery
+_ = _ ? window.Messenger._
+Events = Backbone?.Events ? window.Messenger.Events
 
-class _Message extends Backbone.View
+# Emulates some Backbone-like eventing and element management for ease of use
+# while attempting to avoid a hard dependency on Backbone itself
+class BaseView
+    constructor: (options) ->
+        $.extend(@, Events)
+
+        if _.isObject options
+            if options.el
+                @setElement(options.el)
+            @model = options.model
+
+        @initialize.apply(@, arguments)
+
+    setElement: (el) ->
+        @$el = $(el)
+        @el = @$el[0]
+
+    delegateEvents: (events) ->
+        if (not (events or (events = _.result(@, 'events'))))
+            return
+        
+        delegateEventSplitter = /^(\S+)\s*(.*)$/
+
+        @undelegateEvents()
+        for key, method of events
+            if not _.isFunction(method)
+                method = this[events[key]]
+            if not method
+                throw new Error("Method #{events[key]} does not exist")
+            match = key.match delegateEventSplitter
+            eventName = match[1]
+            selector = match[2]
+            method = _.bind method, @
+            eventName += ".delegateEvents#{@cid}"
+            if selector == ''
+                @$el.on eventName, method
+            else
+                @$el.on eventName, selector, method
+    
+    undelegateEvents: () ->
+        @$el.off ".delegateEvents#{this.cid}"
+
+    remove: () ->
+        @undelegateEvents()
+        @$el.remove()
+
+class _Message extends BaseView
     defaults:
         hideAfter: 10
         scroll: true
@@ -70,7 +118,7 @@ class _Message extends Backbone.View
 
         if @options.hideOnNavigate
             @$message.addClass 'messenger-will-hide-on-navigate'
-            if Backbone.history?
+            if Backbone?.history?
                 Backbone.history.on 'route', =>
                     do @hide
         else
@@ -265,7 +313,7 @@ class RetryingMessage extends _Message
 
         do tick
 
-class _Messenger extends Backbone.View
+class _Messenger extends BaseView
     tagName: 'ul'
     className: 'messenger'
 
@@ -383,6 +431,8 @@ class ActionMessenger extends _Messenger
     # When called, will override Backbone.sync to place globalMessenger in the chain.
     # If using Backbone >= 0.9.9, will instead override Backbone.ajax
     hookBackboneAjax: (msgr_opts={}) ->
+        if not window.Backbone?
+            throw 'Expected Backbone to be defined'
 
         # Set backbone ajax defaults.
         msgr_opts = _.defaults msgr_opts,
@@ -614,8 +664,9 @@ $.fn.messenger = (func={}, args...) ->
     else
         return $el.data('messenger')[func](args...)
 
-_prevMessenger = window.Messenger
-Messenger = (opts) ->
+# When the object is created in preboot.coffee we see that this will be called
+# when the object itself is called.
+window.Messenger._call = (opts) ->
 
     defaultOpts =
         extraClasses: 'messenger-fixed messenger-on-bottom messenger-on-right'
@@ -667,11 +718,9 @@ Messenger = (opts) ->
     return inst
 
 $.extend Messenger,
-    Message: RetryingMessage,
-    Messenger: ActionMessenger,
+    Message: RetryingMessage
+    Messenger: ActionMessenger
     
-    themes: {}
-    noConflict: ->
-        window.Messenger = _prevMessenger
- 
+    themes: Messenger.themes ? {}
+
 $.globalMessenger = window.Messenger = Messenger

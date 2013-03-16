@@ -8,7 +8,7 @@ module.exports = (grunt) ->
         banner: "/*! <%= pkg.name %> <%= pkg.version %> <%= grunt.template.today(\"yyyy-mm-dd\") %> */\n"
 
       dist:
-        src: ["build/js/<%= pkg.name %>.js"]
+        src: ["src/js/preboot.js", "lib/shims.js", "build/js/<%= pkg.name %>.js"]
         dest: "build/js/<%= pkg.name %>.js"
 
     uglify:

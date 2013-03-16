@@ -1,4 +1,6 @@
 $ = jQuery
+_ = _ ? window.Messenger._
+Events = Backbone?.Events ? window.Messenger.Events
 
 # Emulates some Backbone-like eventing and element management for ease of use
 # while attempting to avoid a hard dependency on Backbone itself
@@ -6,7 +8,7 @@ class BaseView
     constructor: (options) ->
         $.extend(@, Events)
 
-        if typeof options == 'object'
+        if _.isObject options
             if options.el
                 @setElement(options.el)
             @model = options.model
@@ -662,8 +664,9 @@ $.fn.messenger = (func={}, args...) ->
     else
         return $el.data('messenger')[func](args...)
 
-_prevMessenger = window.Messenger
-Messenger = (opts) ->
+# When the object is created in preboot.coffee we see that this will be called
+# when the object itself is called.
+window.Messenger._call = (opts) ->
 
     defaultOpts =
         extraClasses: 'messenger-fixed messenger-on-bottom messenger-on-right'
@@ -715,11 +718,9 @@ Messenger = (opts) ->
     return inst
 
 $.extend Messenger,
-    Message: RetryingMessage,
-    Messenger: ActionMessenger,
+    Message: RetryingMessage
+    Messenger: ActionMessenger
     
-    themes: {}
-    noConflict: ->
-        window.Messenger = _prevMessenger
- 
+    themes: Messenger.themes ? {}
+
 $.globalMessenger = window.Messenger = Messenger

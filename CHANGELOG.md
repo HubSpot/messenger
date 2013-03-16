@@ -52,4 +52,4 @@
   to be used directly.
 
 - Messenger now exposes `ActionMessenger` (as `Messenger`) and `RetryingMessage` (as `Message`) for
-  use by theme which wish to extend them.
+  use by themes which wish to extend them.

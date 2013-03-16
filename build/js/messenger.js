@@ -15,11 +15,9 @@
     }
 
     window.Messenger.noConflict = function(){
-        var retMessenger = window.Messenger;
-
         window.Messenger = _prevMessenger;
 
-        return retMessenger;
+        return localMessenger;
     }
 })();
 

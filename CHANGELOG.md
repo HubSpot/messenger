@@ -16,7 +16,7 @@
   to the default behavior, but is useful to those who wish to be more explicit.
 - `message.retry.allow` can now be set to an integer representing the number of retries
   to be permitted.
-- `message.retry.delay` now works as expect with non-integer delays.
+- `message.retry.delay` now works as expected with non-integer delays.
 - Bugfixes surrounding how `do`/`run` retries things.
 
 1.2.0

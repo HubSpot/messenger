@@ -554,9 +554,12 @@ describe 'do ajax', ->
             expect(msg.done).toBeDefined()
             expect(msg.state).toBeDefined()
 
+    #
+    # As of 1.3.0 we have 75% code coverage across 50% of branches
+    #
     # To Be Tested:
     #
-    # - classes
+    # - classes being applied / removed
     # - the updating of the countdown / phrase
     # - Backbone hook / hideAfterNavigate (both pre and post Backbone 0.9.9)
     # - aborted requests not showing error message
@@ -566,6 +569,20 @@ describe 'do ajax', ->
     # - formatTime
     # - findById
     # - message ids / singleton
+    # - show / hide message events (+ re wasShown)
+    # - show calling message.render if not already rendered
+    # - message.update with string argument
+    # - message without hideAfter not hiding
+    # - scrollTo doing nothing if options.scroll is false
+    # - timeSinceUpdate (if it can't just be removed)
+    # - close button
+    # - action abort on message cancel
+    # - _normalizeResponse doing reasonable things
+    # - showSuccessWithoutError
+    # - xhr abort responses not triggering error messages
+    # - automatic retry delay scaling
+    # - hideAfter always occuring after delay has completed
+    # - cancel action on do
     # - globalMessenger
     #   - injection locations
     #   - moving of messages when a better location shows up

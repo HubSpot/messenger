@@ -1,4 +1,4 @@
-/*! messenger 1.3.0 2013-03-16 */
+/*! messenger 1.3.0 2013-03-19 */
 /*
  * This file begins the output concatenated into messenger.js
  *
@@ -60,6 +60,9 @@ window.Messenger._ = (function() {
     // Create a safe reference to the Underscore object for use below.
     var _ = {};
 
+    // Establish the object that gets returned to break out of a loop iteration.
+    var breaker = {};
+  
     var each = _.each = _.forEach = function(obj, iterator, context) {
         if (obj == null) return;
         if (nativeForEach && obj.forEach === nativeForEach) {

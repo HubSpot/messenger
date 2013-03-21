@@ -27,7 +27,7 @@
   to the default behavior, but is useful to those who wish to be more explicit.
 - `message.retry.allow` can now be set to an integer representing the number of retries
   to be permitted.
-- `message.retry.delay` now works as expect with non-integer delays.
+- `message.retry.delay` now works as expected with non-integer delays.
 - Bugfixes surrounding how `do`/`run` retries things.
 
 1.2.0
@@ -36,7 +36,7 @@
 - Added global Messenger object which can be removed with `Messenger.noConflict()`.  The
   Messenger object will provide a container other than the jQuery object for messenger
   externals.
-- Messenger may also be called to provide the same functionality as `$.globalMessenger`.
+- `Messenger` may also be called to provide the same functionality as `$.globalMessenger`.
 - Messenger default options may now be set on `window.Messenger.options` as well as
   `$._messengerDefaults`.
 - The current instance of ActionMessenger which will be used by `Messenger()`/`$.globalMessenger`
@@ -55,4 +55,4 @@
   signify that they are only for the internal structuring of the code, and not expected
   to be used directly.
 - Messenger now exposes `ActionMessenger` (as `Messenger`) and `RetryingMessage` (as `Message`) for
-  use by theme which wish to extend them.
+  use by themes which wish to extend them.

@@ -1,4 +1,5 @@
 .DS_Store
 .sass-cache
 .grunt
+_SpecRunner.html
 /node_modules/

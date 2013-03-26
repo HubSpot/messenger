@@ -1,12 +1,12 @@
 module.exports = (grunt) ->
   grunt.initConfig
     pkg: grunt.file.readJSON("package.json")
+
     clean: ["build/js", "build/css"]
 
     concat:
       options:
         banner: "/*! <%= pkg.name %> <%= pkg.version %> <%= grunt.template.today(\"yyyy-mm-dd\") %> */\n"
-
       dist:
         src: ["src/js/preboot.js", "lib/shims.js", "build/js/<%= pkg.name %>.js"]
         dest: "build/js/<%= pkg.name %>.js"
@@ -14,7 +14,6 @@ module.exports = (grunt) ->
     uglify:
       options:
         banner: "/*! <%= pkg.name %> <%= pkg.version %> <%= grunt.template.today(\"yyyy-mm-dd\") %> */\n"
-
       build:
         src: "build/js/<%= pkg.name %>.js"
         dest: "build/js/<%= pkg.name %>.min.js"
@@ -22,7 +21,6 @@ module.exports = (grunt) ->
     coffee:
       options:
         separator: "/*! <%= pkg.name %> <%= pkg.version %> <%= grunt.template.today(\"yyyy-mm-dd\") %> */\n"
-
       compile:
         files:
           "build/js/messenger.js": "src/coffee/messenger.coffee"
@@ -34,10 +32,19 @@ module.exports = (grunt) ->
           sassDir: "src/sass"
           cssDir: "build/css"
 
+    jasmine:
+      pivotal:
+        src: ["lib/sinon-1.6.0.js", "spec/lib/jquery-1.9.1.js", "build/js/<%= pkg.name%>.js"]
+        options:
+          specs: "spec/*Spec.js",
+          helpers: "spec/*Helper.js"
+
   grunt.loadNpmTasks "grunt-contrib-uglify"
   grunt.loadNpmTasks "grunt-contrib-compass"
   grunt.loadNpmTasks "grunt-contrib-coffee"
   grunt.loadNpmTasks "grunt-contrib-clean"
   grunt.loadNpmTasks "grunt-contrib-concat"
+  grunt.loadNpmTasks "grunt-contrib-jasmine"
 
   grunt.registerTask "default", ["clean", "coffee", "compass", "concat", "uglify"]
+  grunt.registerTask "test", ["jasmine"]

@@ -25,5 +25,8 @@
       "type": "git",
       "url": "http://github.com/HubSpot/messenger"
     }
-  ]
+  ],
+  "scripts": {
+    "test": "grunt test"
+  }
 }

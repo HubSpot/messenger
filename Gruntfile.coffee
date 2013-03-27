@@ -1,26 +1,28 @@
 module.exports = (grunt) ->
   grunt.initConfig
     pkg: grunt.file.readJSON("package.json")
+    meta:
+      banner: "/*! <%= pkg.name %> <%= pkg.version %> <%= grunt.template.today(\"yyyy-mm-dd\") %> */\n"
 
     clean: ["build/js", "build/css"]
 
     concat:
       options:
-        banner: "/*! <%= pkg.name %> <%= pkg.version %> <%= grunt.template.today(\"yyyy-mm-dd\") %> */\n"
+        banner: "<%= meta.banner %>"
       dist:
         src: ["src/js/preboot.js", "lib/shims.js", "build/js/<%= pkg.name %>.js"]
         dest: "build/js/<%= pkg.name %>.js"
 
     uglify:
       options:
-        banner: "/*! <%= pkg.name %> <%= pkg.version %> <%= grunt.template.today(\"yyyy-mm-dd\") %> */\n"
+        banner: "<%= meta.banner %>"
       build:
         src: "build/js/<%= pkg.name %>.js"
         dest: "build/js/<%= pkg.name %>.min.js"
 
     coffee:
       options:
-        separator: "/*! <%= pkg.name %> <%= pkg.version %> <%= grunt.template.today(\"yyyy-mm-dd\") %> */\n"
+        separator: "<%= meta.banner %>"
       compile:
         files:
           "build/js/messenger.js": "src/coffee/messenger.coffee"

@@ -1,3 +1,9 @@
+1.3.1
+-----
+
+- Prefix first, last and shown css classes, changing them to messenger-first, messenger-last,
+  and messenger-shown.
+
 1.3.0
 -----
 

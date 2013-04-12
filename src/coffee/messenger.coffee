@@ -384,19 +384,19 @@ class _Messenger extends BaseView
         anyShown = false
 
         for rec in @history
-            rec.$slot.removeClass 'first last shown'
+            rec.$slot.removeClass 'messenger-first messenger-last messenger-shown'
 
             if rec.msg.shown and rec.msg.rendered
-                rec.$slot.addClass 'shown'
+                rec.$slot.addClass 'messenger-shown'
                 anyShown = true
 
                 last = rec
                 if willBeFirst
                     willBeFirst = false
-                    rec.$slot.addClass 'first'
+                    rec.$slot.addClass 'messenger-first'
 
         if last?
-            last.$slot.addClass 'last'
+            last.$slot.addClass 'messenger-last'
 
         @$el["#{if anyShown then 'remove' else 'add'}Class"]('messenger-empty')
 

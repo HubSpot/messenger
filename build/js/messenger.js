@@ -1,4 +1,4 @@
-/*! messenger 1.3.0 2013-03-21 */
+/*! messenger 1.3.1 2013-05-14 */
 /*
  * This file begins the output concatenated into messenger.js
  *
@@ -810,19 +810,19 @@ window.Messenger.Events = (function() {
       _ref1 = this.history;
       for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
         rec = _ref1[_i];
-        rec.$slot.removeClass('first last shown');
+        rec.$slot.removeClass('messenger-first messenger-last messenger-shown');
         if (rec.msg.shown && rec.msg.rendered) {
-          rec.$slot.addClass('shown');
+          rec.$slot.addClass('messenger-shown');
           anyShown = true;
           last = rec;
           if (willBeFirst) {
             willBeFirst = false;
-            rec.$slot.addClass('first');
+            rec.$slot.addClass('messenger-first');
           }
         }
       }
       if (last != null) {
-        last.$slot.addClass('last');
+        last.$slot.addClass('messenger-last');
       }
       return this.$el["" + (anyShown ? 'remove' : 'add') + "Class"]('messenger-empty');
     };
@@ -916,11 +916,11 @@ window.Messenger.Events = (function() {
       }
     };
 
-    ActionMessenger.prototype._getMessage = function(returnVal, def) {
+    ActionMessenger.prototype._getHandlerResponse = function(returnVal, def) {
       if (returnVal === false) {
         return false;
       }
-      if (returnVal === true || !(returnVal != null) || typeof returnVal !== 'string') {
+      if (returnVal === true || !(returnVal != null)) {
         return def;
       }
       return returnVal;
@@ -990,7 +990,7 @@ window.Messenger.Events = (function() {
         }
         old = (_ref3 = opts[type]) != null ? _ref3 : function() {};
         opts[type] = function() {
-          var data, msgOpts, msgText, r, reason, resp, xhr, _ref10, _ref4, _ref5, _ref6, _ref7, _ref8, _ref9;
+          var data, defaultOpts, msgOpts, reason, resp, responseOpts, xhr, _ref10, _ref4, _ref5, _ref6, _ref7, _ref8, _ref9;
           resp = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
           _ref4 = _this._normalizeResponse.apply(_this, resp), reason = _ref4[0], data = _ref4[1], xhr = _ref4[2];
           if (type === 'success' && !(msg.errorCount != null) && m_opts.showSuccessWithoutError === false) {
@@ -1002,7 +1002,12 @@ window.Messenger.Events = (function() {
             }
             m_opts.errorCount += 1;
           }
-          msgText = _this._getMessage(r = old.apply(null, resp), m_opts[type + 'Message']);
+          responseOpts = _this._getHandlerResponse(old.apply(null, resp), m_opts[type + 'Message']);
+          if (_.isString(responseOpts)) {
+            responseOpts = {
+              message: responseOpts
+            };
+          }
           if (type === 'error' && ((xhr != null ? xhr.status : void 0) === 0 || reason === 'abort')) {
             msg.hide();
             return;
@@ -1011,12 +1016,12 @@ window.Messenger.Events = (function() {
             msg.hide();
             return;
           }
-          msgOpts = $.extend({}, m_opts, {
-            message: msgText,
+          defaultOpts = {
             type: type,
             events: (_ref7 = events[type]) != null ? _ref7 : {},
             hideOnNavigate: type === 'success'
-          });
+          };
+          msgOpts = $.extend({}, m_opts, defaultOpts, responseOpts);
           if (typeof ((_ref8 = msgOpts.retry) != null ? _ref8.allow : void 0) === 'number') {
             msgOpts.retry.allow--;
           }
@@ -1060,7 +1065,7 @@ window.Messenger.Events = (function() {
             delete m_opts._retryActions;
           }
           msg.update(msgOpts);
-          if (msgText) {
+          if (responseOpts) {
             $.globalMessenger();
             return msg.show();
           } else {

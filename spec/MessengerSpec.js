@@ -13,8 +13,7 @@
   };
 
   afterEachFunc = function() {
-    var error, spy, _i, _len, _results;
-
+    var spy, _i, _len, _results;
     gm = null;
     if (spies) {
       _results = [];
@@ -23,8 +22,8 @@
         if (spy) {
           try {
             _results.push(spy.restore());
-          } catch (_error) {
-            error = _error;
+          } catch (error) {
+
           }
         } else {
           _results.push(void 0);
@@ -56,7 +55,6 @@
     afterEach(afterEachFunc);
     it('should be totally awesome', function() {
       var itTotallyIs;
-
       itTotallyIs = true;
       return expect(itTotallyIs).toBe(true);
     });
@@ -65,7 +63,6 @@
     });
     it('should be removed when noConflict is called', function() {
       var _prevMessenger;
-
       _prevMessenger = Messenger;
       Messenger.noConflict();
       expect(Messenger).toBe(void 0);
@@ -73,7 +70,6 @@
     });
     it('should create a new message on post', function() {
       var msg, newMessageSpy;
-
       newMessageSpy = sinon.spy(gm, 'newMessage');
       spies.push(newMessageSpy);
       msg = gm.post(test_msg);
@@ -81,7 +77,6 @@
     });
     it('should be able to hide all messages', function() {
       var msg1, msg2, spy1, spy2, yeahBuddy;
-
       yeahBuddy = 'cabs are ';
       msg1 = gm.post(yeahBuddy + ' here');
       msg2 = gm.post(yeahBuddy + ' not here');
@@ -93,7 +88,6 @@
     });
     return it('should respect maxMessages', function() {
       var m, _ref;
-
       if ((_ref = Messenger.instance) != null) {
         _ref.hideAll();
       }
@@ -105,7 +99,8 @@
       m.post("b");
       m.post("c");
       m.post("d");
-      return expect($('.messenger-message-slot.shown').length).toBe(2);
+      console.log($('.messenger'));
+      return expect($('.messenger-message-slot.messenger-shown').length).toBe(2);
     });
   });
 
@@ -114,7 +109,6 @@
     afterEach(afterEachFunc);
     it('should cancel timers on cancel', function() {
       var msg, spy;
-
       msg = gm.post(test_msg);
       spy = sinon.spy(msg, 'clearTimers');
       spies.push(spy);
@@ -123,7 +117,6 @@
     });
     it('should fire events properly', function() {
       var eventName, fulfilled, msg;
-
       msg = gm.post(test_msg);
       fulfilled = false;
       eventName = 'wtf_mate';
@@ -134,7 +127,6 @@
     });
     it('should re-render a message on update', function() {
       var msg, renderSpy;
-
       msg = gm.post(test_msg);
       renderSpy = sinon.spy(msg, 'render');
       spies.push(renderSpy);
@@ -145,7 +137,6 @@
     });
     it('should trigger update event on update', function() {
       var msg, triggerSpy;
-
       msg = gm.post(test_msg);
       triggerSpy = sinon.spy(msg, 'trigger');
       spies.push(triggerSpy);
@@ -156,7 +147,6 @@
     });
     it('should trigger hide event on hide', function() {
       var msg, spy;
-
       msg = gm.post(test_msg);
       spy = sinon.spy(msg, 'trigger');
       spies.push(spy);
@@ -165,11 +155,9 @@
     });
     it('should hide in the time specified', function() {
       var end, spy, start;
-
       spy = start = end = null;
       runs(function() {
         var msg;
-
         start = +(new Date);
         msg = gm.post({
           message: 'test',
@@ -186,7 +174,6 @@
       }, 100);
       return runs(function() {
         var time;
-
         expect(spy.calledOnce).toBe(true);
         time = end - start;
         return expect(Math.round(time / 10)).toBe(5);
@@ -194,7 +181,6 @@
     });
     return it('should be able to be scrolled to', function() {
       var msg, spy;
-
       msg = gm.post(test_msg);
       $.scrollTo = function() {};
       spy = sinon.stub($, 'scrollTo');
@@ -208,7 +194,6 @@
     beforeEach(beforeEachFunc);
     it('should do the action once', function() {
       var spy;
-
       spy = sinon.spy();
       gm["do"]({
         action: spy
@@ -217,7 +202,6 @@
     });
     it('should pass in success and error callbacks', function() {
       var opts, spy;
-
       spy = sinon.spy();
       gm["do"]({
         action: spy
@@ -228,7 +212,6 @@
     });
     it('should pass the args into the action', function() {
       var spy;
-
       spy = sinon.spy();
       gm["do"]({
         action: spy
@@ -241,14 +224,12 @@
     });
     it('should return the message', function() {
       var message;
-
       message = gm["do"]();
       expect(typeof message).toBe('object');
       return expect(message.messenger).toBeDefined();
     });
     return it('should pass promise attrs through', function() {
       var message, promise;
-
       promise = $.Deferred();
       message = gm["do"]({
         action: function() {
@@ -265,20 +246,17 @@
 
   describe('actions', function() {
     var getAction, getActions;
-
     beforeEach(beforeEachFunc);
     getActions = function(msg) {
       return $(msg.el).find('.messenger-actions');
     };
     getAction = function(msg, key) {
       var $actions;
-
       $actions = getActions(msg);
       return $actions.find("[data-action='" + key + "']");
     };
     it('should show buttons for defined actions', function() {
       var msg;
-
       msg = gm.post({
         message: 'test',
         actions: {
@@ -292,7 +270,6 @@
     });
     it('should call callback when action is clicked', function() {
       var msg, spy;
-
       spy = sinon.spy();
       msg = gm.post({
         message: 'test',
@@ -308,7 +285,6 @@
     });
     return it('should fire event when action is clicked', function() {
       var msg, spy;
-
       spy = sinon.spy();
       msg = gm.post({
         message: 'test',
@@ -330,7 +306,6 @@
     afterEach(serverAfterEach);
     it('should allow events to be bound based on the state of the message', function() {
       var msg, spy;
-
       spy = sinon.spy();
       msg = null;
       runs(function() {
@@ -354,7 +329,6 @@
     });
     return it('should allow events to be bound on elements in the message', function() {
       var msg, spy;
-
       spy = sinon.spy();
       msg = null;
       runs(function() {
@@ -383,7 +357,6 @@
 
   describe('do ajax', function() {
     var shouldBe;
-
     shouldBe = function(result) {
       waits(10);
       return runs(function() {
@@ -495,7 +468,6 @@
     });
     it('should stop retrying on success', function() {
       var i, resp;
-
       i = 0;
       resp = function(req) {
         if (++i >= 3) {
@@ -525,7 +497,6 @@
     });
     it('should show error message on errors', function() {
       var msg;
-
       msg = null;
       runs(function() {
         return msg = gm["do"]({
@@ -547,7 +518,6 @@
     });
     it('should show success message on success', function() {
       var msg;
-
       msg = null;
       runs(function() {
         return msg = gm["do"]({
@@ -569,7 +539,6 @@
     });
     it('should show progress message', function() {
       var msg;
-
       msg = null;
       server.autoRespond = false;
       runs(function() {
@@ -601,7 +570,6 @@
     });
     it('shouldn\'t show a success message if there is no message defined', function() {
       var msg;
-
       msg = null;
       runs(function() {
         return msg = gm["do"]({}, {
@@ -617,7 +585,6 @@
     });
     it('should let message contents be overridden by string messages', function() {
       var msg;
-
       msg = null;
       runs(function() {
         return msg = gm["do"]({
@@ -638,7 +605,6 @@
     });
     it('should let message contents be overridden by message configs', function() {
       var msg;
-
       msg = null;
       runs(function() {
         return msg = gm["do"]({
@@ -660,7 +626,6 @@
     });
     it('should let message contents be defined', function() {
       var msg;
-
       msg = null;
       runs(function() {
         return msg = gm["do"]({}, {
@@ -679,7 +644,6 @@
     });
     it('should let messages be hidden by handlers', function() {
       var msg;
-
       msg = null;
       runs(function() {
         return msg = gm["do"]({}, {
@@ -697,7 +661,6 @@
     });
     return it('should pass ajax promise attrs through to the message', function() {
       var msg;
-
       msg = null;
       runs(function() {
         return msg = gm["do"]({}, {

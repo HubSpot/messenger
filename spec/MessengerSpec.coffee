@@ -82,7 +82,7 @@ describe 'the global messenger', () ->
         m.post "c"
         m.post "d"
 
-        expect($('.messenger-message-slot.shown').length).toBe(2)
+        expect($('.messenger-message-slot.messenger-shown').length).toBe(2)
 
 describe 'a message', () ->
     beforeEach beforeEachFunc

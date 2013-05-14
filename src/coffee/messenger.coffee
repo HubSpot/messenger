@@ -1,5 +1,5 @@
 $ = jQuery
-_ = _ ? window.Messenger._
+_ = window._ ? window.Messenger._
 Events = Backbone?.Events ? window.Messenger.Events
 
 # Emulates some Backbone-like eventing and element management for ease of use

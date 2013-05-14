@@ -3,6 +3,7 @@
 
 - Prefix first, last and shown css classes, changing them to messenger-first, messenger-last,
   and messenger-shown.
+- Fixed an error when Messenger was used without shims
 
 1.3.0
 -----

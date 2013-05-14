@@ -11,11 +11,9 @@
     "toast",
     "ajax"
   ],
-  "scripts": [
+  "main": [
     "build/js/messenger.js",
-    "build/js/messenger-theme-future.js"
-  ],
-  "styles": [
+    "build/js/messenger-theme-future.js",
     "build/css/messenger.css",
     "build/css/messenger-theme-future.css",
     "build/css/messenger-theme-block.css",
@@ -23,6 +21,16 @@
     "build/css/messenger-theme-ice.css"
   ],
   "dependencies": {
-    "component/jquery": "*"
-  }
+    "jquery": "*"
+  },
+  "ignore": [
+    "**/.*",
+    "component.json",
+    "Gruntfile.coffee",
+    "lib/",
+    "package.json",
+    "SpecRunner.html",
+    "spec/",
+    "src/"
+  ]
 }

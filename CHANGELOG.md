@@ -1,3 +1,8 @@
+1.3.1
+-----
+
+- Fixed an error when Messenger was used without shims
+
 1.3.0
 -----
 

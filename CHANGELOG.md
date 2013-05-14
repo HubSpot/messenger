@@ -1,3 +1,11 @@
+1.3.2
+-----
+
+- Add support for returning message options objects from `Messenger.run` success and error
+  handlers.  This could be a breaking change for clients who are inadvertantly returning objects
+  from handlers (easy to do in CoffeeScript), as Messenger will interpret any object returned
+  from a handler as being config for the message.
+
 1.3.1
 -----
 

@@ -146,7 +146,7 @@ class _Message extends BaseView
                     do e.stopPropagation
 
                     @trigger "action:#{ name }", act, e
-                    act.action(e)
+                    act.action.call @, e, @
             )(act)
 
     checkClickable: ->

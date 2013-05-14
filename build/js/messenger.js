@@ -498,7 +498,7 @@ window.Messenger.Events = (function() {
             e.preventDefault();
             e.stopPropagation();
             _this.trigger("action:" + name, act, e);
-            return act.action(e);
+            return act.action.call(_this, e, _this);
           };
         })(act));
       }

@@ -479,12 +479,12 @@ class ActionMessenger extends _Messenger
                 # Restore ajax
                 $.ajax = _old_ajax
 
-    _getHandlerResponse: (returnVal, def) ->
+    _getHandlerResponse: (returnVal) ->
         if returnVal == false
             return false
 
         if returnVal == true or not returnVal?
-            return def
+            return true
 
         return returnVal
 
@@ -535,9 +535,16 @@ class ActionMessenger extends _Messenger
         if m_opts.id?
             msg.options.id = m_opts.id
 
+        getMessageText = (type, xhr) =>
+            message = m_opts[type + 'Message']
+
+            if _.isFunction message
+              return message.call @, type, xhr
+            return message
+
         if m_opts.progressMessage?
             msg.update $.extend {}, m_opts,
-                message: m_opts.progressMessage
+                message: getMessageText('progress', null)
                 type: 'info'
 
         _.each ['error', 'success'], (type) =>
@@ -566,7 +573,7 @@ class ActionMessenger extends _Messenger
                     m_opts.errorCount ?= 0
                     m_opts.errorCount += 1
 
-                responseOpts = @_getHandlerResponse(old(resp...), m_opts[type + 'Message'])
+                responseOpts = @_getHandlerResponse old(resp...)
                 if _.isString responseOpts
                     responseOpts = {message: responseOpts}
 
@@ -581,6 +588,7 @@ class ActionMessenger extends _Messenger
                     return
 
                 defaultOpts =
+                    message: getMessageText(type, xhr)
                     type: type
                     events: events[type] ? {}
 
@@ -626,7 +634,7 @@ class ActionMessenger extends _Messenger
 
                 msg.update msgOpts
 
-                if responseOpts
+                if responseOpts and msgOpts.message
                     # Force the msg box to be rerendered if the page changed:
                     $.globalMessenger()
 

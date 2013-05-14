@@ -1,7 +1,8 @@
 1.3.2
 -----
 
-- Call actions with the message as context and pass the message object to action handlers.
+- successMessage, errorMessage and progressMessage can now be functions.
+- Action handlers are now called with the context of the message they are actions of.
 - Add support for returning message options objects from `Messenger.run` success and error
   handlers.  This could be a breaking change for clients who are inadvertantly returning objects
   from handlers (easy to do in CoffeeScript), as Messenger will interpret any object returned

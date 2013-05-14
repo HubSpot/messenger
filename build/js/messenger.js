@@ -916,12 +916,12 @@ window.Messenger.Events = (function() {
       }
     };
 
-    ActionMessenger.prototype._getHandlerResponse = function(returnVal, def) {
+    ActionMessenger.prototype._getHandlerResponse = function(returnVal) {
       if (returnVal === false) {
         return false;
       }
       if (returnVal === true || !(returnVal != null)) {
-        return def;
+        return true;
       }
       return returnVal;
     };
@@ -965,7 +965,7 @@ window.Messenger.Events = (function() {
     };
 
     ActionMessenger.prototype.run = function() {
-      var args, attr, events, m_opts, msg, opts, promiseAttrs, _i, _len, _ref2, _ref3,
+      var args, attr, events, getMessageText, m_opts, msg, opts, promiseAttrs, _i, _len, _ref2, _ref3,
         _this = this;
       m_opts = arguments[0], opts = arguments[1], args = 3 <= arguments.length ? __slice.call(arguments, 2) : [];
       if (opts == null) {
@@ -977,9 +977,17 @@ window.Messenger.Events = (function() {
       if (m_opts.id != null) {
         msg.options.id = m_opts.id;
       }
+      getMessageText = function(type, xhr) {
+        var message;
+        message = m_opts[type + 'Message'];
+        if (_.isFunction(message)) {
+          return message.call(_this, type, xhr);
+        }
+        return message;
+      };
       if (m_opts.progressMessage != null) {
         msg.update($.extend({}, m_opts, {
-          message: m_opts.progressMessage,
+          message: getMessageText('progress', null),
           type: 'info'
         }));
       }
@@ -1002,7 +1010,7 @@ window.Messenger.Events = (function() {
             }
             m_opts.errorCount += 1;
           }
-          responseOpts = _this._getHandlerResponse(old.apply(null, resp), m_opts[type + 'Message']);
+          responseOpts = _this._getHandlerResponse(old.apply(null, resp));
           if (_.isString(responseOpts)) {
             responseOpts = {
               message: responseOpts
@@ -1017,6 +1025,7 @@ window.Messenger.Events = (function() {
             return;
           }
           defaultOpts = {
+            message: getMessageText(type, xhr),
             type: type,
             events: (_ref8 = events[type]) != null ? _ref8 : {},
             hideOnNavigate: type === 'success'
@@ -1065,7 +1074,7 @@ window.Messenger.Events = (function() {
             delete m_opts._retryActions;
           }
           msg.update(msgOpts);
-          if (responseOpts) {
+          if (responseOpts && msgOpts.message) {
             $.globalMessenger();
             return msg.show();
           } else {

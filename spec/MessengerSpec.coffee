@@ -205,6 +205,17 @@ describe 'do', ->
         expect(message.state).toBe(promise.state)
         expect(message.progress).toBe(promise.progress)
 
+    it 'should accept a promise-based action', ->
+        promise = $.Deferred()
+
+        message = gm.expectPromise (-> promise),
+          successMessage: 'test'
+
+        promise.resolve()
+
+        expect(message.options.message).toBe('test')
+        expect(message.options.type).toBe('success')
+
 describe 'actions', ->
     beforeEach beforeEachFunc
 

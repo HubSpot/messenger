@@ -99,7 +99,6 @@
       m.post("b");
       m.post("c");
       m.post("d");
-      console.log($('.messenger'));
       return expect($('.messenger-message-slot.messenger-shown').length).toBe(2);
     });
   });
@@ -228,7 +227,7 @@
       expect(typeof message).toBe('object');
       return expect(message.messenger).toBeDefined();
     });
-    return it('should pass promise attrs through', function() {
+    it('should pass promise attrs through', function() {
       var message, promise;
       promise = $.Deferred();
       message = gm["do"]({
@@ -241,6 +240,17 @@
       expect(message.fail).toBe(promise.fail);
       expect(message.state).toBe(promise.state);
       return expect(message.progress).toBe(promise.progress);
+    });
+    return it('should accept a promise-based action', function() {
+      var message, promise;
+      promise = $.Deferred();
+      message = gm.runPromise((function() {
+        return promise;
+      }), {
+        successMessage: 'test'
+      });
+      promise.resolve();
+      return expect(message.options.message).toBe('test');
     });
   });
 

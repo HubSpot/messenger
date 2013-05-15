@@ -1,6 +1,12 @@
 1.3.2
 -----
 
+- Add the `expectPromise` method which accepts a function which will return a promise, and 
+  a message options hash, and calls `run`.
+- Add the `returnsPromise` option to `run` which will expect it's `action` to return a promise 
+  object, rather than using success and error callbacks.  The promises can reject or resolve to
+  change the messages shown just as the callbacks can.  You should wrap the promise returned with
+  a `pipe` like function to mutate the returned values before they reach Messenger.
 - successMessage, errorMessage and progressMessage can now be functions.
 - Action handlers are now called with the context of the message they are actions of.
 - Add support for returning message options objects from `Messenger.run` success and error

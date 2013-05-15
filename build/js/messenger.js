@@ -965,7 +965,7 @@ window.Messenger.Events = (function() {
     };
 
     ActionMessenger.prototype.run = function() {
-      var args, attr, events, getMessageText, m_opts, msg, opts, promiseAttrs, _i, _len, _ref2, _ref3,
+      var args, attr, events, getMessageText, handler, handlers, m_opts, msg, old, opts, promiseAttrs, type, _i, _len, _ref2, _ref3,
         _this = this;
       m_opts = arguments[0], opts = arguments[1], args = 3 <= arguments.length ? __slice.call(arguments, 2) : [];
       if (opts == null) {
@@ -973,10 +973,6 @@ window.Messenger.Events = (function() {
       }
       m_opts = $.extend(true, {}, this.messageDefaults, this.doDefaults, m_opts != null ? m_opts : {});
       events = this._parseEvents(m_opts.events);
-      msg = (_ref2 = m_opts.messageInstance) != null ? _ref2 : this.newMessage(m_opts);
-      if (m_opts.id != null) {
-        msg.options.id = m_opts.id;
-      }
       getMessageText = function(type, xhr) {
         var message;
         message = m_opts[type + 'Message'];
@@ -985,32 +981,37 @@ window.Messenger.Events = (function() {
         }
         return message;
       };
+      msg = (_ref2 = m_opts.messageInstance) != null ? _ref2 : this.newMessage(m_opts);
+      if (m_opts.id != null) {
+        msg.options.id = m_opts.id;
+      }
       if (m_opts.progressMessage != null) {
         msg.update($.extend({}, m_opts, {
           message: getMessageText('progress', null),
           type: 'info'
         }));
       }
+      handlers = {};
       _.each(['error', 'success'], function(type) {
-        var old, _ref3, _ref4;
+        var _ref3;
         if ((_ref3 = opts[type]) != null ? _ref3._originalHandler : void 0) {
           opts[type] = opts[type]._originalHandler;
         }
-        old = (_ref4 = opts[type]) != null ? _ref4 : function() {};
-        opts[type] = function() {
-          var data, defaultOpts, msgOpts, reason, resp, responseOpts, xhr, _ref10, _ref11, _ref5, _ref6, _ref7, _ref8, _ref9;
+        return handlers[type] = function() {
+          var data, defaultOpts, handlerResp, msgOpts, reason, resp, responseOpts, xhr, _base, _ref10, _ref4, _ref5, _ref6, _ref7, _ref8, _ref9;
           resp = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
-          _ref5 = _this._normalizeResponse.apply(_this, resp), reason = _ref5[0], data = _ref5[1], xhr = _ref5[2];
+          _ref4 = _this._normalizeResponse.apply(_this, resp), reason = _ref4[0], data = _ref4[1], xhr = _ref4[2];
           if (type === 'success' && !(msg.errorCount != null) && m_opts.showSuccessWithoutError === false) {
             m_opts['successMessage'] = null;
           }
           if (type === 'error') {
-            if ((_ref6 = m_opts.errorCount) == null) {
+            if ((_ref5 = m_opts.errorCount) == null) {
               m_opts.errorCount = 0;
             }
             m_opts.errorCount += 1;
           }
-          responseOpts = _this._getHandlerResponse(old.apply(null, resp));
+          handlerResp = m_opts.returnsPromise ? resp[0] : typeof (_base = opts[type])._originalHandler === "function" ? _base._originalHandler.apply(_base, resp) : void 0;
+          responseOpts = _this._getHandlerResponse(handlerResp);
           if (_.isString(responseOpts)) {
             responseOpts = {
               message: responseOpts
@@ -1020,21 +1021,21 @@ window.Messenger.Events = (function() {
             msg.hide();
             return;
           }
-          if (type === 'error' && ((m_opts.ignoredErrorCodes != null) && (_ref7 = xhr != null ? xhr.status : void 0, __indexOf.call(m_opts.ignoredErrorCodes, _ref7) >= 0))) {
+          if (type === 'error' && ((m_opts.ignoredErrorCodes != null) && (_ref6 = xhr != null ? xhr.status : void 0, __indexOf.call(m_opts.ignoredErrorCodes, _ref6) >= 0))) {
             msg.hide();
             return;
           }
           defaultOpts = {
             message: getMessageText(type, xhr),
             type: type,
-            events: (_ref8 = events[type]) != null ? _ref8 : {},
+            events: (_ref7 = events[type]) != null ? _ref7 : {},
             hideOnNavigate: type === 'success'
           };
           msgOpts = $.extend({}, m_opts, defaultOpts, responseOpts);
-          if (typeof ((_ref9 = msgOpts.retry) != null ? _ref9.allow : void 0) === 'number') {
+          if (typeof ((_ref8 = msgOpts.retry) != null ? _ref8.allow : void 0) === 'number') {
             msgOpts.retry.allow--;
           }
-          if (type === 'error' && (xhr != null ? xhr.status : void 0) >= 500 && ((_ref10 = msgOpts.retry) != null ? _ref10.allow : void 0)) {
+          if (type === 'error' && (xhr != null ? xhr.status : void 0) >= 500 && ((_ref9 = msgOpts.retry) != null ? _ref9.allow : void 0)) {
             if (msgOpts.retry.delay == null) {
               if (msgOpts.errorCount < 4) {
                 msgOpts.retry.delay = 10;
@@ -1043,7 +1044,7 @@ window.Messenger.Events = (function() {
               }
             }
             if (msgOpts.hideAfter) {
-              if ((_ref11 = msgOpts._hideAfter) == null) {
+              if ((_ref10 = msgOpts._hideAfter) == null) {
                 msgOpts._hideAfter = msgOpts.hideAfter;
               }
               msgOpts.hideAfter = msgOpts._hideAfter + msgOpts.retry.delay;
@@ -1081,9 +1082,19 @@ window.Messenger.Events = (function() {
             return msg.hide();
           }
         };
-        return opts[type]._originalHandler = old;
       });
+      if (!m_opts.returnsPromise) {
+        for (type in handlers) {
+          handler = handlers[type];
+          old = opts[type];
+          opts[type] = handler;
+          opts[type]._originalHandler = old;
+        }
+      }
       msg._actionInstance = m_opts.action.apply(m_opts, [opts].concat(__slice.call(args)));
+      if (m_opts.returnsPromise) {
+        msg._actionInstance.then(handlers.success, handlers.error);
+      }
       promiseAttrs = ['done', 'progress', 'fail', 'state', 'then'];
       for (_i = 0, _len = promiseAttrs.length; _i < _len; _i++) {
         attr = promiseAttrs[_i];
@@ -1102,6 +1113,14 @@ window.Messenger.Events = (function() {
       m_opts = arguments[0], args = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
       m_opts.action = $.ajax;
       return this.run.apply(this, [m_opts].concat(__slice.call(args)));
+    };
+
+    ActionMessenger.prototype.expectPromise = function(action, m_opts) {
+      m_opts = _.extend({}, m_opts, {
+        action: action,
+        returnsPromise: true
+      });
+      return this.run(m_opts);
     };
 
     return ActionMessenger;

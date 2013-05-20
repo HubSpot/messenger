@@ -244,13 +244,14 @@
     return it('should accept a promise-based action', function() {
       var message, promise;
       promise = $.Deferred();
-      message = gm.runPromise((function() {
+      message = gm.expectPromise((function() {
         return promise;
       }), {
         successMessage: 'test'
       });
       promise.resolve();
-      return expect(message.options.message).toBe('test');
+      expect(message.options.message).toBe('test');
+      return expect(message.options.type).toBe('success');
     });
   });
 

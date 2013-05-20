@@ -5,7 +5,7 @@ module.exports = (grunt) ->
 
     concat:
       options:
-        banner: "/*! <%= pkg.name %> <%= pkg.version %> <%= grunt.template.today(\"yyyy-mm-dd\") %> */\n"
+        banner: "/*! <%= pkg.name %> <%= pkg.version %> */\n"
 
       dist:
         src: ["src/js/preboot.js", "lib/shims.js", "build/js/<%= pkg.name %>.js"]
@@ -13,7 +13,7 @@ module.exports = (grunt) ->
 
     uglify:
       options:
-        banner: "/*! <%= pkg.name %> <%= pkg.version %> <%= grunt.template.today(\"yyyy-mm-dd\") %> */\n"
+        banner: "/*! <%= pkg.name %> <%= pkg.version %> */\n"
 
       build:
         src: "build/js/<%= pkg.name %>.js"
@@ -21,7 +21,7 @@ module.exports = (grunt) ->
 
     coffee:
       options:
-        separator: "/*! <%= pkg.name %> <%= pkg.version %> <%= grunt.template.today(\"yyyy-mm-dd\") %> */\n"
+        separator: "/*! <%= pkg.name %> <%= pkg.version %> */\n"
 
       compile:
         files:

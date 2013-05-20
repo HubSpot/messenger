@@ -99,7 +99,7 @@
       m.post("b");
       m.post("c");
       m.post("d");
-      return expect($('.messenger-message-slot.shown').length).toBe(2);
+      return expect($('.messenger-message-slot.messenger-shown').length).toBe(2);
     });
   });
 
@@ -227,7 +227,7 @@
       expect(typeof message).toBe('object');
       return expect(message.messenger).toBeDefined();
     });
-    return it('should pass promise attrs through', function() {
+    it('should pass promise attrs through', function() {
       var message, promise;
       promise = $.Deferred();
       message = gm["do"]({
@@ -240,6 +240,18 @@
       expect(message.fail).toBe(promise.fail);
       expect(message.state).toBe(promise.state);
       return expect(message.progress).toBe(promise.progress);
+    });
+    return it('should accept a promise-based action', function() {
+      var message, promise;
+      promise = $.Deferred();
+      message = gm.expectPromise((function() {
+        return promise;
+      }), {
+        successMessage: 'test'
+      });
+      promise.resolve();
+      expect(message.options.message).toBe('test');
+      return expect(message.options.type).toBe('success');
     });
   });
 
@@ -582,7 +594,7 @@
         return expect(msg.shown).toBe(false);
       });
     });
-    it('should let message contents be overridden', function() {
+    it('should let message contents be overridden by string messages', function() {
       var msg;
       msg = null;
       runs(function() {
@@ -600,6 +612,27 @@
       return runs(function() {
         expect(msg.options.message).toBe('YAA');
         return expect(msg.shown).toBe(true);
+      });
+    });
+    it('should let message contents be overridden by message configs', function() {
+      var msg;
+      msg = null;
+      runs(function() {
+        return msg = gm["do"]({
+          successMessage: 'X'
+        }, {
+          url: '/200',
+          error: error,
+          success: function() {
+            return {
+              type: 'error'
+            };
+          }
+        });
+      });
+      waits(10);
+      return runs(function() {
+        return expect(msg.options.type).toBe('error');
       });
     });
     it('should let message contents be defined', function() {

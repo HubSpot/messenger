@@ -124,14 +124,14 @@ ul.messenger-theme-future
 
   .messenger-message-slot
 
-    &.last .messenger-message
+    &.messenger-last .messenger-message
       +border-radius($defaultThemeBorderRadius $defaultThemeBorderRadius 0px 0px)
 
-    &.first .messenger-message
+    &.messenger-first .messenger-message
       +border-radius(0px 0px $defaultThemeBorderRadius $defaultThemeBorderRadius)
       +box-shadow(inset 0px 1px rgba(255, 255, 255, 0.13), inset 48px 0px 0px rgba(0, 0, 0, 0.3), inset 46px 0px 0px rgba(255, 255, 255, 0.07))
 
-    &.first.last .messenger-message
+    &.messenger-first.messenger-last .messenger-message
       +box-shadow(inset 48px 0px 0px rgba(0, 0, 0, 0.3), inset 46px 0px 0px rgba(255, 255, 255, 0.07))
       +border-radius($defaultThemeBorderRadius)
 

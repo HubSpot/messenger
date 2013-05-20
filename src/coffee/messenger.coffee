@@ -146,7 +146,7 @@ class _Message extends BaseView
                     do e.stopPropagation
 
                     @trigger "action:#{ name }", act, e
-                    act.action(e)
+                    act.action.call @, e, @
             )(act)
 
     checkClickable: ->
@@ -384,19 +384,19 @@ class _Messenger extends BaseView
         anyShown = false
 
         for rec in @history
-            rec.$slot.removeClass 'first last shown'
+            rec.$slot.removeClass 'messenger-first messenger-last messenger-shown'
 
             if rec.msg.shown and rec.msg.rendered
-                rec.$slot.addClass 'shown'
+                rec.$slot.addClass 'messenger-shown'
                 anyShown = true
 
                 last = rec
                 if willBeFirst
                     willBeFirst = false
-                    rec.$slot.addClass 'first'
+                    rec.$slot.addClass 'messenger-first'
 
         if last?
-            last.$slot.addClass 'last'
+            last.$slot.addClass 'messenger-last'
 
         @$el["#{if anyShown then 'remove' else 'add'}Class"]('messenger-empty')
 
@@ -479,12 +479,12 @@ class ActionMessenger extends _Messenger
                 # Restore ajax
                 $.ajax = _old_ajax
 
-    _getMessage: (returnVal, def) ->
+    _getHandlerResponse: (returnVal) ->
         if returnVal == false
             return false
 
-        if returnVal == true or not returnVal? or typeof returnVal != 'string'
-            return def
+        if returnVal == true or not returnVal?
+            return true
 
         return returnVal
 
@@ -530,6 +530,13 @@ class ActionMessenger extends _Messenger
         m_opts = $.extend true, {}, @messageDefaults, @doDefaults, m_opts ? {}
         events = @_parseEvents m_opts.events
 
+        getMessageText = (type, xhr) =>
+            message = m_opts[type + 'Message']
+
+            if _.isFunction message
+              return message.call @, type, xhr
+            return message
+
         msg = m_opts.messageInstance ? @newMessage m_opts
 
         if m_opts.id?
@@ -537,9 +544,10 @@ class ActionMessenger extends _Messenger
 
         if m_opts.progressMessage?
             msg.update $.extend {}, m_opts,
-                message: m_opts.progressMessage
+                message: getMessageText('progress', null)
                 type: 'info'
 
+        handlers = {}
         _.each ['error', 'success'], (type) =>
             # Intercept the error and success handlers to give handle the messaging and give the client
             # the chance to stop or replace the message.
@@ -553,9 +561,7 @@ class ActionMessenger extends _Messenger
             if opts[type]?._originalHandler
                 opts[type] = opts[type]._originalHandler
                 
-            old = opts[type] ? ->
-
-            opts[type] = (resp...) =>
+            handlers[type] = (resp...) =>
 
                 [reason, data, xhr] = @_normalizeResponse(resp...)
 
@@ -566,7 +572,12 @@ class ActionMessenger extends _Messenger
                     m_opts.errorCount ?= 0
                     m_opts.errorCount += 1
 
-                msgText = @_getMessage(r=old(resp...), m_opts[type + 'Message'])
+                # We allow message options to be returned by the original success/error handlers, or from the promise
+                # used to call the handler.
+                handlerResp = if m_opts.returnsPromise then resp[0] else opts[type]._originalHandler?(resp...)
+                responseOpts = @_getHandlerResponse handlerResp
+                if _.isString responseOpts
+                    responseOpts = {message: responseOpts}
 
                 if type is 'error' and (xhr?.status == 0 or reason == 'abort')
                     # The request was aborted
@@ -578,12 +589,14 @@ class ActionMessenger extends _Messenger
                     do msg.hide
                     return
 
-                msgOpts = $.extend {}, m_opts,
-                    message: msgText
+                defaultOpts =
+                    message: getMessageText(type, xhr)
                     type: type
                     events: events[type] ? {}
 
                     hideOnNavigate: type == 'success'
+
+                msgOpts = $.extend {}, m_opts, defaultOpts, responseOpts
 
                 if typeof msgOpts.retry?.allow is 'number'
                     msgOpts.retry.allow--
@@ -623,7 +636,7 @@ class ActionMessenger extends _Messenger
 
                 msg.update msgOpts
 
-                if msgText
+                if responseOpts and msgOpts.message
                     # Force the msg box to be rerendered if the page changed:
                     $.globalMessenger()
 
@@ -631,23 +644,40 @@ class ActionMessenger extends _Messenger
                 else
                     do msg.hide
 
-            opts[type]._originalHandler = old
+
+        unless m_opts.returnsPromise
+            for type, handler of handlers
+                old = opts[type]
+        
+                opts[type] = handler
+
+                opts[type]._originalHandler = old
 
         msg._actionInstance = m_opts.action opts, args...
 
+        if m_opts.returnsPromise
+            msg._actionInstance.then(handlers.success, handlers.error)
+
         promiseAttrs = ['done', 'progress', 'fail', 'state', 'then']
         for attr in promiseAttrs
-          delete msg[attr] if msg[attr]?
-          msg[attr] = msg._actionInstance?[attr]
+            delete msg[attr] if msg[attr]?
+            msg[attr] = msg._actionInstance?[attr]
 
         return msg
     
     # Aliases
     do: ActionMessenger::run
     ajax: (m_opts, args...) ->
-      m_opts.action = $.ajax
-  
-      @run(m_opts, args...)
+        m_opts.action = $.ajax
+    
+        @run(m_opts, args...)
+
+    expectPromise: (action, m_opts) ->
+        m_opts = _.extend {}, m_opts,
+            action: action
+            returnsPromise: true
+
+        @run(m_opts)
 
 $.fn.messenger = (func={}, args...) ->
     $el = this

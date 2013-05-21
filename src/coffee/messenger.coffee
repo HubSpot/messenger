@@ -20,29 +20,29 @@ class BaseView
         @el = @$el[0]
 
     delegateEvents: (events) ->
-        if (not (events or (events = _.result(@, 'events'))))
-            return
-        
-        delegateEventSplitter = /^(\S+)\s*(.*)$/
+        return unless events or (events = _.result(this, "events"))
 
         @undelegateEvents()
-        for key, method of events
-            if not _.isFunction(method)
-                method = this[events[key]]
-            if not method
-                throw new Error("Method #{events[key]} does not exist")
-            match = key.match delegateEventSplitter
+
+        delegateEventSplitter = /^(\S+)\s*(.*)$/
+
+        for key of events
+            method = events[key]
+            method = this[events[key]]  unless _.isFunction(method)
+            throw new Error("Method \"" + events[key] + "\" does not exist")  unless method
+            match = key.match(delegateEventSplitter)
+
             eventName = match[1]
             selector = match[2]
-            method = _.bind method, @
-            eventName += ".delegateEvents#{@cid}"
-            if selector == ''
-                @$el.on eventName, method
+            method = _.bind(method, this)
+            eventName += ".delegateEvents" + @cid
+            if selector is ""
+                @$el.bind eventName, method
             else
-                @$el.on eventName, selector, method
-    
-    undelegateEvents: () ->
-        @$el.off ".delegateEvents#{this.cid}"
+                @$el.delegate selector, eventName, method
+
+    undelegateEvents: ->
+        @$el.unbind ".delegateEvents" + @cid
 
     remove: () ->
         @undelegateEvents()

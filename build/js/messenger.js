@@ -331,11 +331,11 @@ window.Messenger.Events = (function() {
 
     BaseView.prototype.delegateEvents = function(events) {
       var delegateEventSplitter, eventName, key, match, method, selector, _results;
-      if (!(events || (events = _.result(this, 'events')))) {
+      if (!(events || (events = _.result(this, "events")))) {
         return;
       }
-      delegateEventSplitter = /^(\S+)\s*(.*)$/;
       this.undelegateEvents();
+      delegateEventSplitter = /^(\S+)\s*(.*)$/;
       _results = [];
       for (key in events) {
         method = events[key];
@@ -343,24 +343,24 @@ window.Messenger.Events = (function() {
           method = this[events[key]];
         }
         if (!method) {
-          throw new Error("Method " + events[key] + " does not exist");
+          throw new Error("Method \"" + events[key] + "\" does not exist");
         }
         match = key.match(delegateEventSplitter);
         eventName = match[1];
         selector = match[2];
         method = _.bind(method, this);
         eventName += ".delegateEvents" + this.cid;
-        if (selector === '') {
-          _results.push(this.$el.on(eventName, method));
+        if (selector === "") {
+          _results.push(this.$el.bind(eventName, method));
         } else {
-          _results.push(this.$el.on(eventName, selector, method));
+          _results.push(this.$el.delegate(selector, eventName, method));
         }
       }
       return _results;
     };
 
     BaseView.prototype.undelegateEvents = function() {
-      return this.$el.off(".delegateEvents" + this.cid);
+      return this.$el.unbind(".delegateEvents" + this.cid);
     };
 
     BaseView.prototype.remove = function() {

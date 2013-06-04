@@ -557,11 +557,9 @@ class ActionMessenger extends _Messenger
             #  - If it returns anything other than false or a string, we show the default passed in for this type (e.g. successMessage)
             #  - If it returns a string, we show that as the message
             #
-
-            if opts[type]?._originalHandler
-                opts[type] = opts[type]._originalHandler
-                
             handlers[type] = (resp...) =>
+                if opts[type]?._originalHandler
+                    opts[type] = opts[type]._originalHandler
 
                 [reason, data, xhr] = @_normalizeResponse(resp...)
 
@@ -638,7 +636,7 @@ class ActionMessenger extends _Messenger
 
                 if responseOpts and msgOpts.message
                     # Force the msg box to be rerendered if the page changed:
-                    $.globalMessenger()
+                    Messenger()
 
                     do msg.show
                 else

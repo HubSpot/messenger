@@ -559,10 +559,8 @@ class ActionMessenger extends _Messenger
             #  - If it returns anything other than false or a string, we show the default passed in for this type (e.g. successMessage)
             #  - If it returns a string, we show that as the message
             #
+            originalHandler = opts[type]
             handlers[type] = (resp...) =>
-                if opts[type]?._originalHandler
-                    opts[type] = opts[type]._originalHandler
-
                 [reason, data, xhr] = @_normalizeResponse(resp...)
 
                 if type is 'success' and not msg.errorCount? and m_opts.showSuccessWithoutError == false
@@ -574,7 +572,7 @@ class ActionMessenger extends _Messenger
 
                 # We allow message options to be returned by the original success/error handlers, or from the promise
                 # used to call the handler.
-                handlerResp = if m_opts.returnsPromise then resp[0] else opts[type]?(resp...)
+                handlerResp = if m_opts.returnsPromise then resp[0] else originalHandler?(resp...)
                 responseOpts = @_getHandlerResponse handlerResp
                 if _.isString responseOpts
                     responseOpts = {message: responseOpts}
@@ -650,8 +648,6 @@ class ActionMessenger extends _Messenger
                 old = opts[type]
         
                 opts[type] = handler
-
-                opts[type]._originalHandler = old
 
         msg._actionInstance = m_opts.action opts, args...
 

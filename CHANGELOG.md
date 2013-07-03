@@ -1,3 +1,8 @@
+1.3.5
+-----
+
+- Fix bug in how retry works
+
 1.3.4
 -----
 

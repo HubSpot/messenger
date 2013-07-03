@@ -1,3 +1,8 @@
+1.3.4
+-----
+
+- Fix bug in how success/error handlers are called
+
 1.3.2
 -----
 

@@ -572,7 +572,7 @@ class ActionMessenger extends _Messenger
 
                 # We allow message options to be returned by the original success/error handlers, or from the promise
                 # used to call the handler.
-                handlerResp = if m_opts.returnsPromise then resp[0] else opts[type]._originalHandler?(resp...)
+                handlerResp = if m_opts.returnsPromise then resp[0] else opts[type]?(resp...)
                 responseOpts = @_getHandlerResponse handlerResp
                 if _.isString responseOpts
                     responseOpts = {message: responseOpts}

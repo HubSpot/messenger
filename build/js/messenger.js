@@ -994,7 +994,7 @@ window.Messenger.Events = (function() {
       handlers = {};
       _.each(['error', 'success'], function(type) {
         return handlers[type] = function() {
-          var data, defaultOpts, handlerResp, msgOpts, reason, resp, responseOpts, xhr, _base, _ref10, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8, _ref9;
+          var data, defaultOpts, handlerResp, msgOpts, reason, resp, responseOpts, xhr, _ref10, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8, _ref9;
           resp = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
           if ((_ref3 = opts[type]) != null ? _ref3._originalHandler : void 0) {
             opts[type] = opts[type]._originalHandler;
@@ -1009,7 +1009,7 @@ window.Messenger.Events = (function() {
             }
             m_opts.errorCount += 1;
           }
-          handlerResp = m_opts.returnsPromise ? resp[0] : typeof (_base = opts[type])._originalHandler === "function" ? _base._originalHandler.apply(_base, resp) : void 0;
+          handlerResp = m_opts.returnsPromise ? resp[0] : typeof opts[type] === "function" ? opts[type].apply(opts, resp) : void 0;
           responseOpts = _this._getHandlerResponse(handlerResp);
           if (_.isString(responseOpts)) {
             responseOpts = {

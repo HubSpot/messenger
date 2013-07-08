@@ -37,12 +37,33 @@ class BaseView
             method = _.bind method, @
             eventName += ".delegateEvents#{@cid}"
             if selector == ''
-                @$el.on eventName, method
+                @jqon eventName, method
             else
-                @$el.on eventName, selector, method
+                @jqon eventName, selector, method
+
+    jqon: (eventName, selector, method) ->
+        if @$el.on?
+            @$el.on arguments...
+        else
+            # Support for jQuery > 1.7
+            if not method?
+                method = selector
+                selector = undefined
+
+            if selector?
+                @$el.delegate selector, eventName, method
+            else
+                @$el.bind eventName, method
+
+    jqoff: (eventName) ->
+        if @$el.off?
+            @$el.off arguments...
+        else
+            @$el.undelegate()
+            @$el.unbind eventName
     
     undelegateEvents: () ->
-        @$el.off ".delegateEvents#{this.cid}"
+        @jqoff ".delegateEvents#{this.cid}"
 
     remove: () ->
         @undelegateEvents()

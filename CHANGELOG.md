@@ -1,3 +1,8 @@
+1.3.6
+-----
+
+- Fix bug with jQuery 1.6 support
+
 1.3.5
 -----
 

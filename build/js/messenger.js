@@ -1,4 +1,4 @@
-/*! messenger 1.3.2 */
+/*! messenger 1.3.6 */
 /*
  * This file begins the output concatenated into messenger.js
  *
@@ -350,17 +350,44 @@ window.Messenger.Events = (function() {
         selector = match[2];
         method = _.bind(method, this);
         eventName += ".delegateEvents" + this.cid;
-        if (selector === "") {
-          _results.push(this.$el.bind(eventName, method));
+        if (selector === '') {
+          _results.push(this.jqon(eventName, method));
         } else {
-          _results.push(this.$el.delegate(selector, eventName, method));
+          _results.push(this.jqon(eventName, selector, method));
         }
       }
       return _results;
     };
 
+    BaseView.prototype.jqon = function(eventName, selector, method) {
+      var _ref2;
+      if (this.$el.on != null) {
+        return (_ref2 = this.$el).on.apply(_ref2, arguments);
+      } else {
+        if (!(method != null)) {
+          method = selector;
+          selector = void 0;
+        }
+        if (selector != null) {
+          return this.$el.delegate(selector, eventName, method);
+        } else {
+          return this.$el.bind(eventName, method);
+        }
+      }
+    };
+
+    BaseView.prototype.jqoff = function(eventName) {
+      var _ref2;
+      if (this.$el.off != null) {
+        return (_ref2 = this.$el).off.apply(_ref2, arguments);
+      } else {
+        this.$el.undelegate();
+        return this.$el.unbind(eventName);
+      }
+    };
+
     BaseView.prototype.undelegateEvents = function() {
-      return this.$el.unbind(".delegateEvents" + this.cid);
+      return this.jqoff(".delegateEvents" + this.cid);
     };
 
     BaseView.prototype.remove = function() {
@@ -993,24 +1020,22 @@ window.Messenger.Events = (function() {
       }
       handlers = {};
       _.each(['error', 'success'], function(type) {
-        var _ref3;
-        if ((_ref3 = opts[type]) != null ? _ref3._originalHandler : void 0) {
-          opts[type] = opts[type]._originalHandler;
-        }
+        var originalHandler;
+        originalHandler = opts[type];
         return handlers[type] = function() {
-          var data, defaultOpts, handlerResp, msgOpts, reason, resp, responseOpts, xhr, _base, _ref10, _ref4, _ref5, _ref6, _ref7, _ref8, _ref9;
+          var data, defaultOpts, handlerResp, msgOpts, reason, resp, responseOpts, xhr, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8, _ref9;
           resp = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
-          _ref4 = _this._normalizeResponse.apply(_this, resp), reason = _ref4[0], data = _ref4[1], xhr = _ref4[2];
+          _ref3 = _this._normalizeResponse.apply(_this, resp), reason = _ref3[0], data = _ref3[1], xhr = _ref3[2];
           if (type === 'success' && !(msg.errorCount != null) && m_opts.showSuccessWithoutError === false) {
             m_opts['successMessage'] = null;
           }
           if (type === 'error') {
-            if ((_ref5 = m_opts.errorCount) == null) {
+            if ((_ref4 = m_opts.errorCount) == null) {
               m_opts.errorCount = 0;
             }
             m_opts.errorCount += 1;
           }
-          handlerResp = m_opts.returnsPromise ? resp[0] : typeof (_base = opts[type])._originalHandler === "function" ? _base._originalHandler.apply(_base, resp) : void 0;
+          handlerResp = m_opts.returnsPromise ? resp[0] : typeof originalHandler === "function" ? originalHandler.apply(null, resp) : void 0;
           responseOpts = _this._getHandlerResponse(handlerResp);
           if (_.isString(responseOpts)) {
             responseOpts = {
@@ -1021,21 +1046,21 @@ window.Messenger.Events = (function() {
             msg.hide();
             return;
           }
-          if (type === 'error' && ((m_opts.ignoredErrorCodes != null) && (_ref6 = xhr != null ? xhr.status : void 0, __indexOf.call(m_opts.ignoredErrorCodes, _ref6) >= 0))) {
+          if (type === 'error' && ((m_opts.ignoredErrorCodes != null) && (_ref5 = xhr != null ? xhr.status : void 0, __indexOf.call(m_opts.ignoredErrorCodes, _ref5) >= 0))) {
             msg.hide();
             return;
           }
           defaultOpts = {
             message: getMessageText(type, xhr),
             type: type,
-            events: (_ref7 = events[type]) != null ? _ref7 : {},
+            events: (_ref6 = events[type]) != null ? _ref6 : {},
             hideOnNavigate: type === 'success'
           };
           msgOpts = $.extend({}, m_opts, defaultOpts, responseOpts);
-          if (typeof ((_ref8 = msgOpts.retry) != null ? _ref8.allow : void 0) === 'number') {
+          if (typeof ((_ref7 = msgOpts.retry) != null ? _ref7.allow : void 0) === 'number') {
             msgOpts.retry.allow--;
           }
-          if (type === 'error' && (xhr != null ? xhr.status : void 0) >= 500 && ((_ref9 = msgOpts.retry) != null ? _ref9.allow : void 0)) {
+          if (type === 'error' && (xhr != null ? xhr.status : void 0) >= 500 && ((_ref8 = msgOpts.retry) != null ? _ref8.allow : void 0)) {
             if (msgOpts.retry.delay == null) {
               if (msgOpts.errorCount < 4) {
                 msgOpts.retry.delay = 10;
@@ -1044,7 +1069,7 @@ window.Messenger.Events = (function() {
               }
             }
             if (msgOpts.hideAfter) {
-              if ((_ref10 = msgOpts._hideAfter) == null) {
+              if ((_ref9 = msgOpts._hideAfter) == null) {
                 msgOpts._hideAfter = msgOpts.hideAfter;
               }
               msgOpts.hideAfter = msgOpts._hideAfter + msgOpts.retry.delay;
@@ -1076,7 +1101,7 @@ window.Messenger.Events = (function() {
           }
           msg.update(msgOpts);
           if (responseOpts && msgOpts.message) {
-            $.globalMessenger();
+            Messenger();
             return msg.show();
           } else {
             return msg.hide();
@@ -1088,7 +1113,6 @@ window.Messenger.Events = (function() {
           handler = handlers[type];
           old = opts[type];
           opts[type] = handler;
-          opts[type]._originalHandler = old;
         }
       }
       msg._actionInstance = m_opts.action.apply(m_opts, [opts].concat(__slice.call(args)));

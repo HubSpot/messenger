@@ -34,15 +34,37 @@ class BaseView
 
             eventName = match[1]
             selector = match[2]
-            method = _.bind(method, this)
-            eventName += ".delegateEvents" + @cid
-            if selector is ""
-                @$el.bind eventName, method
-            else
-                @$el.delegate selector, eventName, method
 
-    undelegateEvents: ->
-        @$el.unbind ".delegateEvents" + @cid
+            method = _.bind method, @
+            eventName += ".delegateEvents#{@cid}"
+            if selector == ''
+                @jqon eventName, method
+            else
+                @jqon eventName, selector, method
+
+    jqon: (eventName, selector, method) ->
+        if @$el.on?
+            @$el.on arguments...
+        else
+            # Support for jQuery > 1.7
+            if not method?
+                method = selector
+                selector = undefined
+
+            if selector?
+                @$el.delegate selector, eventName, method
+            else
+                @$el.bind eventName, method
+
+    jqoff: (eventName) ->
+        if @$el.off?
+            @$el.off arguments...
+        else
+            @$el.undelegate()
+            @$el.unbind eventName
+    
+    undelegateEvents: () ->
+        @jqoff ".delegateEvents#{this.cid}"
 
     remove: () ->
         @undelegateEvents()
@@ -557,12 +579,8 @@ class ActionMessenger extends _Messenger
             #  - If it returns anything other than false or a string, we show the default passed in for this type (e.g. successMessage)
             #  - If it returns a string, we show that as the message
             #
-
-            if opts[type]?._originalHandler
-                opts[type] = opts[type]._originalHandler
-                
+            originalHandler = opts[type]
             handlers[type] = (resp...) =>
-
                 [reason, data, xhr] = @_normalizeResponse(resp...)
 
                 if type is 'success' and not msg.errorCount? and m_opts.showSuccessWithoutError == false
@@ -574,7 +592,7 @@ class ActionMessenger extends _Messenger
 
                 # We allow message options to be returned by the original success/error handlers, or from the promise
                 # used to call the handler.
-                handlerResp = if m_opts.returnsPromise then resp[0] else opts[type]._originalHandler?(resp...)
+                handlerResp = if m_opts.returnsPromise then resp[0] else originalHandler?(resp...)
                 responseOpts = @_getHandlerResponse handlerResp
                 if _.isString responseOpts
                     responseOpts = {message: responseOpts}
@@ -638,7 +656,7 @@ class ActionMessenger extends _Messenger
 
                 if responseOpts and msgOpts.message
                     # Force the msg box to be rerendered if the page changed:
-                    $.globalMessenger()
+                    Messenger()
 
                     do msg.show
                 else
@@ -650,8 +668,6 @@ class ActionMessenger extends _Messenger
                 old = opts[type]
         
                 opts[type] = handler
-
-                opts[type]._originalHandler = old
 
         msg._actionInstance = m_opts.action opts, args...
 

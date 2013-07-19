@@ -1,9 +1,24 @@
+1.3.6
+-----
+
+- Fix bug with jQuery 1.6 support
+
+1.3.5
+-----
+
+- Fix bug in how retry works
+
+1.3.4
+-----
+
+- Fix bug in how success/error handlers are called
+
 1.3.2
 -----
 
 - Add the `expectPromise` method which accepts a function which will return a promise, and 
   a message options hash, and calls `run`.
-- Add the `returnsPromise` option to `run` which will expect it's `action` to return a promise 
+- Add the `returnsPromise` option to `run` which will expect its `action` to return a promise 
   object, rather than using success and error callbacks.  The promises can reject or resolve to
   change the messages shown just as the callbacks can.  You should wrap the promise returned with
   a `pipe` like function to mutate the returned values before they reach Messenger.

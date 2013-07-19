@@ -676,8 +676,8 @@ class ActionMessenger extends _Messenger
 
         promiseAttrs = ['done', 'progress', 'fail', 'state', 'then']
         for attr in promiseAttrs
-            delete msg[attr] if msg[attr]?
-            msg[attr] = msg._actionInstance?[attr]
+            msg[attr] = ->
+                return msg._actionInstance?[attr]?.apply(msg._actionInstance, arguments)
 
         return msg
     

@@ -695,6 +695,32 @@ class ActionMessenger extends _Messenger
 
         @run(m_opts)
 
+    error: (m_opts={}) ->
+      if typeof m_opts is 'string'
+        m_opts = {message: m_opts}
+
+      m_opts.type = 'error'
+
+      @post m_opts
+
+    info: (m_opts={}) ->
+      if typeof m_opts is 'string'
+        m_opts = {message: m_opts}
+
+      m_opts.type = 'info'
+
+      @post m_opts
+
+    success: (m_opts={}) ->
+      if typeof m_opts is 'string'
+        m_opts = {message: m_opts}
+
+      m_opts.type = 'success'
+
+      @post m_opts
+
+
+
 $.fn.messenger = (func={}, args...) ->
     $el = this
 

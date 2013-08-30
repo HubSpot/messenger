@@ -992,7 +992,7 @@ window.Messenger.Events = (function() {
     };
 
     ActionMessenger.prototype.run = function() {
-      var args, attr, events, getMessageText, handler, handlers, m_opts, msg, old, opts, promiseAttrs, type, _i, _len, _ref2, _ref3,
+      var args, attr, events, getMessageText, handler, handlers, m_opts, msg, old, opts, promiseAttrs, type, _i, _len, _ref2,
         _this = this;
       m_opts = arguments[0], opts = arguments[1], args = 3 <= arguments.length ? __slice.call(arguments, 2) : [];
       if (opts == null) {
@@ -1122,10 +1122,10 @@ window.Messenger.Events = (function() {
       promiseAttrs = ['done', 'progress', 'fail', 'state', 'then'];
       for (_i = 0, _len = promiseAttrs.length; _i < _len; _i++) {
         attr = promiseAttrs[_i];
-        if (msg[attr] != null) {
-          delete msg[attr];
-        }
-        msg[attr] = (_ref3 = msg._actionInstance) != null ? _ref3[attr] : void 0;
+        msg[attr] = function() {
+          var _ref3, _ref4;
+          return (_ref3 = msg._actionInstance) != null ? (_ref4 = _ref3[attr]) != null ? _ref4.apply(msg._actionInstance, arguments) : void 0 : void 0;
+        };
       }
       return msg;
     };
@@ -1145,6 +1145,45 @@ window.Messenger.Events = (function() {
         returnsPromise: true
       });
       return this.run(m_opts);
+    };
+
+    ActionMessenger.prototype.error = function(m_opts) {
+      if (m_opts == null) {
+        m_opts = {};
+      }
+      if (typeof m_opts === 'string') {
+        m_opts = {
+          message: m_opts
+        };
+      }
+      m_opts.type = 'error';
+      return this.post(m_opts);
+    };
+
+    ActionMessenger.prototype.info = function(m_opts) {
+      if (m_opts == null) {
+        m_opts = {};
+      }
+      if (typeof m_opts === 'string') {
+        m_opts = {
+          message: m_opts
+        };
+      }
+      m_opts.type = 'info';
+      return this.post(m_opts);
+    };
+
+    ActionMessenger.prototype.success = function(m_opts) {
+      if (m_opts == null) {
+        m_opts = {};
+      }
+      if (typeof m_opts === 'string') {
+        m_opts = {
+          message: m_opts
+        };
+      }
+      m_opts.type = 'success';
+      return this.post(m_opts);
     };
 
     return ActionMessenger;

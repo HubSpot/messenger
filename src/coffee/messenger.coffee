@@ -148,6 +148,8 @@ class _Message extends BaseView
 
         @trigger 'update', @
 
+        @trigger 'update', @
+
     scrollTo: ->
         return unless @options.scroll
 

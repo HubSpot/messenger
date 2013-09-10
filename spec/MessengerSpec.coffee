@@ -573,6 +573,7 @@ describe 'do ajax', ->
     # - formatTime
     # - findById
     # - message ids / singleton
+    # - specifying defaults
     # - show / hide message events (+ re wasShown)
     # - show calling message.render if not already rendered
     # - message.update with string argument

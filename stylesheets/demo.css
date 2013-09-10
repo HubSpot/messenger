@@ -1,0 +1,33 @@
+.social {
+  position: absolute;
+  top: 10px;
+}
+
+h2 .subtitle {
+  font-size: 14px;
+}
+
+.highlight .c1 {
+  font-size: 12px;
+}
+
+.controls {
+  margin-bottom: 20px;
+}
+
+.controls > div {
+  margin: 0 40px;
+  float: left;
+}
+
+.controls h4 {
+  text-align: center;
+}
+
+.clear {
+  clear: both;
+  height: 0;
+  margin: 0;
+  margin-bottom: 15px;
+  border-width: 0;
+}

@@ -227,20 +227,6 @@
       expect(typeof message).toBe('object');
       return expect(message.messenger).toBeDefined();
     });
-    it('should pass promise attrs through', function() {
-      var message, promise;
-      promise = $.Deferred();
-      message = gm["do"]({
-        action: function() {
-          return promise;
-        }
-      });
-      expect(message.then).toBe(promise.then);
-      expect(message.done).toBe(promise.done);
-      expect(message.fail).toBe(promise.fail);
-      expect(message.state).toBe(promise.state);
-      return expect(message.progress).toBe(promise.progress);
-    });
     return it('should accept a promise-based action', function() {
       var message, promise;
       promise = $.Deferred();
@@ -653,7 +639,7 @@
         return expect(msg.shown).toBe(true);
       });
     });
-    it('should let messages be hidden by handlers', function() {
+    return it('should let messages be hidden by handlers', function() {
       var msg;
       msg = null;
       runs(function() {
@@ -668,22 +654,6 @@
       waits(10);
       return runs(function() {
         return expect(msg.shown).toBe(false);
-      });
-    });
-    return it('should pass ajax promise attrs through to the message', function() {
-      var msg;
-      msg = null;
-      runs(function() {
-        return msg = gm["do"]({}, {
-          url: '/200'
-        });
-      });
-      waits(10);
-      return runs(function() {
-        expect(msg.then).toBeDefined();
-        expect(msg.fail).toBeDefined();
-        expect(msg.done).toBeDefined();
-        return expect(msg.state).toBeDefined();
       });
     });
   });

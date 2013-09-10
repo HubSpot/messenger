@@ -992,7 +992,7 @@ window.Messenger.Events = (function() {
     };
 
     ActionMessenger.prototype.run = function() {
-      var args, attr, events, getMessageText, handler, handlers, m_opts, msg, old, opts, promiseAttrs, type, _i, _len, _ref2,
+      var args, events, getMessageText, handler, handlers, m_opts, msg, old, opts, type, _ref2,
         _this = this;
       m_opts = arguments[0], opts = arguments[1], args = 3 <= arguments.length ? __slice.call(arguments, 2) : [];
       if (opts == null) {
@@ -1118,14 +1118,6 @@ window.Messenger.Events = (function() {
       msg._actionInstance = m_opts.action.apply(m_opts, [opts].concat(__slice.call(args)));
       if (m_opts.returnsPromise) {
         msg._actionInstance.then(handlers.success, handlers.error);
-      }
-      promiseAttrs = ['done', 'progress', 'fail', 'state', 'then'];
-      for (_i = 0, _len = promiseAttrs.length; _i < _len; _i++) {
-        attr = promiseAttrs[_i];
-        msg[attr] = function() {
-          var _ref3, _ref4;
-          return (_ref3 = msg._actionInstance) != null ? (_ref4 = _ref3[attr]) != null ? _ref4.apply(msg._actionInstance, arguments) : void 0 : void 0;
-        };
       }
       return msg;
     };

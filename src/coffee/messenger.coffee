@@ -674,11 +674,6 @@ class ActionMessenger extends _Messenger
         if m_opts.returnsPromise
             msg._actionInstance.then(handlers.success, handlers.error)
 
-        promiseAttrs = ['done', 'progress', 'fail', 'state', 'then']
-        for attr in promiseAttrs
-            msg[attr] = ->
-                return msg._actionInstance?[attr]?.apply(msg._actionInstance, arguments)
-
         return msg
     
     # Aliases

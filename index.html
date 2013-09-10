@@ -311,11 +311,6 @@ Messenger().run
 # Need to hide all messages?
 Messenger().hideAll()
 </code><code executable>
-# If your action responds with a promise-like thing, its
-# methods will be copied onto the message:
-
-Messenger().run({}, {url: 'a'}).fail(-> alert "Uh oh")
-</code><code executable>
 # Do you use Backbone? Hook all backbone calls:
 Messenger().hookBackboneAjax()
 

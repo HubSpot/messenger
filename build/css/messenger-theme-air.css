@@ -244,10 +244,6 @@ ul.messenger-theme-air {
   font-family: "Raleway", sans-serif;
 }
 /* line 20, ../../src/sass/messenger-theme-air.sass */
-ul.messenger-theme-air.messenger-empty {
-  display: none;
-}
-/* line 23, ../../src/sass/messenger-theme-air.sass */
 ul.messenger-theme-air .messenger-message {
   -webkit-transition: background-color 0.4s;
   -moz-transition: background-color 0.4s;
@@ -270,11 +266,11 @@ ul.messenger-theme-air .messenger-message {
   font-weight: 500;
   padding: 10px 30px 11px 46px;
 }
-/* line 36, ../../src/sass/messenger-theme-air.sass */
+/* line 33, ../../src/sass/messenger-theme-air.sass */
 ul.messenger-theme-air .messenger-message:hover {
   background-color: white;
 }
-/* line 39, ../../src/sass/messenger-theme-air.sass */
+/* line 36, ../../src/sass/messenger-theme-air.sass */
 ul.messenger-theme-air .messenger-message .close {
   position: absolute;
   top: 0px;
@@ -291,20 +287,20 @@ ul.messenger-theme-air .messenger-message .close {
   border: 0;
   -webkit-appearance: none;
 }
-/* line 55, ../../src/sass/messenger-theme-air.sass */
+/* line 52, ../../src/sass/messenger-theme-air.sass */
 ul.messenger-theme-air .messenger-message .close:hover {
   color: #444444;
 }
-/* line 58, ../../src/sass/messenger-theme-air.sass */
+/* line 55, ../../src/sass/messenger-theme-air.sass */
 ul.messenger-theme-air .messenger-message .close:active {
   color: #222222;
 }
-/* line 61, ../../src/sass/messenger-theme-air.sass */
+/* line 58, ../../src/sass/messenger-theme-air.sass */
 ul.messenger-theme-air .messenger-message .messenger-actions {
   float: none;
   margin-top: 10px;
 }
-/* line 65, ../../src/sass/messenger-theme-air.sass */
+/* line 62, ../../src/sass/messenger-theme-air.sass */
 ul.messenger-theme-air .messenger-message .messenger-actions a {
   -webkit-box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.1), inset 0px 1px rgba(255, 255, 255, 0.05);
   -moz-box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.1), inset 0px 1px rgba(255, 255, 255, 0.05);
@@ -322,14 +318,14 @@ ul.messenger-theme-air .messenger-message .messenger-actions a {
   padding: 3px 10px 5px;
   text-transform: capitalize;
 }
-/* line 76, ../../src/sass/messenger-theme-air.sass */
+/* line 73, ../../src/sass/messenger-theme-air.sass */
 ul.messenger-theme-air .messenger-message .messenger-actions a:hover {
   -webkit-box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.1), inset 0px 1px rgba(255, 255, 255, 0.15);
   -moz-box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.1), inset 0px 1px rgba(255, 255, 255, 0.15);
   box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.1), inset 0px 1px rgba(255, 255, 255, 0.15);
   color: #444444;
 }
-/* line 80, ../../src/sass/messenger-theme-air.sass */
+/* line 77, ../../src/sass/messenger-theme-air.sass */
 ul.messenger-theme-air .messenger-message .messenger-actions a:active {
   -webkit-box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.18), inset 0px 1px rgba(0, 0, 0, 0.05);
   -moz-box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.18), inset 0px 1px rgba(0, 0, 0, 0.05);
@@ -337,11 +333,11 @@ ul.messenger-theme-air .messenger-message .messenger-actions a:active {
   background: rgba(0, 0, 0, 0.04);
   color: #444444;
 }
-/* line 85, ../../src/sass/messenger-theme-air.sass */
+/* line 82, ../../src/sass/messenger-theme-air.sass */
 ul.messenger-theme-air .messenger-message .messenger-actions .messenger-phrase {
   display: none;
 }
-/* line 88, ../../src/sass/messenger-theme-air.sass */
+/* line 85, ../../src/sass/messenger-theme-air.sass */
 ul.messenger-theme-air .messenger-message .messenger-message-inner:before {
   -webkit-box-shadow: inset 0px 1px 3px rgba(0, 0, 0, 0.3);
   -moz-box-shadow: inset 0px 1px 3px rgba(0, 0, 0, 0.3);
@@ -361,7 +357,7 @@ ul.messenger-theme-air .messenger-message .messenger-message-inner:before {
   width: 13px;
   z-index: 20;
 }
-/* line 102, ../../src/sass/messenger-theme-air.sass */
+/* line 99, ../../src/sass/messenger-theme-air.sass */
 ul.messenger-theme-air .messenger-message.alert-success .messenger-message-inner:before {
   background-color: #5fca4a;
 }
@@ -421,15 +417,15 @@ ul.messenger-theme-air .messenger-message.alert-error.messenger-retry-later .mes
   left: 2px;
   display: block;
 }
-/* line 112, ../../src/sass/messenger-theme-air.sass */
+/* line 109, ../../src/sass/messenger-theme-air.sass */
 ul.messenger-theme-air .messenger-message.alert-error .messenger-message-inner:before {
   background-color: #dd6a45;
 }
-/* line 116, ../../src/sass/messenger-theme-air.sass */
+/* line 113, ../../src/sass/messenger-theme-air.sass */
 ul.messenger-theme-air .messenger-message.alert-info .messenger-message-inner:before {
   background-color: #61c4b8;
 }
-/* line 119, ../../src/sass/messenger-theme-air.sass */
+/* line 116, ../../src/sass/messenger-theme-air.sass */
 ul.messenger-theme-air .messenger-spinner {
   display: block;
   position: absolute;

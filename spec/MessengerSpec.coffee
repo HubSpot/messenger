@@ -193,18 +193,6 @@ describe 'do', ->
         expect(typeof message).toBe('object')
         expect(message.messenger).toBeDefined()
 
-    it 'should pass promise attrs through', ->
-        promise = $.Deferred()
-
-        message = gm.do
-            action: -> promise
-
-        expect(message.then).toBe(promise.then)
-        expect(message.done).toBe(promise.done)
-        expect(message.fail).toBe(promise.fail)
-        expect(message.state).toBe(promise.state)
-        expect(message.progress).toBe(promise.progress)
-
     it 'should accept a promise-based action', ->
         promise = $.Deferred()
 
@@ -569,20 +557,6 @@ describe 'do ajax', ->
 
         runs ->
             expect(msg.shown).toBe(false)
-
-    it 'should pass ajax promise attrs through to the message', ->
-        msg = null
-
-        runs ->
-            msg = gm.do {}, {url: '/200'}
-
-        waits 10
-
-        runs ->
-            expect(msg.then).toBeDefined()
-            expect(msg.fail).toBeDefined()
-            expect(msg.done).toBeDefined()
-            expect(msg.state).toBeDefined()
 
     #
     # As of 1.3.0 we have 75% code coverage across 50% of branches

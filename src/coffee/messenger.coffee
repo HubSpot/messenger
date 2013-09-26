@@ -20,20 +20,21 @@ class BaseView
         @el = @$el[0]
 
     delegateEvents: (events) ->
-        if (not (events or (events = _.result(@, 'events'))))
-            return
-        
-        delegateEventSplitter = /^(\S+)\s*(.*)$/
+        return unless events or (events = _.result(this, "events"))
 
         @undelegateEvents()
-        for key, method of events
-            if not _.isFunction(method)
-                method = this[events[key]]
-            if not method
-                throw new Error("Method #{events[key]} does not exist")
-            match = key.match delegateEventSplitter
+
+        delegateEventSplitter = /^(\S+)\s*(.*)$/
+
+        for key of events
+            method = events[key]
+            method = this[events[key]]  unless _.isFunction(method)
+            throw new Error("Method \"" + events[key] + "\" does not exist")  unless method
+            match = key.match(delegateEventSplitter)
+
             eventName = match[1]
             selector = match[2]
+
             method = _.bind method, @
             eventName += ".delegateEvents#{@cid}"
             if selector == ''
@@ -673,11 +674,6 @@ class ActionMessenger extends _Messenger
         if m_opts.returnsPromise
             msg._actionInstance.then(handlers.success, handlers.error)
 
-        promiseAttrs = ['done', 'progress', 'fail', 'state', 'then']
-        for attr in promiseAttrs
-            delete msg[attr] if msg[attr]?
-            msg[attr] = msg._actionInstance?[attr]
-
         return msg
     
     # Aliases
@@ -693,6 +689,32 @@ class ActionMessenger extends _Messenger
             returnsPromise: true
 
         @run(m_opts)
+
+    error: (m_opts={}) ->
+      if typeof m_opts is 'string'
+        m_opts = {message: m_opts}
+
+      m_opts.type = 'error'
+
+      @post m_opts
+
+    info: (m_opts={}) ->
+      if typeof m_opts is 'string'
+        m_opts = {message: m_opts}
+
+      m_opts.type = 'info'
+
+      @post m_opts
+
+    success: (m_opts={}) ->
+      if typeof m_opts is 'string'
+        m_opts = {message: m_opts}
+
+      m_opts.type = 'success'
+
+      @post m_opts
+
+
 
 $.fn.messenger = (func={}, args...) ->
     $el = this

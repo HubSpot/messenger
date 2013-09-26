@@ -17,7 +17,7 @@ $(function(){
     $.globalMessenger({ extraClasses: classes, theme: style });
     Messenger.options = { extraClasses: classes, theme: style };
 
-    $output.text("Messenger.options = {\n\textraClasses: '" + classes + "',\n\ttheme: '" + style + "'\n}");
+    $output.text("Messenger.options = {\n    extraClasses: '" + classes + "',\n    theme: '" + style + "'\n}");
   };
 
   update();

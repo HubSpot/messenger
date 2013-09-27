@@ -2,7 +2,7 @@ $(function(){
   Messenger().post("Thanks for checking out Messenger!");
 
   var loc = ['bottom', 'right'];
-  var style = 'future';
+  var style = 'flat';
 
   var $output = $('.controls output');
   var $lsel = $('.location-selector');

@@ -1,42 +1,42 @@
-/* line 6, ../../src/sass/messenger-theme-block.sass */
+/* line 4, ../../src/sass/messenger-theme-block.sass */
 ul.messenger.messenger-theme-block.messenger-fixed {
   width: 100%;
   top: 0;
   left: 0;
   margin-left: 0px;
 }
-/* line 12, ../../src/sass/messenger-theme-block.sass */
+/* line 10, ../../src/sass/messenger-theme-block.sass */
 ul.messenger.messenger-theme-block.messenger-fixed.messenger-on-bottom {
   top: auto;
   bottom: 0;
 }
-/* line 16, ../../src/sass/messenger-theme-block.sass */
+/* line 14, ../../src/sass/messenger-theme-block.sass */
 ul.messenger.messenger-theme-block.messenger-fixed.messenger-on-top {
   top: 0px;
   bottom: auto;
 }
-/* line 20, ../../src/sass/messenger-theme-block.sass */
+/* line 18, ../../src/sass/messenger-theme-block.sass */
 ul.messenger.messenger-theme-block.messenger-fixed.messenger-on-top, ul.messenger.messenger-theme-block.messenger-fixed.messenger-on-bottom {
   left: 0px;
   right: 0px;
 }
-/* line 24, ../../src/sass/messenger-theme-block.sass */
+/* line 22, ../../src/sass/messenger-theme-block.sass */
 ul.messenger.messenger-theme-block.messenger-fixed.messenger-on-top.messenger-on-right, ul.messenger.messenger-theme-block.messenger-fixed.messenger-on-top.messenger-on-left, ul.messenger.messenger-theme-block.messenger-fixed.messenger-on-bottom.messenger-on-right, ul.messenger.messenger-theme-block.messenger-fixed.messenger-on-bottom.messenger-on-left {
   width: 350px;
 }
-/* line 27, ../../src/sass/messenger-theme-block.sass */
+/* line 25, ../../src/sass/messenger-theme-block.sass */
 ul.messenger.messenger-theme-block.messenger-fixed.messenger-on-top.messenger-on-left, ul.messenger.messenger-theme-block.messenger-fixed.messenger-on-bottom.messenger-on-left {
   right: auto;
 }
-/* line 30, ../../src/sass/messenger-theme-block.sass */
+/* line 28, ../../src/sass/messenger-theme-block.sass */
 ul.messenger.messenger-theme-block.messenger-fixed.messenger-on-top.messenger-on-right, ul.messenger.messenger-theme-block.messenger-fixed.messenger-on-bottom.messenger-on-right {
   left: auto;
 }
-/* line 33, ../../src/sass/messenger-theme-block.sass */
+/* line 31, ../../src/sass/messenger-theme-block.sass */
 ul.messenger.messenger-theme-block.messenger-fixed .messenger-message-slot {
   max-width: none;
 }
-/* line 36, ../../src/sass/messenger-theme-block.sass */
+/* line 34, ../../src/sass/messenger-theme-block.sass */
 ul.messenger.messenger-theme-block.messenger-fixed .messenger-message {
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
   border-width: 1px;
@@ -44,31 +44,31 @@ ul.messenger.messenger-theme-block.messenger-fixed .messenger-message {
   text-align: center;
   padding: 1em;
 }
-/* line 43, ../../src/sass/messenger-theme-block.sass */
+/* line 41, ../../src/sass/messenger-theme-block.sass */
 ul.messenger.messenger-theme-block.messenger-fixed .messenger-message.alert-warning {
   color: #c09853;
   background-color: #fcf8e3;
   border-color: #fbeed5;
 }
-/* line 48, ../../src/sass/messenger-theme-block.sass */
+/* line 46, ../../src/sass/messenger-theme-block.sass */
 ul.messenger.messenger-theme-block.messenger-fixed .messenger-message.alert-error, ul.messenger.messenger-theme-block.messenger-fixed .messenger-message.alert-danger {
   color: #b94a48;
   background-color: #f2dede;
   border-color: #eed3d7;
 }
-/* line 53, ../../src/sass/messenger-theme-block.sass */
+/* line 51, ../../src/sass/messenger-theme-block.sass */
 ul.messenger.messenger-theme-block.messenger-fixed .messenger-message.alert-success {
   color: #468847;
   background-color: #dff0d8;
   border-color: #d6e9c6;
 }
-/* line 58, ../../src/sass/messenger-theme-block.sass */
+/* line 56, ../../src/sass/messenger-theme-block.sass */
 ul.messenger.messenger-theme-block.messenger-fixed .messenger-message.alert-info {
   color: #3a87ad;
   background-color: #d9edf7;
   border-color: #bce8f1;
 }
-/* line 63, ../../src/sass/messenger-theme-block.sass */
+/* line 61, ../../src/sass/messenger-theme-block.sass */
 ul.messenger.messenger-theme-block.messenger-fixed .messenger-message .close {
   filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=50);
   opacity: 0.5;
@@ -84,12 +84,12 @@ ul.messenger.messenger-theme-block.messenger-fixed .messenger-message .close {
   left: 11px;
   font-size: 22px;
 }
-/* line 77, ../../src/sass/messenger-theme-block.sass */
+/* line 75, ../../src/sass/messenger-theme-block.sass */
 ul.messenger.messenger-theme-block.messenger-fixed .messenger-message .close:hover {
   filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=80);
   opacity: 0.8;
 }
-/* line 80, ../../src/sass/messenger-theme-block.sass */
+/* line 78, ../../src/sass/messenger-theme-block.sass */
 ul.messenger.messenger-theme-block.messenger-fixed .messenger-message .close:active {
   filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);
   opacity: 1;

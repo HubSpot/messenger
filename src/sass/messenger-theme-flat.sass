@@ -12,19 +12,16 @@
 $defaultThemeBorderRadius: 4px
 $spinnerSize: 32px
 
-ul.messenger-theme-future
-  +box-shadow(inset 0px 1px rgba(255, 255, 255, 0.24), 0px 1px 5px rgba(0, 0, 0, 0.6))
+ul.messenger-theme-flat
   +border-radius($defaultThemeBorderRadius)
   +unselectable
-  +background-image(linear-gradient(rgb(92, 91, 91), rgb(53, 53, 53)))
-  background-color: rgb(92, 91, 91)
-  border: 1px solid rgba(0, 0, 0, 0.5)
+  background: #404040
 
   &.messenger-empty
     display: none
 
   .messenger-message
-    +box-shadow(inset 0px 1px rgba(255, 255, 255, 0.13), inset 0px -1px rgba(0, 0, 0, 0.23), inset 48px 0px 0px rgba(0, 0, 0, 0.3), inset 46px 0px 0px rgba(255, 255, 255, 0.07))
+    +box-shadow(inset 0px 1px rgba(255, 255, 255, 0.13), inset 48px 0px 0px #292929)
     +border-radius(0px)
     position: relative
     border: 0px
@@ -32,7 +29,6 @@ ul.messenger-theme-future
     font-size: 13px
     background: transparent
     color: #f0f0f0
-    text-shadow: 0px 1px #111
     font-weight: 500
     padding: 10px 30px 13px 65px
 
@@ -41,7 +37,6 @@ ul.messenger-theme-future
       top: 0px
       right: 0px
       color: #888
-      text-shadow: 0px 1px #000
       opacity: 1
       font-weight: bold
       display: block
@@ -64,31 +59,28 @@ ul.messenger-theme-future
       margin-top: 10px
 
       a
-        +box-shadow(0px 0px 0px 1px rgba(0, 0, 0, 0.2), inset 0px 1px rgba(255, 255, 255, 0.1))
         +border-radius(4px)
         text-decoration: none
+        color: #aaa
+        background: #2e2e2e
         display: inline-block
         padding: 10px
-        color: #aaa
-        text-shadow: 0px 1px #222
         margin-right: 10px
-        padding: 3px 10px 5px
+        padding: 4px 11px 6px
         text-transform: capitalize
 
         &:hover
-          +box-shadow(0px 0px 0px 1px rgba(0, 0, 0, 0.2), inset 0px 1px rgba(255, 255, 255, 0.2))
           color: #f0f0f0
+          background: #2e2e2e
 
         &:active
-          +box-shadow(0px 0px 0px 1px rgba(0, 0, 0, 0.28), inset 0px 1px rgba(0, 0, 0, 0.1))
-          background: rgba(0, 0, 0, 0.04)
+          background: #292929
           color: #aaa
 
       .messenger-phrase
         display: none
 
     .messenger-message-inner:before
-      +box-shadow(inset 0px 1px 3px rgba(0, 0, 0, 0.6), 0px 0px 0px 1px rgba(0, 0, 0, 0.2))
       +border-radius(50%)
       position: absolute
       left: 17px
@@ -101,37 +93,35 @@ ul.messenger-theme-future
       z-index: 20
 
     &.alert-success .messenger-message-inner:before
-      +background-image(linear-gradient(top, rgb(95, 202, 74), rgb(9, 141, 56)))
-      background-color: rgb(95, 202, 74)
+      background: rgb(95, 202, 74)
 
     &.alert-info .messenger-message-inner:before
-      +background-image(linear-gradient(top, rgb(97, 196, 184), rgb(25, 146, 163)))
-      background-color: rgb(97, 196, 184)
+      background: rgb(97, 196, 184)
 
     &.alert-error
 
       .messenger-message-inner:before
-        +background-image(linear-gradient(top, rgb(221, 106, 69), rgb(145, 54, 26)))
-        background-color: rgb(221, 106, 69)
+        background: rgb(221, 106, 69)
 
       &.messenger-retry-soon
-        +ui-spinner(#333, $spinnerSize, transparent, rgb(221, 106, 69), 1, 10s)
+        +ui-spinner(#292929, $spinnerSize, transparent, rgb(221, 106, 69), 1, 10s)
 
       &.messenger-retry-later
-        +ui-spinner(#333, $spinnerSize, transparent, rgb(221, 106, 69), 1, 300s)
+        +ui-spinner(#292929, $spinnerSize, transparent, rgb(221, 106, 69), 1, 300s)
 
   .messenger-message-slot
 
     &.messenger-last .messenger-message
       +border-radius($defaultThemeBorderRadius $defaultThemeBorderRadius 0px 0px)
+      +box-shadow(inset 48px 0px 0px #292929)
 
     &.messenger-first .messenger-message
       +border-radius(0px 0px $defaultThemeBorderRadius $defaultThemeBorderRadius)
-      +box-shadow(inset 0px 1px rgba(255, 255, 255, 0.13), inset 48px 0px 0px rgba(0, 0, 0, 0.3), inset 46px 0px 0px rgba(255, 255, 255, 0.07))
+      +box-shadow(inset 0px 1px rgba(255, 255, 255, 0.13), inset 48px 0px 0px #292929)
 
     &.messenger-first.messenger-last .messenger-message
       +border-radius($defaultThemeBorderRadius)
-      +box-shadow(inset 48px 0px 0px rgba(0, 0, 0, 0.3), inset 46px 0px 0px rgba(255, 255, 255, 0.07))
+      +box-shadow(inset 48px 0px 0px #292929)
 
   .messenger-spinner
     display: block

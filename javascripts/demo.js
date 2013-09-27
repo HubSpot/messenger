@@ -31,7 +31,7 @@ $(function(){
   ;
 
   $tsel.themeSelector({
-    themes: ['future', 'block', 'air', 'ice']
+    themes: ['flat', 'future', 'block', 'air', 'ice']
   }).on('update', function(theme){
     style = theme;
 

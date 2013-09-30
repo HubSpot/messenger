@@ -31,7 +31,7 @@ ul.messenger-theme-ice .messenger-message {
   padding: 12px 22px;
 }
 /* line 31, ../../src/sass/messenger-theme-ice.sass */
-ul.messenger-theme-ice .messenger-message .close {
+ul.messenger-theme-ice .messenger-message .messenger-close {
   position: absolute;
   top: 0px;
   right: 0px;
@@ -48,11 +48,11 @@ ul.messenger-theme-ice .messenger-message .close {
   -webkit-appearance: none;
 }
 /* line 47, ../../src/sass/messenger-theme-ice.sass */
-ul.messenger-theme-ice .messenger-message .close:hover {
+ul.messenger-theme-ice .messenger-message .messenger-close:hover {
   color: #444444;
 }
 /* line 50, ../../src/sass/messenger-theme-ice.sass */
-ul.messenger-theme-ice .messenger-message .close:active {
+ul.messenger-theme-ice .messenger-message .messenger-close:active {
   color: #222222;
 }
 /* line 53, ../../src/sass/messenger-theme-ice.sass */

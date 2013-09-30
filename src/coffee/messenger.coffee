@@ -196,7 +196,7 @@ class _Message extends BaseView
         $message = $ "<div class='messenger-message message alert #{ opts.type } message-#{ opts.type } alert-#{ opts.type }'>"
 
         if opts.showCloseButton
-            $cancel = $ '<button type="button" class="close" data-dismiss="alert">&times;</button>'
+            $cancel = $ '<button type="button" class="messenger-close" data-dismiss="alert">&times;</button>'
             $cancel.click =>
               do @cancel
 

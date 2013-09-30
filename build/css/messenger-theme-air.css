@@ -275,7 +275,7 @@ ul.messenger-theme-air .messenger-message:hover {
   background-color: white;
 }
 /* line 39, ../../src/sass/messenger-theme-air.sass */
-ul.messenger-theme-air .messenger-message .close {
+ul.messenger-theme-air .messenger-message .messenger-close {
   position: absolute;
   top: 0px;
   right: 0px;
@@ -292,11 +292,11 @@ ul.messenger-theme-air .messenger-message .close {
   -webkit-appearance: none;
 }
 /* line 55, ../../src/sass/messenger-theme-air.sass */
-ul.messenger-theme-air .messenger-message .close:hover {
+ul.messenger-theme-air .messenger-message .messenger-close:hover {
   color: #444444;
 }
 /* line 58, ../../src/sass/messenger-theme-air.sass */
-ul.messenger-theme-air .messenger-message .close:active {
+ul.messenger-theme-air .messenger-message .messenger-close:active {
   color: #222222;
 }
 /* line 61, ../../src/sass/messenger-theme-air.sass */

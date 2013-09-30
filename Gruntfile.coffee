@@ -27,6 +27,7 @@ module.exports = (grunt) ->
         files:
           "build/js/messenger.js": "src/coffee/messenger.coffee"
           "build/js/messenger-theme-future.js": "src/coffee/messenger-theme-future.coffee"
+          "build/js/messenger-theme-flat.js": "src/coffee/messenger-theme-flat.coffee"
 
     compass:
       dist:

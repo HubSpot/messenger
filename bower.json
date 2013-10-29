@@ -4,11 +4,16 @@
   "description": "Client-side growl-like notifications with actions and auto-retry.",
   "version": "1.3.6",
   "homepage": "http://github.hubspot.com/messenger",
+  "authors": [
+    "Zack Bloom <aschwartz@hubspot.com>",
+    "Adam Schwartz <aschwartz@hubspot.com>"
+  ],
   "license": "MIT",
   "keywords": [
     "client-side",
     "notification",
     "toast",
+    "growl",
     "ajax"
   ],
   "main": [

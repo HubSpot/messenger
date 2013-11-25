@@ -1,0 +1,56 @@
+.location-selector  
+  width: 140px
+  height: 100px
+  background-color: #EEE
+  position: relative
+
+  .bit
+    background-color: #DDD
+    opacity: 0.8
+    cursor: pointer
+
+    position: absolute 
+
+    &:hover
+      background-color: #CCC
+
+    &.top, &.bottom
+      height: 25%
+      width: 40%
+      margin: 0 30%
+
+    &.top
+      top: 0
+
+    &.bottom
+      bottom: 0
+
+    &.right, &.left
+      height: 20%
+      width: 20%
+      margin:
+        left: 0
+        right: 0
+
+    &.right
+      right: 0
+  
+    &.left
+      left: 0
+
+
+  &.top
+    .bit.top
+       opacity: 1
+
+  &.bottom
+    .bit.bottom
+      opacity: 1
+
+  &.left
+    .bit:not(.left)
+      opacity: 0.8
+
+  &.right
+    .bit:not(.right)
+      opacity: 0.8

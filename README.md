@@ -6,4 +6,4 @@
 - Wrap AJAX requests with progress, success and error messages, and add retry to your failed requests.
 - Add actions (undo, cancel, etc.) to your messages.
 
-![Messenger](https://raw.github.com/HubSpot/messenger/master/promotional-images/messenger.gif)
+![Messenger](https://raw.github.com/HubSpot/messenger/master/docs/images/messenger.gif)

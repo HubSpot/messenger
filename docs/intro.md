@@ -61,6 +61,8 @@ general.
 - `hideOnNavigate`: Hide the message if Backbone client-side navigation occurs
 - `showCloseButton`: Should a close button be added to the message?
 
+Messenger also includes aliases which set the `type` for you: `Messenger().error()`, `Messenger().success()`, and `messenger().info()`.
+
 ### Updating Messages
 
 Rather than posting a new message when progress occurs, it can be nice to update an existing message.

@@ -1,0 +1,39 @@
+<html>
+  <head>
+    <link rel="stylesheet" type="text/css" media="screen" href="lib/CodeMirror/codemirror.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="build/css/executr.css">
+
+    <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+
+    <script type="text/javascript" src="lib/CodeMirror/codemirror.js"></script>
+    <script type="text/javascript" src="lib/CodeMirror/mode/coffeescript/coffeescript.js"></script>
+    <script type="text/javascript" src="lib/CodeMirror/mode/javascript/javascript.js"></script>
+    <script type="text/javascript" src="lib/coffee-script.js"></script>
+    <script type="text/javascript" src="lib/underscore.min.js"></script>
+    <script type="text/javascript" src="lib/js2coffee.min.js"></script>
+    <script type="text/javascript" src="build/js/executr.js"></script>
+
+    <script>
+      $(function(){
+        $('body').executr({
+          'outputTo': 'output'
+        });
+      });
+    </script>
+
+  </head>
+  <body>
+    <output></output>
+    <pre>
+<code executable>do ->
+  x = 3 + 12
+  x / 2</code></pre>
+
+    <pre>
+<code data-type="javascript" executable>(function(){
+  return 8;
+})();</code></pre>
+  </body>
+  <button class="executr-switch" data-code-type="javascript">To JavaScript</button>
+  <button class="executr-switch" data-code-type="coffeescript">To CoffeeScript</button>
+</html>

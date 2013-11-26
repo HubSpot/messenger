@@ -1,8 +1,0 @@
-Messenger is an open source project created by HubSpot, Inc.  It is nurtured by HubSpot devs and the community.
-
-Messenger was originally written and is currently maintained by @zackbloom
-All of the styles in Messenger were written by @adamschwartz
-@bosgood is responsible for removing the Backbone dependency
-The gruntfile is maintained by @BennyC
-
-Various bugfixes by @STRML, @joelmoss and @TrevorBurnham

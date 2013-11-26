@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="Messenger : Alerts for the 21st century" />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/location-sel.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/theme-sel.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/demo.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="../../build/css/messenger.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="../../build/css/messenger-theme-block.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="../../build/css/messenger-theme-future.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="../../build/css/messenger-theme-air.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="../../build/css/messenger-theme-ice.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="../../build/css/messenger-theme-flat.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="lib/executr/build/css/executr.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="lib/executr/lib/CodeMirror/codemirror.css">
+
+    <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+    <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.3/underscore-min.js"></script>
+    <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/backbone.js/0.9.10/backbone-min.js"></script>
+    <script type="text/javascript" src="../../build/js/messenger.min.js"></script>
+    <script type="text/javascript" src="../../build/js/messenger-theme-future.js"></script>
+
+    <script type="text/javascript" src="javascripts/location-sel.js"></script>
+    <script type="text/javascript" src="javascripts/theme-sel.js"></script>
+
+    <script type="text/javascript" src="lib/executr/lib/CodeMirror/codemirror.js"></script>
+    <script type="text/javascript" src="lib/executr/lib/CodeMirror/mode/coffeescript/coffeescript.js"></script>
+    <script type="text/javascript" src="lib/executr/lib/CodeMirror/mode/javascript/javascript.js"></script>
+    <script type="text/javascript" src="lib/executr/build/js/executr.js"></script>
+    <script type="text/javascript" src="lib/executr/lib/coffee-script.js"></script>
+
+    <script type="text/javascript">
+      $(function(){
+
+        Messenger.options = {
+          extraClasses: "messenger-fixed messenger-on-bottom",
+          theme: "air"
+        };
+
+        var alienAttemptMsg;
+
+        var steps = [
+          function() {
+            var msg = Messenger().post({
+              message: 'Launching thermonuclear war...',
+              type: 'info',
+              actions: {
+                cancel: {
+                  label: 'cancel launch',
+                  action: function() {
+                    msg.update({
+                      message: 'Thermonuclear war averted.',
+                      type: 'success',
+                      actions: false
+                    });
+                  }
+                }
+              }
+            });
+            setTimeout(function(){
+              msg.update({
+                message: 'Thermonuclear war averted.',
+                type: 'success',
+                actions: false
+              });
+            }, 4000);
+            setTimeout(function(){ msg.hide(); }, 8000);
+          },
+          function() {
+            alienAttemptMsg = Messenger().post({
+              message: 'Attempting to destory alien planet...',
+              type: 'info'
+            });
+          },
+          function() {
+            var i = 0;
+            alienAttemptMsg.hide();
+            Messenger().run({
+              errorMessage: 'Error destroying alien planet',
+              successMessage: 'Alien planet destroyed!',
+              action: function(opts) {
+                if (++i < 3) {
+                  return opts.error({
+                    status: 500,
+                    readyState: 0,
+                    responseText: 0
+                  });
+                } else {
+                  return opts.success();
+                }
+              }
+            });
+          },
+          function() {
+            //Pause
+          }
+        ];
+
+        var i = 1;
+
+        steps[0]();
+        setInterval(function(){
+          steps[i]();
+          i = (i + 1) % steps.length;
+        }, 6000);
+
+      });
+    </script>
+
+    <title>Messenger &ndash; Demo</title>
+  </head>
+
+  <body style="background: #fff">
+  </body>
+</html>

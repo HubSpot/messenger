@@ -1,0 +1,1131 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>messenger.coffee</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>messenger.coffee</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>$ = jQuery
+_ = window._ ? window.Messenger._
+Events = Backbone?.Events ? window.Messenger.Events</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <p>Emulates some Backbone-like eventing and element management for ease of use
+while attempting to avoid a hard dependency on Backbone itself</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="class"><span class="keyword">class</span> <span class="title">BaseView</span></span>
+    constructor: (options) -&gt;
+        $.extend(@, Events)
+
+        <span class="keyword">if</span> _.isObject options
+            <span class="keyword">if</span> options.el
+                <span class="property">@setElement</span>(options.el)
+            <span class="property">@model</span> = options.model
+
+        <span class="property">@initialize</span>.apply(@, arguments)
+
+    setElement: (el) -&gt;
+        <span class="property">@$el</span> = $(el)
+        <span class="property">@el</span> = <span class="property">@$el</span>[<span class="number">0</span>]
+
+    delegateEvents: (events) -&gt;
+        <span class="keyword">return</span> <span class="keyword">unless</span> events <span class="keyword">or</span> (events = _.result(<span class="keyword">this</span>, <span class="string">"events"</span>))
+
+        <span class="property">@undelegateEvents</span>()
+
+        delegateEventSplitter = <span class="regexp">/^(\S+)\s*(.*)$/</span>
+
+        <span class="keyword">for</span> key <span class="keyword">of</span> events
+            method = events[key]
+            method = <span class="keyword">this</span>[events[key]]  <span class="keyword">unless</span> _.isFunction(method)
+            <span class="keyword">throw</span> <span class="keyword">new</span> Error(<span class="string">"Method \""</span> + events[key] + <span class="string">"\" does not exist"</span>)  <span class="keyword">unless</span> method
+            match = key.match(delegateEventSplitter)
+
+            eventName = match[<span class="number">1</span>]
+            selector = match[<span class="number">2</span>]
+
+            method = _.bind method, @
+            eventName += <span class="string">".delegateEvents<span class="subst">#{@cid}</span>"</span>
+            <span class="keyword">if</span> selector == <span class="string">''</span>
+                <span class="property">@jqon</span> eventName, method
+            <span class="keyword">else</span>
+                <span class="property">@jqon</span> eventName, selector, method
+
+    jqon: (eventName, selector, method) -&gt;
+        <span class="keyword">if</span> <span class="property">@$el</span>.<span class="literal">on</span>?
+            <span class="property">@$el</span>.<span class="literal">on</span> arguments...
+        <span class="keyword">else</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>Support for jQuery &gt; 1.7</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">if</span> <span class="keyword">not</span> method?
+                method = selector
+                selector = <span class="literal">undefined</span>
+
+            <span class="keyword">if</span> selector?
+                <span class="property">@$el</span>.delegate selector, eventName, method
+            <span class="keyword">else</span>
+                <span class="property">@$el</span>.bind eventName, method
+
+    jqoff: (eventName) -&gt;
+        <span class="keyword">if</span> <span class="property">@$el</span>.<span class="literal">off</span>?
+            <span class="property">@$el</span>.<span class="literal">off</span> arguments...
+        <span class="keyword">else</span>
+            <span class="property">@$el</span>.undelegate()
+            <span class="property">@$el</span>.unbind eventName
+    
+    undelegateEvents: () -&gt;
+        <span class="property">@jqoff</span> <span class="string">".delegateEvents<span class="subst">#{<span class="keyword">this</span>.cid}</span>"</span>
+
+    remove: () -&gt;
+        <span class="property">@undelegateEvents</span>()
+        <span class="property">@$el</span>.remove()
+
+<span class="class"><span class="keyword">class</span> <span class="title">_Message</span> <span class="keyword">extends</span> <span class="title">BaseView</span></span>
+    defaults:
+        hideAfter: <span class="number">10</span>
+        scroll: <span class="literal">true</span>
+
+    initialize: (opts={}) -&gt;
+        <span class="property">@shown</span> = <span class="literal">false</span>
+        <span class="property">@rendered</span> = <span class="literal">false</span>
+
+        <span class="property">@messenger</span> = opts.messenger
+
+        <span class="property">@options</span> = $.extend {}, <span class="property">@options</span>, opts, <span class="property">@defaults</span>
+
+    show: -&gt;
+        <span class="keyword">unless</span> <span class="property">@rendered</span>
+            <span class="keyword">do</span> <span class="property">@render</span>
+
+        <span class="property">@$message</span>.removeClass(<span class="string">'messenger-hidden'</span>)
+
+        wasShown = <span class="property">@shown</span>
+        <span class="property">@shown</span> = <span class="literal">true</span>
+
+        <span class="property">@trigger</span>(<span class="string">'show'</span>) <span class="keyword">unless</span> wasShown
+
+    hide: -&gt;
+        <span class="keyword">return</span> <span class="keyword">unless</span> <span class="property">@rendered</span>
+
+        <span class="property">@$message</span>.addClass(<span class="string">'messenger-hidden'</span>)
+
+        wasShown = <span class="property">@shown</span>
+        <span class="property">@shown</span> = <span class="literal">false</span>
+
+        <span class="property">@trigger</span>(<span class="string">'hide'</span>) <span class="keyword">if</span> wasShown
+
+    cancel: -&gt;
+        <span class="keyword">do</span> <span class="property">@hide</span>
+
+    update: (opts) -&gt;
+        <span class="keyword">if</span> _.isString opts
+            opts = {message: opts}
+
+        $.extend(<span class="property">@options</span>, opts)
+
+        <span class="property">@lastUpdate</span> = <span class="keyword">new</span> Date()
+
+        <span class="property">@rendered</span> = <span class="literal">false</span>
+
+        <span class="property">@events</span> = <span class="property">@options</span>.events ? {}
+
+        <span class="keyword">do</span> <span class="property">@render</span>
+
+        <span class="keyword">do</span> <span class="property">@actionsToEvents</span>
+        <span class="keyword">do</span> <span class="property">@delegateEvents</span>
+
+        <span class="keyword">do</span> <span class="property">@checkClickable</span>
+
+        <span class="keyword">if</span> <span class="property">@options</span>.hideAfter
+            <span class="property">@$message</span>.addClass <span class="string">'messenger-will-hide-after'</span>
+
+            <span class="keyword">if</span> <span class="property">@_hideTimeout</span>?
+                clearTimeout <span class="property">@_hideTimeout</span>
+
+            <span class="property">@_hideTimeout</span> = setTimeout =&gt;
+                <span class="keyword">do</span> <span class="property">@hide</span>
+            , <span class="property">@options</span>.hideAfter * <span class="number">1000</span>
+        <span class="keyword">else</span>
+            <span class="property">@$message</span>.removeClass <span class="string">'messenger-will-hide-after'</span>
+
+        <span class="keyword">if</span> <span class="property">@options</span>.hideOnNavigate
+            <span class="property">@$message</span>.addClass <span class="string">'messenger-will-hide-on-navigate'</span>
+            <span class="keyword">if</span> Backbone?.history?
+                Backbone.history.<span class="literal">on</span> <span class="string">'route'</span>, =&gt;
+                    <span class="keyword">do</span> <span class="property">@hide</span>
+        <span class="keyword">else</span>
+            <span class="property">@$message</span>.removeClass <span class="string">'messenger-will-hide-on-navigate'</span>
+
+        <span class="property">@trigger</span> <span class="string">'update'</span>, @
+
+    scrollTo: -&gt;
+        <span class="keyword">return</span> <span class="keyword">unless</span> <span class="property">@options</span>.scroll
+
+        $.scrollTo <span class="property">@$el</span>,
+            duration: <span class="number">400</span>
+            offset:
+                left: <span class="number">0</span>
+                top: -<span class="number">20</span>
+
+    timeSinceUpdate: -&gt;
+        <span class="keyword">return</span> <span class="keyword">if</span> <span class="property">@lastUpdate</span> <span class="keyword">then</span> ((<span class="keyword">new</span> Date) - <span class="property">@lastUpdate</span>) <span class="keyword">else</span> <span class="literal">null</span>
+
+    actionsToEvents: -&gt;
+        <span class="keyword">for</span> name, act <span class="keyword">of</span> <span class="property">@options</span>.actions
+            <span class="property">@events</span>[<span class="string">"click [data-action=\"<span class="subst">#{ name }</span>\"] a"</span>] = ((act) =&gt;
+                <span class="keyword">return</span> (e) =&gt;
+                    <span class="keyword">do</span> e.preventDefault
+                    <span class="keyword">do</span> e.stopPropagation
+
+                    <span class="property">@trigger</span> <span class="string">"action:<span class="subst">#{ name }</span>"</span>, act, e
+                    act.action.call @, e, @
+            )(act)
+
+    checkClickable: -&gt;
+        <span class="keyword">for</span> name, evt <span class="keyword">of</span> <span class="property">@events</span>
+            <span class="keyword">if</span> name <span class="keyword">is</span> <span class="string">'click'</span>
+                <span class="property">@$message</span>.addClass <span class="string">'messenger-clickable'</span>
+
+    undelegateEvents: -&gt;
+        <span class="keyword">super</span>
+
+        <span class="property">@$message</span>?.removeClass <span class="string">'messenger-clickable'</span>
+
+    parseActions: -&gt;
+        actions = []
+
+        <span class="keyword">for</span> name, act <span class="keyword">of</span> <span class="property">@options</span>.actions
+            n_act = $.extend {}, act
+            n_act.name = name
+            n_act.label ?= name
+
+            actions.push n_act
+
+        <span class="keyword">return</span> actions
+
+    template: (opts) -&gt;
+        $message = $ <span class="string">"&lt;div class='messenger-message message alert <span class="subst">#{ opts.type }</span> message-<span class="subst">#{ opts.type }</span> alert-<span class="subst">#{ opts.type }</span>'&gt;"</span>
+
+        <span class="keyword">if</span> opts.showCloseButton
+            $cancel = $ <span class="string">'&lt;button type="button" class="messenger-close" data-dismiss="alert"&gt;&amp;times;&lt;/button&gt;'</span>
+            $cancel.click =&gt;
+              <span class="keyword">do</span> <span class="property">@cancel</span>
+
+              <span class="literal">true</span>
+
+            $message.append $cancel
+
+        $text = $ <span class="string">"""&lt;div class="messenger-message-inner"&gt;<span class="subst">#{ opts.message }</span>&lt;/div&gt;"""</span>
+        $message.append $text
+
+        <span class="keyword">if</span> opts.actions.length
+            $actions = $ <span class="string">'&lt;div class="messenger-actions"&gt;'</span>
+
+        <span class="keyword">for</span> action <span class="keyword">in</span> opts.actions
+            $action = $ <span class="string">'&lt;span&gt;'</span>
+            $action.attr <span class="string">'data-action'</span>, <span class="string">"<span class="subst">#{ action.name }</span>"</span>
+
+            $link = $ <span class="string">'&lt;a&gt;'</span>
+            $link.html action.label
+
+            $action.append $ <span class="string">'&lt;span class="messenger-phrase"&gt;'</span>
+            $action.append $link
+
+            $actions.append $action
+
+        $message.append $actions
+
+        $message
+
+    render: -&gt;
+        <span class="keyword">if</span> <span class="property">@rendered</span>
+            <span class="keyword">return</span>
+
+        <span class="keyword">if</span> <span class="keyword">not</span> <span class="property">@_hasSlot</span>
+            <span class="property">@setElement</span> <span class="property">@messenger</span>._reserveMessageSlot(@)
+
+            <span class="property">@_hasSlot</span> = <span class="literal">true</span>
+
+        opts = $.extend {}, <span class="property">@options</span>,
+            actions: <span class="keyword">do</span> <span class="property">@parseActions</span>
+
+        <span class="property">@$message</span> = $ <span class="property">@template</span> opts
+        <span class="property">@$el</span>.html <span class="property">@$message</span>
+
+        <span class="property">@shown</span> = <span class="literal">true</span>
+        <span class="property">@rendered</span> = <span class="literal">true</span>
+
+        <span class="property">@trigger</span> <span class="string">'render'</span>
+
+<span class="class"><span class="keyword">class</span> <span class="title">RetryingMessage</span> <span class="keyword">extends</span> <span class="title">_Message</span></span>
+    initialize: -&gt;
+        <span class="keyword">super</span>
+
+        <span class="property">@_timers</span> = {}
+
+    cancel: -&gt;
+        <span class="keyword">do</span> <span class="property">@clearTimers</span>
+        <span class="keyword">do</span> <span class="property">@hide</span>
+
+        <span class="keyword">if</span> <span class="property">@_actionInstance</span>? <span class="keyword">and</span> <span class="property">@_actionInstance</span>.abort?
+            <span class="keyword">do</span> <span class="property">@_actionInstance</span>.abort
+
+    clearTimers: -&gt;
+        <span class="keyword">for</span> name, timer <span class="keyword">of</span> <span class="property">@_timers</span>
+            clearTimeout timer
+
+        <span class="property">@_timers</span> = {}
+
+        <span class="property">@$message</span>?.removeClass <span class="string">'messenger-retry-soon messenger-retry-later'</span>
+
+    render: -&gt;
+        <span class="keyword">super</span>
+
+        <span class="keyword">do</span> <span class="property">@clearTimers</span>
+
+        <span class="keyword">for</span> name, action <span class="keyword">of</span> <span class="property">@options</span>.actions
+            <span class="keyword">if</span> action.auto
+                <span class="property">@startCountdown</span> name, action
+
+    renderPhrase: (action, time) -&gt;
+        phrase = action.phrase.replace(<span class="string">'TIME'</span>, <span class="property">@formatTime</span>(time))
+        <span class="keyword">return</span> phrase
+
+    formatTime: (time) -&gt;
+        <span class="function"><span class="title">pluralize</span></span> = (num, str) -&gt;
+            num = Math.floor num
+
+            <span class="keyword">if</span> num != <span class="number">1</span>
+                str = str + <span class="string">'s'</span>
+
+            <span class="keyword">return</span> <span class="string">'in '</span> + num + <span class="string">' '</span> + str
+
+        <span class="keyword">if</span> Math.floor(time) == <span class="number">0</span>
+            <span class="keyword">return</span> <span class="string">'now...'</span>
+
+        <span class="keyword">if</span> time &lt; <span class="number">60</span>
+            <span class="keyword">return</span> pluralize(time, <span class="string">'second'</span>)
+
+        time /= <span class="number">60</span>
+        <span class="keyword">if</span> time &lt; <span class="number">60</span>
+            <span class="keyword">return</span> pluralize(time, <span class="string">'minute'</span>)
+
+        time /=<span class="number">60</span>
+        <span class="keyword">return</span> pluralize(time, <span class="string">'hour'</span>)
+
+
+    startCountdown: (name, action) -&gt;
+        <span class="keyword">if</span> <span class="property">@_timers</span>[name]?
+            <span class="keyword">return</span>
+
+        $phrase = <span class="property">@$message</span>.find(<span class="string">"[data-action='<span class="subst">#{ name }</span>'] .messenger-phrase"</span>)
+
+        remaining = action.delay ? <span class="number">3</span>
+
+        <span class="keyword">if</span> remaining &lt;= <span class="number">10</span>
+          <span class="property">@$message</span>.removeClass <span class="string">'messenger-retry-later'</span>
+          <span class="property">@$message</span>.addClass <span class="string">'messenger-retry-soon'</span>
+        <span class="keyword">else</span>
+          <span class="property">@$message</span>.removeClass <span class="string">'messenger-retry-soon'</span>
+          <span class="property">@$message</span>.addClass <span class="string">'messenger-retry-later'</span>
+
+        <span class="function"><span class="title">tick</span></span> = =&gt;
+            $phrase.text <span class="property">@renderPhrase</span>(action, remaining)
+
+            <span class="keyword">if</span> remaining &gt; <span class="number">0</span>
+                delta = Math.min(remaining, <span class="number">1</span>)
+                remaining -= delta
+
+                <span class="property">@_timers</span>[name] = setTimeout tick, delta * <span class="number">1000</span>
+
+            <span class="keyword">else</span>
+                <span class="property">@$message</span>.removeClass <span class="string">'messenger-retry-soon messenger-retry-later'</span>
+                <span class="keyword">delete</span> <span class="property">@_timers</span>[name]
+                <span class="keyword">do</span> action.action
+
+        <span class="keyword">do</span> tick
+
+<span class="class"><span class="keyword">class</span> <span class="title">_Messenger</span> <span class="keyword">extends</span> <span class="title">BaseView</span></span>
+    tagName: <span class="string">'ul'</span>
+    className: <span class="string">'messenger'</span>
+
+    messageDefaults:
+        type: <span class="string">'info'</span>
+
+    initialize: (<span class="property">@options</span>={}) -&gt;
+        <span class="property">@history</span> = []
+
+        <span class="property">@messageDefaults</span> = $.extend {}, <span class="property">@messageDefaults</span>, <span class="property">@options</span>.messageDefaults
+
+    render: -&gt;
+        <span class="keyword">do</span> <span class="property">@updateMessageSlotClasses</span>
+
+    findById: (id) -&gt;
+        _.filter <span class="property">@history</span>, (rec) -&gt;
+            rec.msg.options.id == id
+
+    _reserveMessageSlot: (msg) -&gt;
+        $slot = $(<span class="string">'&lt;li&gt;'</span>)
+        $slot.addClass <span class="string">'messenger-message-slot'</span>
+        <span class="property">@$el</span>.prepend $slot
+
+        <span class="property">@history</span>.push {msg, $slot}
+
+        <span class="property">@_enforceIdConstraint</span> msg
+        msg.<span class="literal">on</span> <span class="string">'update'</span>, =&gt; <span class="property">@_enforceIdConstraint</span>(msg)
+
+        <span class="keyword">while</span> <span class="property">@options</span>.maxMessages <span class="keyword">and</span> <span class="property">@history</span>.length &gt; <span class="property">@options</span>.maxMessages
+          dmsg = <span class="property">@history</span>.shift()
+          dmsg.msg.remove()
+          dmsg.$slot.remove()
+
+        <span class="keyword">return</span> $slot
+
+    _enforceIdConstraint: (msg) -&gt;
+      <span class="keyword">return</span> <span class="keyword">unless</span> msg.options.id?
+
+      <span class="keyword">for</span> entry <span class="keyword">in</span> <span class="property">@history</span>
+        _msg = entry.msg
+
+        <span class="keyword">if</span> _msg.options.id? <span class="keyword">and</span> _msg.options.id <span class="keyword">is</span> msg.options.id <span class="keyword">and</span> msg <span class="keyword">isnt</span> _msg
+          <span class="keyword">if</span> msg.options.singleton
+            msg.hide()
+            <span class="keyword">return</span>
+          <span class="keyword">else</span>
+            _msg.hide()
+
+    newMessage: (opts={}) -&gt;
+        opts.messenger = @
+        
+        _Message = Messenger.themes[opts.theme ? <span class="property">@options</span>.theme]?.Message ? RetryingMessage
+
+        msg = <span class="keyword">new</span> _Message(opts)
+
+        msg.<span class="literal">on</span> <span class="string">'show'</span>, =&gt;
+            <span class="keyword">if</span> opts.scrollTo <span class="keyword">and</span> <span class="property">@$el</span>.css(<span class="string">'position'</span>) <span class="keyword">isnt</span> <span class="string">'fixed'</span>
+                <span class="keyword">do</span> msg.scrollTo
+
+        msg.<span class="literal">on</span> <span class="string">'hide show render'</span>, <span class="property">@updateMessageSlotClasses</span>, @
+
+        msg
+
+    updateMessageSlotClasses: -&gt;
+        willBeFirst = <span class="literal">true</span>
+        last = <span class="literal">null</span>
+
+        anyShown = <span class="literal">false</span>
+
+        <span class="keyword">for</span> rec <span class="keyword">in</span> <span class="property">@history</span>
+            rec.$slot.removeClass <span class="string">'messenger-first messenger-last messenger-shown'</span>
+
+            <span class="keyword">if</span> rec.msg.shown <span class="keyword">and</span> rec.msg.rendered
+                rec.$slot.addClass <span class="string">'messenger-shown'</span>
+                anyShown = <span class="literal">true</span>
+
+                last = rec
+                <span class="keyword">if</span> willBeFirst
+                    willBeFirst = <span class="literal">false</span>
+                    rec.$slot.addClass <span class="string">'messenger-first'</span>
+
+        <span class="keyword">if</span> last?
+            last.$slot.addClass <span class="string">'messenger-last'</span>
+
+        <span class="property">@$el</span>[<span class="string">"<span class="subst">#{<span class="keyword">if</span> anyShown <span class="keyword">then</span> 'remove' <span class="keyword">else</span> 'add'}</span>Class"</span>](<span class="string">'messenger-empty'</span>)
+
+    hideAll: -&gt;
+        <span class="keyword">for</span> rec <span class="keyword">in</span> <span class="property">@history</span>
+            rec.msg.hide()
+
+    post: (opts) -&gt;
+        <span class="keyword">if</span> _.isString opts
+            opts = {message: opts}
+
+        opts = $.extend(<span class="literal">true</span>, {}, <span class="property">@messageDefaults</span>, opts)
+
+        msg = <span class="property">@newMessage</span> opts
+        msg.update opts
+        <span class="keyword">return</span> msg
+
+<span class="class"><span class="keyword">class</span> <span class="title">ActionMessenger</span> <span class="keyword">extends</span> <span class="title">_Messenger</span></span>
+    doDefaults:
+        progressMessage: <span class="literal">null</span>
+        successMessage: <span class="literal">null</span>
+        errorMessage: <span class="string">"Error connecting to the server."</span>
+
+        showSuccessWithoutError: <span class="literal">true</span>
+
+        retry:
+            auto: <span class="literal">true</span>
+            allow: <span class="literal">true</span>
+
+        action: $.ajax</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>When called, will override Backbone.sync to place globalMessenger in the chain.
+If using Backbone &gt;= 0.9.9, will instead override Backbone.ajax</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    hookBackboneAjax: (msgr_opts={}) -&gt;
+        <span class="keyword">if</span> <span class="keyword">not</span> window.Backbone?
+            <span class="keyword">throw</span> <span class="string">'Expected Backbone to be defined'</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>Set backbone ajax defaults.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        msgr_opts = _.defaults msgr_opts,
+            id: <span class="string">'BACKBONE_ACTION'</span>
+
+            errorMessage: <span class="literal">false</span>
+            successMessage: <span class="string">"Request completed successfully."</span>
+
+            showSuccessWithoutError: <span class="literal">false</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>Create ajax override</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="function"><span class="title">_ajax</span></span> = (options) =&gt;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p>if options were provided to this individual call, use them</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            sync_msgr_opts = _.extend {}, msgr_opts, options.messenger
+
+            <span class="property">@do</span> sync_msgr_opts, options</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>If Backbone.ajax exists (Backbone &gt;= 0.9.9), override it</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="keyword">if</span> Backbone.ajax?</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <p>We&#39;ve already wrapped Backbone at some point.
+Lets reverse that, so we don&#39;t end up making every request multiple times.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">if</span> Backbone.ajax._withoutMessenger
+                Backbone.ajax = Backbone.ajax._withoutMessenger</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <p>We set the action to Backbone.ajax so any previous overrides in Backbone.ajax are not clobbered
+But we are careful not to override it if a different .action was passed in.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">if</span> <span class="keyword">not</span> msgr_opts.action? <span class="keyword">or</span> msgr_opts.action <span class="keyword">is</span> <span class="property">@doDefaults</span>.action
+                msgr_opts.action = Backbone.ajax</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <p>Keep a reference to the previous ajax</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            _ajax._withoutMessenger = Backbone.ajax
+
+            Backbone.ajax = _ajax</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <p>Override Backbone.sync if Backbone &lt; 0.9.9</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="keyword">else</span>
+            Backbone.sync = _.wrap Backbone.sync, (_old_sync, args...) -&gt;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <p>Switch ajax methods</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                _old_ajax = $.ajax
+                $.ajax = _ajax</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
+              <p>Call old Backbone.sync (with it&#39;s original context)</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                _old_sync.call(<span class="keyword">this</span>, args...)</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-15">&#182;</a>
+              </div>
+              <p>Restore ajax</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                $.ajax = _old_ajax
+
+    _getHandlerResponse: (returnVal) -&gt;
+        <span class="keyword">if</span> returnVal == <span class="literal">false</span>
+            <span class="keyword">return</span> <span class="literal">false</span>
+
+        <span class="keyword">if</span> returnVal == <span class="literal">true</span> <span class="keyword">or</span> <span class="keyword">not</span> returnVal?
+            <span class="keyword">return</span> <span class="literal">true</span>
+
+        <span class="keyword">return</span> returnVal
+
+    _parseEvents: (events={}) -&gt;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-16">&#182;</a>
+              </div>
+              <p>We are extending the Backbone event syntax to allow a status to be included in event descriptions.
+For example:</p>
+<p>&#39;success click&#39;: <some func>
+&#39;error click a[href=#blah]&#39;: <some func></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        out = {}
+        <span class="keyword">for</span> label, func <span class="keyword">of</span> events
+            firstSpace = label.indexOf <span class="string">' '</span>
+
+            type = label.substring(<span class="number">0</span>, firstSpace)
+            desc = label.substring(firstSpace + <span class="number">1</span>)
+
+            out[type] ?= {}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-17">&#182;</a>
+              </div>
+              <p>Due to how backbone expects events, it&#39;s not possible to have multiple callbacks bound to the
+same event.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            out[type][desc] = func
+
+        <span class="keyword">return</span> out
+
+    _normalizeResponse: (resp...) -&gt;
+        type = <span class="literal">null</span>
+        xhr = <span class="literal">null</span>
+        data = <span class="literal">null</span>
+
+        <span class="keyword">for</span> elem <span class="keyword">in</span> resp
+            <span class="keyword">if</span> elem <span class="keyword">in</span> [<span class="string">'success'</span>, <span class="string">'timeout'</span>, <span class="string">'abort'</span>]
+                type = elem
+
+            <span class="keyword">else</span> <span class="keyword">if</span> elem?.readyState? <span class="keyword">and</span> elem?.responseText?
+                xhr = elem
+
+            <span class="keyword">else</span> <span class="keyword">if</span> _.isObject elem
+                data = elem
+
+        <span class="keyword">return</span> [type, data, xhr]
+
+    run: (m_opts, opts={}, args...) -&gt;
+        m_opts = $.extend <span class="literal">true</span>, {}, <span class="property">@messageDefaults</span>, <span class="property">@doDefaults</span>, m_opts ? {}
+        events = <span class="property">@_parseEvents</span> m_opts.events
+
+        <span class="function"><span class="title">getMessageText</span></span> = (type, xhr) =&gt;
+            message = m_opts[type + <span class="string">'Message'</span>]
+
+            <span class="keyword">if</span> _.isFunction message
+              <span class="keyword">return</span> message.call @, type, xhr
+            <span class="keyword">return</span> message
+
+        msg = m_opts.messageInstance ? <span class="property">@newMessage</span> m_opts
+
+        <span class="keyword">if</span> m_opts.id?
+            msg.options.id = m_opts.id
+
+        <span class="keyword">if</span> m_opts.progressMessage?
+            msg.update $.extend {}, m_opts,
+                message: getMessageText(<span class="string">'progress'</span>, <span class="literal">null</span>)
+                type: <span class="string">'info'</span>
+
+        handlers = {}
+        _.each [<span class="string">'error'</span>, <span class="string">'success'</span>], (type) =&gt;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-18">&#182;</a>
+              </div>
+              <p>Intercept the error and success handlers to give handle the messaging and give the client
+the chance to stop or replace the message.</p>
+<ul>
+<li>Call the existing handler<ul>
+<li>If it returns false, we don&#39;t show a message</li>
+<li>If it returns anything other than false or a string, we show the default passed in for this type (e.g. successMessage)</li>
+<li>If it returns a string, we show that as the message</li>
+</ul>
+</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            originalHandler = opts[type]
+            handlers[type] = (resp...) =&gt;
+                [reason, data, xhr] = <span class="property">@_normalizeResponse</span>(resp...)
+
+                <span class="keyword">if</span> type <span class="keyword">is</span> <span class="string">'success'</span> <span class="keyword">and</span> <span class="keyword">not</span> msg.errorCount? <span class="keyword">and</span> m_opts.showSuccessWithoutError == <span class="literal">false</span>
+                    m_opts[<span class="string">'successMessage'</span>] = <span class="literal">null</span>
+
+                <span class="keyword">if</span> type <span class="keyword">is</span> <span class="string">'error'</span>
+                    m_opts.errorCount ?= <span class="number">0</span>
+                    m_opts.errorCount += <span class="number">1</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-19">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-19">&#182;</a>
+              </div>
+              <p>We allow message options to be returned by the original success/error handlers, or from the promise
+used to call the handler.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                handlerResp = <span class="keyword">if</span> m_opts.returnsPromise <span class="keyword">then</span> resp[<span class="number">0</span>] <span class="keyword">else</span> originalHandler?(resp...)
+                responseOpts = <span class="property">@_getHandlerResponse</span> handlerResp
+                <span class="keyword">if</span> _.isString responseOpts
+                    responseOpts = {message: responseOpts}
+
+                <span class="keyword">if</span> type <span class="keyword">is</span> <span class="string">'error'</span> <span class="keyword">and</span> (xhr?.status == <span class="number">0</span> <span class="keyword">or</span> reason == <span class="string">'abort'</span>)</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-20">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-20">&#182;</a>
+              </div>
+              <p>The request was aborted</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                    <span class="keyword">do</span> msg.hide
+                    <span class="keyword">return</span>
+
+                <span class="keyword">if</span> type <span class="keyword">is</span> <span class="string">'error'</span> <span class="keyword">and</span> (m_opts.ignoredErrorCodes? <span class="keyword">and</span> xhr?.status <span class="keyword">in</span> m_opts.ignoredErrorCodes)</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-21">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-21">&#182;</a>
+              </div>
+              <p>We&#39;re ignoring this error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                    <span class="keyword">do</span> msg.hide
+                    <span class="keyword">return</span>
+
+                defaultOpts =
+                    message: getMessageText(type, xhr)
+                    type: type
+                    events: events[type] ? {}
+
+                    hideOnNavigate: type == <span class="string">'success'</span>
+
+                msgOpts = $.extend {}, m_opts, defaultOpts, responseOpts
+
+                <span class="keyword">if</span> <span class="keyword">typeof</span> msgOpts.retry?.allow <span class="keyword">is</span> <span class="string">'number'</span>
+                    msgOpts.retry.allow--
+
+                <span class="keyword">if</span> type <span class="keyword">is</span> <span class="string">'error'</span> <span class="keyword">and</span> xhr?.status &gt;= <span class="number">500</span> <span class="keyword">and</span> msgOpts.retry?.allow
+                    <span class="keyword">unless</span> msgOpts.retry.delay?
+                        <span class="keyword">if</span> msgOpts.errorCount &lt; <span class="number">4</span>
+                            msgOpts.retry.delay = <span class="number">10</span>
+                        <span class="keyword">else</span>
+                            msgOpts.retry.delay = <span class="number">5</span> * <span class="number">60</span>
+
+                    <span class="keyword">if</span> msgOpts.hideAfter
+                        msgOpts._hideAfter ?= msgOpts.hideAfter
+                        msgOpts.hideAfter = msgOpts._hideAfter + msgOpts.retry.delay
+
+                    msgOpts._retryActions = <span class="literal">true</span>
+                    msgOpts.actions =
+                        retry:
+                            label: <span class="string">'retry now'</span>
+                            phrase: <span class="string">'Retrying TIME'</span>
+                            auto: msgOpts.retry.auto
+                            delay: msgOpts.retry.delay
+                            action: =&gt;
+                                msgOpts.messageInstance = msg
+
+                                setTimeout =&gt;
+                                    <span class="property">@do</span> msgOpts, opts, args...
+                                , <span class="number">0</span>
+                        cancel:
+                            action: =&gt;
+                                <span class="keyword">do</span> msg.cancel
+
+                <span class="keyword">else</span> <span class="keyword">if</span> msgOpts._retryActions
+                    <span class="keyword">delete</span> msgOpts.actions.retry
+                    <span class="keyword">delete</span> msgOpts.actions.cancel
+                    <span class="keyword">delete</span> m_opts._retryActions
+
+                msg.update msgOpts
+
+                <span class="keyword">if</span> responseOpts <span class="keyword">and</span> msgOpts.message</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-22">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-22">&#182;</a>
+              </div>
+              <p>Force the msg box to be rerendered if the page changed:</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                    Messenger()
+
+                    <span class="keyword">do</span> msg.show
+                <span class="keyword">else</span>
+                    <span class="keyword">do</span> msg.hide
+
+
+        <span class="keyword">unless</span> m_opts.returnsPromise
+            <span class="keyword">for</span> type, handler <span class="keyword">of</span> handlers
+                old = opts[type]
+        
+                opts[type] = handler
+
+        msg._actionInstance = m_opts.action opts, args...
+
+        <span class="keyword">if</span> m_opts.returnsPromise
+            msg._actionInstance.<span class="keyword">then</span>(handlers.success, handlers.error)
+
+        <span class="keyword">return</span> msg</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-23">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-23">&#182;</a>
+              </div>
+              <p>Aliases</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="keyword">do</span>: ActionMessenger::run
+    ajax: (m_opts, args...) -&gt;
+        m_opts.action = $.ajax
+    
+        <span class="property">@run</span>(m_opts, args...)
+
+    expectPromise: (action, m_opts) -&gt;
+        m_opts = _.extend {}, m_opts,
+            action: action
+            returnsPromise: <span class="literal">true</span>
+
+        <span class="property">@run</span>(m_opts)
+
+    error: (m_opts={}) -&gt;
+      <span class="keyword">if</span> <span class="keyword">typeof</span> m_opts <span class="keyword">is</span> <span class="string">'string'</span>
+        m_opts = {message: m_opts}
+
+      m_opts.type = <span class="string">'error'</span>
+
+      <span class="property">@post</span> m_opts
+
+    info: (m_opts={}) -&gt;
+      <span class="keyword">if</span> <span class="keyword">typeof</span> m_opts <span class="keyword">is</span> <span class="string">'string'</span>
+        m_opts = {message: m_opts}
+
+      m_opts.type = <span class="string">'info'</span>
+
+      <span class="property">@post</span> m_opts
+
+    success: (m_opts={}) -&gt;
+      <span class="keyword">if</span> <span class="keyword">typeof</span> m_opts <span class="keyword">is</span> <span class="string">'string'</span>
+        m_opts = {message: m_opts}
+
+      m_opts.type = <span class="string">'success'</span>
+
+      <span class="property">@post</span> m_opts
+
+
+
+$.fn.<span class="function"><span class="title">messenger</span></span> = (func={}, args...) -&gt;
+    $el = <span class="keyword">this</span>
+
+    <span class="keyword">if</span> <span class="keyword">not</span> func? <span class="keyword">or</span> <span class="keyword">not</span> _.isString(func)
+        opts = func
+
+        <span class="keyword">if</span> <span class="keyword">not</span> $el.data(<span class="string">'messenger'</span>)?
+            _Messenger = Messenger.themes[opts.theme]?.Messenger ? ActionMessenger
+            $el.data(<span class="string">'messenger'</span>, instance = <span class="keyword">new</span> _Messenger($.extend({el: $el}, opts)))
+            instance.render()
+
+        <span class="keyword">return</span> $el.data(<span class="string">'messenger'</span>)
+    <span class="keyword">else</span>
+        <span class="keyword">return</span> $el.data(<span class="string">'messenger'</span>)[func](args...)</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-24">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-24">&#182;</a>
+              </div>
+              <p>When the object is created in preboot.coffee we see that this will be called
+when the object itself is called.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>window.Messenger.<span class="function"><span class="title">_call</span></span> = (opts) -&gt;
+
+    defaultOpts =
+        extraClasses: <span class="string">'messenger-fixed messenger-on-bottom messenger-on-right'</span>
+
+        theme: <span class="string">'future'</span>
+        maxMessages: <span class="number">9</span>
+        parentLocations: [<span class="string">'body'</span>]
+
+    opts = $.extend defaultOpts, $._messengerDefaults, Messenger.options, opts
+
+    <span class="keyword">if</span> opts.theme?
+        opts.extraClasses += <span class="string">" messenger-theme-<span class="subst">#{ opts.theme }</span>"</span>
+
+    inst = opts.instance <span class="keyword">or</span> Messenger.instance
+
+    <span class="keyword">unless</span> opts.instance?
+        locations = opts.parentLocations
+        $parent = <span class="literal">null</span>
+        choosen_loc = <span class="literal">null</span>
+
+        <span class="keyword">for</span> loc <span class="keyword">in</span> locations
+            $parent = $(loc)
+
+            <span class="keyword">if</span> $parent.length
+                chosen_loc = loc
+                <span class="keyword">break</span>
+
+        <span class="keyword">if</span> <span class="keyword">not</span> inst
+            $el = $(<span class="string">'&lt;ul&gt;'</span>)
+
+            $parent.prepend $el
+
+            inst = $el.messenger(opts)
+            inst._location = chosen_loc
+            Messenger.instance = inst
+
+        <span class="keyword">else</span> <span class="keyword">if</span> $(inst._location) != $(chosen_loc)</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-25">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-25">&#182;</a>
+              </div>
+              <p>A better location has since become avail on the page.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            inst.$el.detach()
+            $parent.prepend inst.$el
+
+    <span class="keyword">if</span> inst._addedClasses?
+        inst.$el.removeClass inst._addedClasses
+
+    inst.$el.addClass classes = <span class="string">"<span class="subst">#{ inst.className }</span> <span class="subst">#{ opts.extraClasses }</span>"</span>
+    inst._addedClasses = classes
+
+    <span class="keyword">return</span> inst
+
+$.extend Messenger,
+    Message: RetryingMessage
+    Messenger: ActionMessenger
+    
+    themes: Messenger.themes ? {}
+
+$.globalMessenger = window.Messenger = Messenger</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>

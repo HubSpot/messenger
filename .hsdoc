@@ -1,0 +1,4 @@
+title: "messenger"
+description: "Growl-style alerts and messages for web apps."
+source: "src/coffee/messenger.coffee"
+assets: "{build/**/*,docs/welcome/*,docs/welcome/**/*,docs/images/*}"

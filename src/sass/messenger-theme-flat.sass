@@ -1,0 +1,135 @@
+@import "compass/utilities/general/clearfix"
+@import "compass/css3"
+
+@import "messenger-spinner"
+
+@mixin unselectable
+  -moz-user-select: none
+  -webkit-user-select: none
+  -o-user-select: none
+  user-select: none
+
+$defaultThemeBorderRadius: 4px
+$spinnerSize: 32px
+
+ul.messenger-theme-flat
+  +border-radius($defaultThemeBorderRadius)
+  +unselectable
+  background: #404040
+
+  &.messenger-empty
+    display: none
+
+  .messenger-message
+    +box-shadow(inset 0px 1px rgba(255, 255, 255, 0.13), inset 48px 0px 0px #292929)
+    +border-radius(0px)
+    position: relative
+    border: 0px
+    margin-bottom: 0px
+    font-size: 13px
+    background: transparent
+    color: #f0f0f0
+    font-weight: 500
+    padding: 10px 30px 13px 65px
+
+    .messenger-close
+      position: absolute
+      top: 0px
+      right: 0px
+      color: #888
+      opacity: 1
+      font-weight: bold
+      display: block
+      font-size: 20px
+      line-height: 20px
+      padding: 8px 10px 7px 7px
+      cursor: pointer
+      background: transparent
+      border: 0
+      -webkit-appearance: none
+
+      &:hover
+        color: #bbb
+
+      &:active
+        color: #777
+
+    .messenger-actions
+      float: none
+      margin-top: 10px
+
+      a
+        +border-radius(4px)
+        text-decoration: none
+        color: #aaa
+        background: #2e2e2e
+        display: inline-block
+        padding: 10px
+        margin-right: 10px
+        padding: 4px 11px 6px
+        text-transform: capitalize
+
+        &:hover
+          color: #f0f0f0
+          background: #2e2e2e
+
+        &:active
+          background: #292929
+          color: #aaa
+
+      .messenger-phrase
+        display: none
+
+    .messenger-message-inner:before
+      +border-radius(50%)
+      position: absolute
+      left: 17px
+      display: block
+      content: " "
+      top: 50%
+      margin-top: -8px
+      height: 13px
+      width: 13px
+      z-index: 20
+
+    &.alert-success .messenger-message-inner:before
+      background: rgb(95, 202, 74)
+
+    &.alert-info .messenger-message-inner:before
+      background: rgb(97, 196, 184)
+
+    &.alert-error
+
+      .messenger-message-inner:before
+        background: rgb(221, 106, 69)
+
+      &.messenger-retry-soon
+        +ui-spinner(#292929, $spinnerSize, transparent, rgb(221, 106, 69), 1, 10s)
+
+      &.messenger-retry-later
+        +ui-spinner(#292929, $spinnerSize, transparent, rgb(221, 106, 69), 1, 300s)
+
+  .messenger-message-slot
+
+    &.messenger-last .messenger-message
+      +border-radius($defaultThemeBorderRadius $defaultThemeBorderRadius 0px 0px)
+      +box-shadow(inset 48px 0px 0px #292929)
+
+    &.messenger-first .messenger-message
+      +border-radius(0px 0px $defaultThemeBorderRadius $defaultThemeBorderRadius)
+      +box-shadow(inset 0px 1px rgba(255, 255, 255, 0.13), inset 48px 0px 0px #292929)
+
+    &.messenger-first.messenger-last .messenger-message
+      +border-radius($defaultThemeBorderRadius)
+      +box-shadow(inset 48px 0px 0px #292929)
+
+  .messenger-spinner
+    display: block
+    position: absolute
+    left: 7px
+    top: 50%
+    margin-top: -1 * (($spinnerSize / 2) + 2px)
+    z-index: 999
+    height: $spinnerSize
+    width: $spinnerSize
+    z-index: 10

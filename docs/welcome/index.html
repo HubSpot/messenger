@@ -10,12 +10,12 @@
     <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/location-sel.css">
     <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/theme-sel.css">
     <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/demo.css">
-    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/bootstrap/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" media="screen" href="build/css/messenger.css">
-    <link rel="stylesheet" type="text/css" media="screen" href="build/css/messenger-theme-block.css">
-    <link rel="stylesheet" type="text/css" media="screen" href="build/css/messenger-theme-future.css">
-    <link rel="stylesheet" type="text/css" media="screen" href="build/css/messenger-theme-air.css">
-    <link rel="stylesheet" type="text/css" media="screen" href="build/css/messenger-theme-ice.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="../../build/css/messenger.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="../../build/css/messenger-theme-block.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="../../build/css/messenger-theme-future.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="../../build/css/messenger-theme-air.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="../../build/css/messenger-theme-ice.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="../../build/css/messenger-theme-flat.css">
     <link rel="stylesheet" type="text/css" media="screen" href="lib/executr/build/css/executr.css">
     <link rel="stylesheet" type="text/css" media="screen" href="lib/executr/lib/CodeMirror/codemirror.css">
 
@@ -23,8 +23,9 @@
     <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.3/underscore-min.js"></script>
     <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/backbone.js/0.9.10/backbone-min.js"></script>
     <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.2.2/bootstrap.min.js"></script>
-    <script type="text/javascript" src="build/js/messenger.js"></script>
-    <script type="text/javascript" src="build/js/messenger-theme-future.js"></script>
+    <script type="text/javascript" src="../../build/js/messenger.js"></script>
+    <script type="text/javascript" src="../../build/js/messenger-theme-future.js"></script>
+    <script type="text/javascript" src="../../build/js/messenger-theme-flat.js"></script>
 
     <script type="text/javascript" src="javascripts/location-sel.js"></script>
     <script type="text/javascript" src="javascripts/theme-sel.js"></script>
@@ -82,6 +83,27 @@
           <li>4kb minified and compressed.
           <li>Works in everything modern, and IE7 and above.
         </ul>
+
+<h2>Demo</h2>
+
+<style>
+.iframe-demo {
+  height: 240px;
+  width: 100%;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  border: 5px solid #f5f5f5;
+  border-top-width: 40px;
+  -webkit-box-shadow: 0 0 0 1px #ccc, 0 0 10px rgba(0, 0, 0 ,.1);
+  -moz-box-shadow: 0 0 0 1px #ccc, 0 0 10px rgba(0, 0, 0 ,.1);
+  box-shadow: 0 0 0 1px #ccc, 0 0 10px rgba(0, 0, 0 ,.1);
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+}
+</style>
+<iframe class="iframe-demo" src="iframe-demo.html"></iframe>
 
 <h2>Requires</h2>
 
@@ -399,5 +421,16 @@ There is plenty to be done, pick an <a href="https://github.com/HubSpot/messenge
         })(document,"script","hs-analytics",300000);
     </script>
     <!-- End of Async HubSpot Analytics Code -->
+
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-45159009-1', 'hubspot.com');
+      ga('send', 'pageview');
+
+    </script>
   </body>
 </html>

@@ -24,11 +24,13 @@ of messages on the screen
 ### Messenger Object
 
 Messenger is accessed through a global `Messenger` object.  The object is called at each usage to give
-it a chance to instantiate if necessary: `Messenger()`.
+it a chance to instantiate if necessary.
 
 The most basic usage is to post a message:
 
-`Messenger().post({ options })` - Show a message
+```javascript
+Messenger().post({ options })
+```
 
 Options can be a string representing the body of the message:
 
@@ -173,8 +175,8 @@ Messenger().run({
 
 We also provide a couple of aliases:
 
-- `Messenger().ajax({ messageOptions }, { actionOptions })`:  Call run, with `$.ajax` as the action (which is already the default).
-- `Messenger().expectPromise(action, { messageOptions })`: Call run with a function which returns a promise, so actionOptions aren't necessary.
+- `Messenger().ajax({ messageOptions }, { actionOptions })`:  Call `run` with `$.ajax` as the action (which is already the default).
+- `Messenger().expectPromise(action, { messageOptions })`: Call `run` with a function which returns a promise, so actionOptions aren't necessary.
 
 ```javascript
 Messenger().expectPromise(function(){
@@ -224,7 +226,7 @@ msg = Messenger().post({
 You can add DOM event handlers to the message itself, or any element within it.  For example, you might wish to do
 something when the user clicks on the message.
 
-The format of the event key is: `[type] event [selector]`
+The format of the event key is: "`[type] event [selector]`"
 
 Type is a message type, like `success`, `error`, or `info`, or skip to ignore the type.  It's useful with `run` where
 the same options are getting applied to the `success` and `error` messages.

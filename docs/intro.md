@@ -1,7 +1,7 @@
 <script type="text/javascript" src="build/js/messenger.js"></script>
-<script type="text/javascript" src="build/js/messenger-theme-flat.js"></script>
+<script type="text/javascript" src="build/js/messenger-theme-future.js"></script>
 <link rel="stylesheet" type="text/css" media="screen" href="build/css/messenger.css">
-<link rel="stylesheet" type="text/css" media="screen" href="build/css/messenger-theme-flat.css">
+<link rel="stylesheet" type="text/css" media="screen" href="build/css/messenger-theme-future.css">
 
 # Messenger
 

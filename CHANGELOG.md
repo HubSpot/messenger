@@ -1,3 +1,9 @@
+1.4.0
+-----
+
+- Remove promise method pass-through
+- Add type aliases
+
 1.3.6
 -----
 

@@ -2,7 +2,7 @@
   "name": "messenger",
   "repo": "HubSpot/messenger",
   "description": "Client-side growl-like notifications with actions and auto-retry.",
-  "version": "1.3.6",
+  "version": "1.4.0",
   "homepage": "http://github.hubspot.com/messenger",
   "license": "MIT",
   "keywords": [
@@ -13,11 +13,13 @@
   ],
   "scripts": [
     "build/js/messenger.js",
-    "build/js/messenger-theme-future.js"
+    "build/js/messenger-theme-future.js",
+    "build/js/messenger-theme-flat.js"
   ],
   "styles": [
     "build/css/messenger.css",
     "build/css/messenger-theme-future.css",
+    "build/css/messenger-theme-flat.css",
     "build/css/messenger-theme-block.css",
     "build/css/messenger-theme-air.css",
     "build/css/messenger-theme-ice.css"

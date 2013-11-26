@@ -1,3 +1,8 @@
+<script type="text/javascript" src="build/js/messenger.js"></script>
+<script type="text/javascript" src="build/js/messenger-theme-flat.js"></script>
+<link rel="stylesheet" type="text/css" media="screen" href="build/css/messenger.css">
+<link rel="stylesheet" type="text/css" media="screen" href="build/css/messenger-theme-flat.css">
+
 # Messenger
 
 #### [Demo and Usage](http://hubspot.github.com/messenger/docs/welcome)
@@ -35,7 +40,7 @@ It can also be an object:
 
 ```javascript
 Messenger().post({
-  message: "How's it going?"
+  message: "How's it going?",
   type: "error"
 })
 ```

@@ -11,8 +11,6 @@
 - Wrap AJAX requests with progress, success and error messages, and add retry to your failed requests.
 - Add actions (undo, cancel, etc.) to your messages.
 
-![Messenger](https://raw.github.com/HubSpot/messenger/master/docs/images/messenger.gif)
-
 Messenger is different from other solutions for a few reasons:
 
 - Each message can be updated after being posted without losing it's place

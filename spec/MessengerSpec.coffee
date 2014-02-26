@@ -159,6 +159,57 @@ describe 'a message', () ->
         msg.scrollTo()
         expect(spy.called).toBeTruthy()
 
+describe 'close button', () ->
+    beforeEach beforeEachFunc
+    afterEach afterEachFunc
+
+    getCloseButton = (msg) ->
+        $(msg.el).find('.messenger-close')
+
+    it 'should not be added by default', () ->
+        msg = gm.post test_msg
+        closeButton = getCloseButton msg
+
+        expect(closeButton.length).toBe(0)
+
+    it 'should be added if showCloseButton specified', () ->
+        msg = gm.post
+            message: test_msg
+            showCloseButton: true
+        closeButton = getCloseButton msg
+
+        expect(closeButton.length).toBe(1)
+
+    it 'should call hide when clicked', () ->
+        msg = gm.post
+            message: test_msg
+            showCloseButton: true
+        closeButton = getCloseButton msg
+        spy = sinon.spy msg, 'hide'
+
+        closeButton.click()
+
+        expect(spy.called).toBeTruthy()
+
+    it 'text should be &times; by default', () ->
+        msg = gm.post
+            message: test_msg
+            showCloseButton: true
+        closeButton = getCloseButton msg
+
+        expect(closeButton.html()).toBe($('<div>').html('&times;').html());
+
+    it 'text should be equal to provided closeButtonText', () ->
+        closeButtonText = 'Close'
+
+        msg = gm.post
+            message: test_msg
+            showCloseButton: true
+            closeButtonText: closeButtonText
+        closeButton = getCloseButton msg
+
+        expect(closeButton.html()).toBe($('<div>').html(closeButtonText).html());
+
 describe 'do', ->
     beforeEach beforeEachFunc
 

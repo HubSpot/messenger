@@ -74,6 +74,7 @@ class _Message extends BaseView
     defaults:
         hideAfter: 10
         scroll: true
+        closeButtonText: "&times;"
 
     initialize: (opts={}) ->
         @shown = false
@@ -197,7 +198,9 @@ class _Message extends BaseView
         $message = $ "<div class='messenger-message message alert #{ opts.type } message-#{ opts.type } alert-#{ opts.type }'>"
 
         if opts.showCloseButton
-            $cancel = $ '<button type="button" class="messenger-close" data-dismiss="alert">&times;</button>'
+            $cancel = $ '<button type="button" class="messenger-close" data-dismiss="alert">'
+            $cancel.html opts.closeButtonText
+
             $cancel.click =>
               do @cancel
 

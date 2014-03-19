@@ -58,6 +58,7 @@ general.
 - `hideAfter`: Hide the message after the provided number of seconds
 - `hideOnNavigate`: Hide the message if Backbone client-side navigation occurs
 - `showCloseButton`: Should a close button be added to the message?
+- `closeButtonText`: Specify the text the close button should use (default &times;)
 
 Messenger also includes aliases which set the `type` for you: `Messenger().error()`, `Messenger().success()`, and `messenger().info()`.
 

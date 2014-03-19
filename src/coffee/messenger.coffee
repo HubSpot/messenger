@@ -770,7 +770,7 @@ window.Messenger._call = (opts) ->
             inst._location = chosen_loc
             Messenger.instance = inst
 
-        else if $(inst._location) != $(chosen_loc)
+        else if not $(inst._location).is $(chosen_loc)
             # A better location has since become avail on the page.
 
             inst.$el.detach()

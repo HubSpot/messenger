@@ -1,4 +1,4 @@
-/*! messenger 1.4.0 */
+/*! messenger 1.4.1 */
 /*
  * This file begins the output concatenated into messenger.js
  *

@@ -1,3 +1,9 @@
+1.4.1
+-----
+
+- Allow for customization of the text in the close button
+- Fix a bug with passing options to `Messenger()`, and subsequent updates made by `run` not respecting those options
+
 1.4.0
 -----
 

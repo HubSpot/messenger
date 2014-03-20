@@ -1,4 +1,4 @@
-/*! messenger 1.4.0 */
+/*! messenger 1.4.1 */
 /*
  * This file begins the output concatenated into messenger.js
  *
@@ -409,7 +409,8 @@ window.Messenger.Events = (function() {
 
     _Message.prototype.defaults = {
       hideAfter: 10,
-      scroll: true
+      scroll: true,
+      closeButtonText: "&times;"
     };
 
     _Message.prototype.initialize = function(opts) {
@@ -574,7 +575,8 @@ window.Messenger.Events = (function() {
         _this = this;
       $message = $("<div class='messenger-message message alert " + opts.type + " message-" + opts.type + " alert-" + opts.type + "'>");
       if (opts.showCloseButton) {
-        $cancel = $('<button type="button" class="messenger-close" data-dismiss="alert">&times;</button>');
+        $cancel = $('<button type="button" class="messenger-close" data-dismiss="alert">');
+        $cancel.html(opts.closeButtonText);
         $cancel.click(function() {
           _this.cancel();
           return true;
@@ -1101,7 +1103,9 @@ window.Messenger.Events = (function() {
           }
           msg.update(msgOpts);
           if (responseOpts && msgOpts.message) {
-            Messenger();
+            Messenger(_.extend({}, _this.options, {
+              instance: _this
+            }));
             return msg.show();
           } else {
             return msg.hide();
@@ -1235,7 +1239,7 @@ window.Messenger.Events = (function() {
         inst = $el.messenger(opts);
         inst._location = chosen_loc;
         Messenger.instance = inst;
-      } else if ($(inst._location) !== $(chosen_loc)) {
+      } else if (!$(inst._location).is($(chosen_loc))) {
         inst.$el.detach();
         $parent.prepend(inst.$el);
       }

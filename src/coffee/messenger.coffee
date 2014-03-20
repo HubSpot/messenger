@@ -659,7 +659,7 @@ class ActionMessenger extends _Messenger
 
                 if responseOpts and msgOpts.message
                     # Force the msg box to be rerendered if the page changed:
-                    Messenger()
+                    Messenger _.extend({}, @options, {instance: @})
 
                     do msg.show
                 else

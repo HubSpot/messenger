@@ -62,7 +62,7 @@ class BaseView
         else
             @$el.undelegate()
             @$el.unbind eventName
-    
+
     undelegateEvents: () ->
         @jqoff ".delegateEvents#{this.cid}"
 
@@ -208,7 +208,7 @@ class _Message extends BaseView
 
             $message.append $cancel
 
-        $text = $ """<div class="messenger-message-inner">#{ opts.message }</div>"""
+        $text = $('<div class="messenger-message-inner"></div>').text(opts.message)
         $message.append $text
 
         if opts.actions.length
@@ -389,7 +389,7 @@ class _Messenger extends BaseView
 
     newMessage: (opts={}) ->
         opts.messenger = @
-        
+
         _Message = Messenger.themes[opts.theme ? @options.theme]?.Message ? RetryingMessage
 
         msg = new _Message(opts)
@@ -669,7 +669,7 @@ class ActionMessenger extends _Messenger
         unless m_opts.returnsPromise
             for type, handler of handlers
                 old = opts[type]
-        
+
                 opts[type] = handler
 
         msg._actionInstance = m_opts.action opts, args...
@@ -678,12 +678,12 @@ class ActionMessenger extends _Messenger
             msg._actionInstance.then(handlers.success, handlers.error)
 
         return msg
-    
+
     # Aliases
     do: ActionMessenger::run
     ajax: (m_opts, args...) ->
         m_opts.action = $.ajax
-    
+
         @run(m_opts, args...)
 
     expectPromise: (action, m_opts) ->
@@ -790,7 +790,7 @@ window.Messenger._call = (opts) ->
 $.extend Messenger,
     Message: RetryingMessage
     Messenger: ActionMessenger
-    
+
     themes: Messenger.themes ? {}
 
 $.globalMessenger = window.Messenger = Messenger

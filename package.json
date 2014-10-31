@@ -1,7 +1,7 @@
 {
   "name": "messenger",
   "description": "Client-side growl-like notifications with actions and auto-retry.",
-  "version": "1.4.1",
+  "version": "1.4.2",
   "license": "MIT",
   "homepage": "http://github.hubspot.com/messenger",
   "authors": [

@@ -1,4 +1,6 @@
 @import "compass/css3/transition";
+@import "compass/css3/animation";
+@import "compass/css3/transform";
 
 // Copied from https://github.com/tomgenoni/ouroboros
 // But with the class names changed
@@ -36,7 +38,7 @@ $default-duration: 3s;
 
         .messenger-spinner-side .messenger-spinner-fill {
             background: $bkg-color-dark;
-            @include experimental(animation-duration, $duration * 2);
+            @include animation-duration($duration * 2);
             opacity: $opacity;
         }
 
@@ -132,8 +134,8 @@ $default-duration: 3s;
             position: absolute;
             width: 100%;
             height: 100%;
-            @include experimental(animation-iteration-count, infinite);
-            @include experimental(animation-timing-function, linear);
+            @include animation-iteration-count(infinite);
+            @include animation-timing-function(linear);
         }
     }
 
@@ -144,8 +146,8 @@ $default-duration: 3s;
             left: 100%;
             border-top-left-radius: 0;
             border-bottom-left-radius: 0;
-            @include experimental(animation-name, ui-spinner-rotate-left);
-            @include experimental(transform-origin, 0 50%);
+            @include animation-name(ui-spinner-rotate-left);
+            @include transform-origin(0 50%);
         }
     }
 
@@ -156,8 +158,8 @@ $default-duration: 3s;
             left: -100%;
             border-top-right-radius: 0;
             border-bottom-right-radius: 0;
-            @include experimental(animation-name, ui-spinner-rotate-right);
-            @include experimental(transform-origin, 100% 50%);
+            @include animation-name(ui-spinner-rotate-right);
+            @include transform-origin(100% 50%);
         }
     }
 }

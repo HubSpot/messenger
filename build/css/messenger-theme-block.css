@@ -91,6 +91,6 @@ ul.messenger.messenger-theme-block.messenger-fixed .messenger-message .messenger
 }
 /* line 78, ../../src/sass/messenger-theme-block.sass */
 ul.messenger.messenger-theme-block.messenger-fixed .messenger-message .messenger-close:active {
-  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);
+  filter: progid:DXImageTransform.Microsoft.Alpha(enabled=false);
   opacity: 1;
 }

@@ -1,4 +1,4 @@
-/*! messenger 1.4.1 */
+/*! messenger 1.4.2 */
 /*
  * This file begins the output concatenated into messenger.js
  *
@@ -410,7 +410,8 @@ window.Messenger.Events = (function() {
     _Message.prototype.defaults = {
       hideAfter: 10,
       scroll: true,
-      closeButtonText: "&times;"
+      closeButtonText: "&times;",
+      escapeText: false
     };
 
     _Message.prototype.initialize = function(opts) {
@@ -583,7 +584,11 @@ window.Messenger.Events = (function() {
         });
         $message.append($cancel);
       }
-      $text = $("<div class=\"messenger-message-inner\">" + opts.message + "</div>");
+      if (opts.escapeText) {
+        $text = $('<div class="messenger-message-inner"></div>').text(opts.message);
+      } else {
+        $text = $("<div class=\"messenger-message-inner\">" + opts.message + "</div>");
+      }
       $message.append($text);
       if (opts.actions.length) {
         $actions = $('<div class="messenger-actions">');

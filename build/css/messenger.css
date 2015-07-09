@@ -47,8 +47,8 @@ ul.messenger.messenger-fixed {
 /* line 40, ../../src/sass/messenger.sass */
 ul.messenger.messenger-fixed .messenger-message {
   min-width: 0;
-  -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
   box-sizing: border-box;
 }
 /* line 45, ../../src/sass/messenger.sass */
@@ -98,4 +98,8 @@ ul.messenger.messenger-fixed.messenger-on-right .messenger-actions, ul.messenger
 /* line 78, ../../src/sass/messenger.sass */
 ul.messenger .messenger-spinner {
   display: none;
+}
+/* line 81, ../../src/sass/messenger.sass */
+ul.messenger .messenger-clickable {
+  cursor: pointer;
 }

@@ -1,3 +1,8 @@
+1.4.2
+-----
+
+- Allow for messenger text to be escaped. Off by default
+
 1.4.1
 -----
 
@@ -28,9 +33,9 @@
 1.3.2
 -----
 
-- Add the `expectPromise` method which accepts a function which will return a promise, and 
+- Add the `expectPromise` method which accepts a function which will return a promise, and
   a message options hash, and calls `run`.
-- Add the `returnsPromise` option to `run` which will expect its `action` to return a promise 
+- Add the `returnsPromise` option to `run` which will expect its `action` to return a promise
   object, rather than using success and error callbacks.  The promises can reject or resolve to
   change the messages shown just as the callbacks can.  You should wrap the promise returned with
   a `pipe` like function to mutate the returned values before they reach Messenger.
@@ -53,7 +58,7 @@
 
 - Removed dependencies on Underscore and Backbone.
 - Add src/js/shim.js which includes cutdown versions of some Underscore functions and Backbone's
-  event handling.  It is included automatically in messenger.js and messenger.min.js.  This file 
+  event handling.  It is included automatically in messenger.js and messenger.min.js.  This file
   can be safely excluded in environments with Backbone and Underscore, but support for that is
   not yet in the build system.
 - Add src/js/preboot.js which needs to be included before the main messenger file.  It is included

@@ -1247,6 +1247,7 @@ window.Messenger.Events = (function() {
       } else if (!$(inst._location).is($(chosen_loc))) {
         inst.$el.detach();
         $parent.prepend(inst.$el);
+        inst._location = chosen_loc;
       }
     }
     if (inst._addedClasses != null) {

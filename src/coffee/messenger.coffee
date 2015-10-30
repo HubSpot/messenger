@@ -782,6 +782,7 @@ window.Messenger._call = (opts) ->
 
             inst.$el.detach()
             $parent.prepend inst.$el
+            inst._location = chosen_loc
 
     if inst._addedClasses?
         inst.$el.removeClass inst._addedClasses

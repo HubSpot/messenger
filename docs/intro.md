@@ -60,6 +60,7 @@ general.
 - `showCloseButton`: Should a close button be added to the message?
 - `closeButtonText`: Specify the text the close button should use (default: &times;)
 - `escapeText`: Should messenger escape message text? (default: false)
+- `onClickClose`: Function that executes when the close button is clicked
 
 Messenger also includes aliases which set the `type` for you: `Messenger().error()`, `Messenger().success()`, and `Messenger().info()`.
 

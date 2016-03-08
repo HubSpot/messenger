@@ -1,155 +1,101 @@
 @-webkit-keyframes ui-spinner-rotate-right {
-  /* line 66, ../../src/sass/messenger-spinner.scss */
   0% {
     -webkit-transform: rotate(0deg);
   }
-
-  /* line 67, ../../src/sass/messenger-spinner.scss */
   25% {
     -webkit-transform: rotate(180deg);
   }
-
-  /* line 68, ../../src/sass/messenger-spinner.scss */
   50% {
     -webkit-transform: rotate(180deg);
   }
-
-  /* line 69, ../../src/sass/messenger-spinner.scss */
   75% {
     -webkit-transform: rotate(360deg);
   }
-
-  /* line 70, ../../src/sass/messenger-spinner.scss */
   100% {
     -webkit-transform: rotate(360deg);
   }
 }
 @-webkit-keyframes ui-spinner-rotate-left {
-  /* line 74, ../../src/sass/messenger-spinner.scss */
   0% {
     -webkit-transform: rotate(0deg);
   }
-
-  /* line 75, ../../src/sass/messenger-spinner.scss */
   25% {
     -webkit-transform: rotate(0deg);
   }
-
-  /* line 76, ../../src/sass/messenger-spinner.scss */
   50% {
     -webkit-transform: rotate(180deg);
   }
-
-  /* line 77, ../../src/sass/messenger-spinner.scss */
   75% {
     -webkit-transform: rotate(180deg);
   }
-
-  /* line 78, ../../src/sass/messenger-spinner.scss */
   100% {
     -webkit-transform: rotate(360deg);
   }
 }
 @-moz-keyframes ui-spinner-rotate-right {
-  /* line 82, ../../src/sass/messenger-spinner.scss */
   0% {
     -moz-transform: rotate(0deg);
   }
-
-  /* line 83, ../../src/sass/messenger-spinner.scss */
   25% {
     -moz-transform: rotate(180deg);
   }
-
-  /* line 84, ../../src/sass/messenger-spinner.scss */
   50% {
     -moz-transform: rotate(180deg);
   }
-
-  /* line 85, ../../src/sass/messenger-spinner.scss */
   75% {
     -moz-transform: rotate(360deg);
   }
-
-  /* line 86, ../../src/sass/messenger-spinner.scss */
   100% {
     -moz-transform: rotate(360deg);
   }
 }
 @-moz-keyframes ui-spinner-rotate-left {
-  /* line 90, ../../src/sass/messenger-spinner.scss */
   0% {
     -moz-transform: rotate(0deg);
   }
-
-  /* line 91, ../../src/sass/messenger-spinner.scss */
   25% {
     -moz-transform: rotate(0deg);
   }
-
-  /* line 92, ../../src/sass/messenger-spinner.scss */
   50% {
     -moz-transform: rotate(180deg);
   }
-
-  /* line 93, ../../src/sass/messenger-spinner.scss */
   75% {
     -moz-transform: rotate(180deg);
   }
-
-  /* line 94, ../../src/sass/messenger-spinner.scss */
   100% {
     -moz-transform: rotate(360deg);
   }
 }
 @keyframes ui-spinner-rotate-right {
-  /* line 98, ../../src/sass/messenger-spinner.scss */
   0% {
     transform: rotate(0deg);
   }
-
-  /* line 99, ../../src/sass/messenger-spinner.scss */
   25% {
     transform: rotate(180deg);
   }
-
-  /* line 100, ../../src/sass/messenger-spinner.scss */
   50% {
     transform: rotate(180deg);
   }
-
-  /* line 101, ../../src/sass/messenger-spinner.scss */
   75% {
     transform: rotate(360deg);
   }
-
-  /* line 102, ../../src/sass/messenger-spinner.scss */
   100% {
     transform: rotate(360deg);
   }
 }
 @keyframes ui-spinner-rotate-left {
-  /* line 106, ../../src/sass/messenger-spinner.scss */
   0% {
     transform: rotate(0deg);
   }
-
-  /* line 107, ../../src/sass/messenger-spinner.scss */
   25% {
     transform: rotate(0deg);
   }
-
-  /* line 108, ../../src/sass/messenger-spinner.scss */
   50% {
     transform: rotate(180deg);
   }
-
-  /* line 109, ../../src/sass/messenger-spinner.scss */
   75% {
     transform: rotate(180deg);
   }
-
-  /* line 110, ../../src/sass/messenger-spinner.scss */
   100% {
     transform: rotate(360deg);
   }

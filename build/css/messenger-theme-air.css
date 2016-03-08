@@ -1,156 +1,102 @@
 @import url("//fonts.googleapis.com/css?family=Raleway:400");
 @-webkit-keyframes ui-spinner-rotate-right {
-  /* line 66, ../../src/sass/messenger-spinner.scss */
   0% {
     -webkit-transform: rotate(0deg);
   }
-
-  /* line 67, ../../src/sass/messenger-spinner.scss */
   25% {
     -webkit-transform: rotate(180deg);
   }
-
-  /* line 68, ../../src/sass/messenger-spinner.scss */
   50% {
     -webkit-transform: rotate(180deg);
   }
-
-  /* line 69, ../../src/sass/messenger-spinner.scss */
   75% {
     -webkit-transform: rotate(360deg);
   }
-
-  /* line 70, ../../src/sass/messenger-spinner.scss */
   100% {
     -webkit-transform: rotate(360deg);
   }
 }
 @-webkit-keyframes ui-spinner-rotate-left {
-  /* line 74, ../../src/sass/messenger-spinner.scss */
   0% {
     -webkit-transform: rotate(0deg);
   }
-
-  /* line 75, ../../src/sass/messenger-spinner.scss */
   25% {
     -webkit-transform: rotate(0deg);
   }
-
-  /* line 76, ../../src/sass/messenger-spinner.scss */
   50% {
     -webkit-transform: rotate(180deg);
   }
-
-  /* line 77, ../../src/sass/messenger-spinner.scss */
   75% {
     -webkit-transform: rotate(180deg);
   }
-
-  /* line 78, ../../src/sass/messenger-spinner.scss */
   100% {
     -webkit-transform: rotate(360deg);
   }
 }
 @-moz-keyframes ui-spinner-rotate-right {
-  /* line 82, ../../src/sass/messenger-spinner.scss */
   0% {
     -moz-transform: rotate(0deg);
   }
-
-  /* line 83, ../../src/sass/messenger-spinner.scss */
   25% {
     -moz-transform: rotate(180deg);
   }
-
-  /* line 84, ../../src/sass/messenger-spinner.scss */
   50% {
     -moz-transform: rotate(180deg);
   }
-
-  /* line 85, ../../src/sass/messenger-spinner.scss */
   75% {
     -moz-transform: rotate(360deg);
   }
-
-  /* line 86, ../../src/sass/messenger-spinner.scss */
   100% {
     -moz-transform: rotate(360deg);
   }
 }
 @-moz-keyframes ui-spinner-rotate-left {
-  /* line 90, ../../src/sass/messenger-spinner.scss */
   0% {
     -moz-transform: rotate(0deg);
   }
-
-  /* line 91, ../../src/sass/messenger-spinner.scss */
   25% {
     -moz-transform: rotate(0deg);
   }
-
-  /* line 92, ../../src/sass/messenger-spinner.scss */
   50% {
     -moz-transform: rotate(180deg);
   }
-
-  /* line 93, ../../src/sass/messenger-spinner.scss */
   75% {
     -moz-transform: rotate(180deg);
   }
-
-  /* line 94, ../../src/sass/messenger-spinner.scss */
   100% {
     -moz-transform: rotate(360deg);
   }
 }
 @keyframes ui-spinner-rotate-right {
-  /* line 98, ../../src/sass/messenger-spinner.scss */
   0% {
     transform: rotate(0deg);
   }
-
-  /* line 99, ../../src/sass/messenger-spinner.scss */
   25% {
     transform: rotate(180deg);
   }
-
-  /* line 100, ../../src/sass/messenger-spinner.scss */
   50% {
     transform: rotate(180deg);
   }
-
-  /* line 101, ../../src/sass/messenger-spinner.scss */
   75% {
     transform: rotate(360deg);
   }
-
-  /* line 102, ../../src/sass/messenger-spinner.scss */
   100% {
     transform: rotate(360deg);
   }
 }
 @keyframes ui-spinner-rotate-left {
-  /* line 106, ../../src/sass/messenger-spinner.scss */
   0% {
     transform: rotate(0deg);
   }
-
-  /* line 107, ../../src/sass/messenger-spinner.scss */
   25% {
     transform: rotate(0deg);
   }
-
-  /* line 108, ../../src/sass/messenger-spinner.scss */
   50% {
     transform: rotate(180deg);
   }
-
-  /* line 109, ../../src/sass/messenger-spinner.scss */
   75% {
     transform: rotate(180deg);
   }
-
-  /* line 110, ../../src/sass/messenger-spinner.scss */
   100% {
     transform: rotate(360deg);
   }
@@ -236,15 +182,15 @@ ul.messenger-theme-air .messenger-message {
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
   border-radius: 5px;
-  -moz-box-shadow: inset 0 0 0 1px white, inset 0 2px white, 0 0 0 1px rgba(0, 0, 0, 0.1), 0 1px rgba(0, 0, 0, 0.2);
-  -webkit-box-shadow: inset 0 0 0 1px white, inset 0 2px white, 0 0 0 1px rgba(0, 0, 0, 0.1), 0 1px rgba(0, 0, 0, 0.2);
-  box-shadow: inset 0 0 0 1px white, inset 0 2px white, 0 0 0 1px rgba(0, 0, 0, 0.1), 0 1px rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: inset 0 0 0 1px #fff, inset 0 2px #fff, 0 0 0 1px rgba(0, 0, 0, 0.1), 0 1px rgba(0, 0, 0, 0.2);
+  -webkit-box-shadow: inset 0 0 0 1px #fff, inset 0 2px #fff, 0 0 0 1px rgba(0, 0, 0, 0.1), 0 1px rgba(0, 0, 0, 0.2);
+  box-shadow: inset 0 0 0 1px #fff, inset 0 2px #fff, 0 0 0 1px rgba(0, 0, 0, 0.1), 0 1px rgba(0, 0, 0, 0.2);
   border: 0px;
   background-color: rgba(255, 255, 255, 0.8);
   position: relative;
   margin-bottom: 1em;
   font-size: 13px;
-  color: #666666;
+  color: #666;
   font-weight: 500;
   padding: 10px 30px 11px 46px;
 }
@@ -257,7 +203,7 @@ ul.messenger-theme-air .messenger-message .messenger-close {
   position: absolute;
   top: 0px;
   right: 0px;
-  color: #888888;
+  color: #888;
   opacity: 1;
   font-weight: bold;
   display: block;
@@ -271,11 +217,11 @@ ul.messenger-theme-air .messenger-message .messenger-close {
 }
 /* line 52, ../../src/sass/messenger-theme-air.sass */
 ul.messenger-theme-air .messenger-message .messenger-close:hover {
-  color: #444444;
+  color: #444;
 }
 /* line 55, ../../src/sass/messenger-theme-air.sass */
 ul.messenger-theme-air .messenger-message .messenger-close:active {
-  color: #222222;
+  color: #222;
 }
 /* line 58, ../../src/sass/messenger-theme-air.sass */
 ul.messenger-theme-air .messenger-message .messenger-actions {
@@ -293,7 +239,7 @@ ul.messenger-theme-air .messenger-message .messenger-actions a {
   text-decoration: none;
   display: inline-block;
   padding: 10px;
-  color: #888888;
+  color: #888;
   margin-right: 10px;
   padding: 3px 10px 5px;
   text-transform: capitalize;
@@ -303,7 +249,7 @@ ul.messenger-theme-air .messenger-message .messenger-actions a:hover {
   -moz-box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.1), inset 0px 1px rgba(255, 255, 255, 0.15);
   -webkit-box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.1), inset 0px 1px rgba(255, 255, 255, 0.15);
   box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.1), inset 0px 1px rgba(255, 255, 255, 0.15);
-  color: #444444;
+  color: #444;
 }
 /* line 77, ../../src/sass/messenger-theme-air.sass */
 ul.messenger-theme-air .messenger-message .messenger-actions a:active {
@@ -311,7 +257,7 @@ ul.messenger-theme-air .messenger-message .messenger-actions a:active {
   -webkit-box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.18), inset 0px 1px rgba(0, 0, 0, 0.05);
   box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.18), inset 0px 1px rgba(0, 0, 0, 0.05);
   background: rgba(0, 0, 0, 0.04);
-  color: #444444;
+  color: #444;
 }
 /* line 82, ../../src/sass/messenger-theme-air.sass */
 ul.messenger-theme-air .messenger-message .messenger-actions .messenger-phrase {
@@ -356,7 +302,7 @@ ul.messenger-theme-air .messenger-message.alert-error.messenger-retry-soon .mess
 /* line 47, ../../src/sass/messenger-spinner.scss */
 ul.messenger-theme-air .messenger-message.alert-error.messenger-retry-soon .messenger-spinner:after {
   content: "";
-  background: white;
+  background: #fff;
   position: absolute;
   width: 19px;
   height: 19px;
@@ -382,7 +328,7 @@ ul.messenger-theme-air .messenger-message.alert-error.messenger-retry-later .mes
 /* line 47, ../../src/sass/messenger-spinner.scss */
 ul.messenger-theme-air .messenger-message.alert-error.messenger-retry-later .messenger-spinner:after {
   content: "";
-  background: white;
+  background: #fff;
   position: absolute;
   width: 19px;
   height: 19px;

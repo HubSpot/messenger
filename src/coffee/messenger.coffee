@@ -204,6 +204,7 @@ class _Message extends BaseView
 
             $cancel.click =>
               do @cancel
+              @options.onClickClose?()
 
               true
 
@@ -263,6 +264,7 @@ class RetryingMessage extends _Message
     cancel: ->
         do @clearTimers
         do @hide
+
 
         if @_actionInstance? and @_actionInstance.abort?
             do @_actionInstance.abort

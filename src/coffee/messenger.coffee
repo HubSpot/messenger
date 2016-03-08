@@ -204,7 +204,7 @@ class _Message extends BaseView
 
             $cancel.click =>
               do @cancel
-              do @options.onClickClose?()
+              @options.onClickClose?()
 
               true
 

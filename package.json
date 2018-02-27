@@ -8,6 +8,7 @@
     "Zack Bloom <zackbloom@gmail.com>",
     "Adam Schwartz <adam.flynn.schwartz@gmail.com>"
   ],
+  "main": "build/js/messenger.js",
   "keywords": [
     "client-side",
     "notification",

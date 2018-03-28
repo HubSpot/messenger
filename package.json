@@ -4,6 +4,7 @@
   "version": "1.5.0",
   "license": "MIT",
   "homepage": "http://github.hubspot.com/messenger",
+  "main": "build/js/messenger.js",
   "authors": [
     "Zack Bloom <zackbloom@gmail.com>",
     "Adam Schwartz <adam.flynn.schwartz@gmail.com>"

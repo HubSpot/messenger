@@ -1,0 +1,12 @@
+@font-face {
+    font-family: 'Raleway';
+    font-style: normal;
+    font-weight: 400;
+    src: url(Raleway_400_normal.eot); /* http://fonts.gstatic.com/s/raleway/v17/1Ptxg8zYS_SKggPN4iEgvnHyvveLxVvaorCIPrU.eot */
+    src: local('☺'),
+        url(Raleway_400_normal.eot?#iefix) format('embedded-opentype'), /* http://fonts.gstatic.com/s/raleway/v17/1Ptxg8zYS_SKggPN4iEgvnHyvveLxVvaorCIPrU.eot */
+        url(Raleway_400_normal.woff2) format('woff2'), /* http://fonts.gstatic.com/s/raleway/v17/1Ptxg8zYS_SKggPN4iEgvnHyvveLxVvaorCIPrE.woff2 */
+        url(Raleway_400_normal.woff) format('woff'), /* http://fonts.gstatic.com/s/raleway/v17/1Ptxg8zYS_SKggPN4iEgvnHyvveLxVvaorCIPrc.woff */
+        url(Raleway_400_normal.ttf) format('truetype'), /* http://fonts.gstatic.com/s/raleway/v17/1Ptxg8zYS_SKggPN4iEgvnHyvveLxVvaorCIPrQVJz9d.ttf */
+        url(Raleway_400_normal.svg#Raleway_400_normal) format('svg'); /* http://fonts.gstatic.com/l/font?kit=1Ptxg8zYS_SKggPN4iEgvnHyvveLxVvaorCIPrY&skey=30a27f2564731c64&v=v17#Raleway */
+}

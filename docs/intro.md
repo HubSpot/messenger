@@ -102,7 +102,7 @@ Adding the `top` or `bottom` class along with a `left` or `right` will move the 
 - `parentLocations`: Which locations should be tried when inserting the message container into the page.  The default is `['body']`.
 It accepts a list to allow you to try a variety of places when deciding what the optimal location is on any given page.  This should
 generally not need to be changed unless you are inserting the messages into the flow of the document, rather than using `messenger-fixed`.
-- `theme`: What theme are you using? Some themes have associated javascript, specifing this allows that js to run.
+- `theme`: What theme are you using? Some themes have associated javascript, specifying this allows that js to run.
 - `messageDefaults`: Default options for created messages
 
 ```javascript
